@@ -16,7 +16,6 @@ class DatabaseManager {
 
     function connectToDatabase() // create a function for connect database
     {
-
         $conn= mysql_connect($this->host,$this->username,$this->password);
 
         if(!$conn)// testing the connection

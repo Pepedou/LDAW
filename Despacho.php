@@ -16,10 +16,13 @@ class Despacho {
     public $id, $nombre, $direccion;
 
     public function __construct() {
-        echo "Nuevo despacho!";
-        $this->id = 1;
+        echo "Nuevo despacho!<br>";        
         $this->nombre = "Despacho" + $this->id;
         $this->direccion = "ND";
+    }
+    
+    public function eliminarEnBD() {
+        
     }
 
     public function validarNombre() {
@@ -35,6 +38,16 @@ class Despacho {
             return false;
         } else {
             return true;
+        }
+    }
+    
+    public function almacenarEnBD() {
+        if ($this->validarDireccion() && $this->validarNombre()){
+            echo "Guardo en BD!<br>";
+            return true;
+        }
+        else{
+            return false;
         }
     }
     
