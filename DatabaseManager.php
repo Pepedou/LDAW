@@ -9,7 +9,7 @@ class DatabaseManager {
     
     var $host="localhost";
     var $username="1018566_user";    // specify the sever details for mysql
-    Var $password="1018566";
+    var $password="1018566";
     var $database="ldaw\@1018566";
     
     var $myconn;
