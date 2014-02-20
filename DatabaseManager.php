@@ -46,6 +46,19 @@ class DatabaseManager {
          echo "Database selected..";       
     }
 
+    function executeQuery($query){
+        
+        mysqli_query($this->myconn, $query);
+         if(mysql_error()) // if error occured display the error message
+        {
+            echo "Error al ejecutar el query ".$this->database;
+
+        }
+         echo "Query Ejecutado";   
+        
+        
+    }
+    
     function closeConnection() // close the connection
     {
         mysql_close($this->myconn);
