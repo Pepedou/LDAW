@@ -1,5 +1,7 @@
 <?php
 
+include './DatabaseManager.php';
+
 class Abogado {
 
     public
@@ -13,7 +15,7 @@ class Abogado {
     public function cargarUsuarioDeBD($usuario) {
         $dbManager = new DatabaseManager();
         $dbManager->connectToDatabase() or die("No se pudo conectar a la BD.");
-
+        $resul = false;
         $query = "SELECT * FROM Abogados WHERE Usuario='$usuario'";
 
         $resultado = $dbManager->executeQuery($query);
@@ -29,8 +31,10 @@ class Abogado {
             $this->pwd = $fila['Contrasena'];
             $this->id_rol = $fila['id_Rol'];
             $this->id_despacho = $fila['id_Despacho'];
+            $resul = true;
         }
         $dbManager->closeConnection();
+        return $resul;
     }
 
     public function devuelveDespacho() {
@@ -71,7 +75,7 @@ class Abogado {
         $dbManager = new DatabaseManager();
         $dbManager->connectToDatabase();
 
-        $sql = "INSERT INTO Abogados (Nombre,ApellidoP, ApellidoM, Telefono, Email, Usuario, Contrasena,id_Rol, id_Despacho) values ( '$this->nombre', '$this->apellidop', '$this->apellidom', '$this->telefono',  '$this->mail', 
+        $sql = "INSERT INTO Abogados (Nombre,ApellidoP, ApellidoM, Telefono, Email, Usuario, Contrasena,id_Rol, id_Despacho) values ( '$this->nombre', '$this->apellidoP', '$this->apellidoM', '$this->telefono',  '$this->mail', 
                 '$this->usuario', sha1('$this->pwd'),$this->id_rol, $this->id_despacho)";
         echo $sql;
 
