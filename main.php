@@ -3,6 +3,10 @@ session_start();
 if (!session_is_registered(myusername)) {
     header("Location: index.html");
 }
+include './Abogado.php';
+$nombreUsuario = $_COOKIE['usuario'];
+$miUsuario = new Abogado();
+$miUsuario->cargarUsuarioDeBD($nombreUsuario);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!--
@@ -46,7 +50,7 @@ Released   : 20130602
                 <div id="content">
                     <div class="article borders">
                         <div class="title">
-                            <h2>Welcome <?php echo $_COOKIE['usuario']; ?></h2>
+                            <h2>Bienvenido <?php echo $miUsuario->nombre ?></h2>
                         </div>
                         <table border="0" width="100%">
                             <tr>

@@ -1,4 +1,3 @@
-<!-- verificacion de usuario -->
 <?php
 require './DatabaseManager.php';
 
@@ -7,8 +6,8 @@ $campos = "id";
 $db = new DatabaseManager();
 
 // Obtenemos usuario y password y filtramos para eliminar posibles inyecciones a MySQL
-$myusername = $_POST['usuario'];
-$mypassword = $_POST['pwd'];
+$myusername = mysql_escape_string($_POST['usuario']);
+$mypassword = mysql_escape_string($_POST['pwd']);
 
 $sql = "SELECT * FROM $tabla WHERE Usuario='$myusername' AND Contrasena=sha1('$mypassword')";
 
