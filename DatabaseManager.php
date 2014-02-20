@@ -1,21 +1,17 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of Conenction
+ * Clase para realizar conexión con la Base de Datos
  *
  * @author estef
  */
-class Conection {
+class DatabaseManager {
+    
     var $host="localhost";
-    var $username="username";    // specify the sever details for mysql
-    Var $password="password";
-    var $database="database name";
+    var $username="1018566_user";    // specify the sever details for mysql
+    Var $password="1018566";
+    var $database="ldaw\@1018566";
+    
     var $myconn;
 
     function connectToDatabase() // create a function for connect database
@@ -32,13 +28,10 @@ class Conection {
         {
 
             $this->myconn = $conn;
-
             echo "Connection established";
-
         }
 
         return $this->myconn;
-
     }
 
     function selectDatabase() // selecting the database.
@@ -47,7 +40,6 @@ class Conection {
 
         if(mysql_error()) // if error occured display the error message
         {
-
             echo "Cannot find the database ".$this->database;
 
         }
