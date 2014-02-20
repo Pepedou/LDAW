@@ -1,6 +1,6 @@
 <?php
 
-include ('Conection.php');
+include ('Connection.php');
 
 
 /*
@@ -20,12 +20,38 @@ class Abogado {
      $id, $nombre, $apellidop, $apellidom, $telefono,  $mail, 
      $usuario, $pwd,$id_rol, $id_despacho;
     
-    public function _construct($usuario,$pwd){
+    public function _construct($user,$pass){
+              
+        if (verifica_usuario){
+            $this->usuario = $user;
+            $this->pwd = $pass;
+        }
+        
+        else{
+            echo 'Usuario no valido';
+        }
+           
+    }
+    
+    public function _destruct($id){
+        
+    }
+    
+    public function verifica_usuario($user){
+        
+        $dbManager = new DatabaseManager();        
+        $dbManager->connectToDatabase(); //i created a new object
+        $dbManager->selectDatabase(); 
+        
         
         
     }
     
-    public function _destruct($id){
+    public function guardar(){
+        
+        $dbManager = new DatabaseManager();        
+        $dbManager->connectToDatabase(); //i created a new object
+        $dbManager->selectDatabase();       
         
     }
     
