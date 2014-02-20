@@ -23,7 +23,7 @@ Released   : 20130602
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Propuesta 2</title>
+        <title>Gesti&oacute;n de Despachos</title>
         <meta name="keywords" content="" />
         <meta name="description" content="" />
         <link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
@@ -39,10 +39,9 @@ Released   : 20130602
                     <h1><a href="#">LOGO</a></h1></div>
                 <div id="menu">
                     <ul>
-                        <li class="current_page_item"><a href="#" accesskey="1" title="">Homepage</a></li>
+                        <li class="current_page_item"><a href="main.php" accesskey="1" title="">Homepage</a></li>
                         <li><a href="generaDespachos.php" accesskey="2" title="">Despachos</a></li>
-                        <li><a href="#" accesskey="3" title="">About Us</a></li>
-                        <li><a href="logout.php" accesskey="5" title="">Cerrar sesi&oacute;n</a></li>
+                        <li><a href="logout.php" accesskey="3" title="">Cerrar sesi&oacute;n</a></li>
                     </ul>
                 </div>
             </div>
