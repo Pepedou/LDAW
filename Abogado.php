@@ -1,46 +1,57 @@
 <?php
 
+include './DatabaseManager.php';
 
 class Abogado {
 
     public
-            $id, $nombre, $apellidop, $apellidom, $telefono, $mail,
-            $usuario, $pwd, $id_rol, $id_despacho = 1;
+            $id, $nombre, $apellidoP, $apellidoM, $telefono, $mail,
+            $usuario = "", $pwd, $id_rol, $id_despacho = 1;
 
-    public function _construct($user, $pass) {
-
-        if ($this->verifica_usuario($user)) {
-            $this->usuario = $user;
-            $this->pwd = $pass;
-            $this->id_despacho = $id_despacho;
-            echo 'Usuario Nuevo';
-        } else {
-            echo 'Usuario no valido';
-        }
+    public function _construct() {
+        $this->id = -1;
     }
 
-    public function _devuelveDespacho() {
+    public function cargarUsuarioDeBD($usuario) {
+        $dbManager = new DatabaseManager();
+        $dbManager->connectToDatabase() or die("No se pudo conectar a la BD.");
+        $resul = false;
+        $query = "SELECT * FROM Abogados WHERE Usuario='$usuario'";
 
+        $resultado = $dbManager->executeQuery($query);
+        if ($resultado->num_rows) {
+            $fila = $resultado->fetch_assoc();
+            $this->id = $fila['id'];
+            $this->nombre = $fila['Nombre'];
+            $this->apellidoP = $fila['ApellidoP'];
+            $this->apellidoM = $fila['ApellidoM'];
+            $this->telefono = $fila['Telefono'];
+            $this->mail = $fila['Email'];
+            $this->usuario = $fila['Usuario'];
+            $this->pwd = $fila['Contrasena'];
+            $this->id_rol = $fila['id_Rol'];
+            $this->id_despacho = $fila['id_Despacho'];
+            $resul = true;
+        }
+        $dbManager->closeConnection();
+        return $resul;
+    }
+
+    public function devuelveDespacho() {
         $dbManager = new DatabaseManager();
         $dbManager->connectToDatabase();
 
         $despacho = new Despacho();
 
         $query = "SELECT * FROM Despachos WHERE id=$this->id_despacho";
-        /*$resultado = $dbManager->executeQuery($query);*/
-        
-        
-        
+        /* $resultado = $dbManager->executeQuery($query); */
     }
 
-    public function verifica_usuario($user) {
-
-
-        if (strlen($user) === 0 || strlen($user) > 20) {
+    public function verificaUsuario() {
+        if (strlen($this->usuario) === 0 || strlen($this->usuario) > 20) {
             echo 'Longitud de usuario no valida';
+            return false;
         } else {
-
-
             $dbManager = new DatabaseManager();
             $dbManager->connectToDatabase();
 
@@ -48,28 +59,23 @@ class Abogado {
 
             $resultado = $dbManager->executeQuery($query);
             //$row = $resultado->fetch_array(MYSQLI_NUM);
-              /* obtener el array de objetos */
-                         
-            if (($resultado->num_rows > 0)) {
+            /* obtener el array de objetos */
 
-                return 0;
+            if (($resultado->num_rows)) {
+                $dbManager->closeConnection();
+                return false;
             } else {
-
-                return 1;//sí esta libre para usarse
+                $dbManager->closeConnection();
+                return true; //sí esta libre para usarse
             }
-
-            $dbManager->closeConnection();
         }
     }
 
     public function almacenarEnBD() {
-
-
         $dbManager = new DatabaseManager();
         $dbManager->connectToDatabase();
 
-
-        $sql = "INSERT INTO Abogados (Nombre,ApellidoP, ApellidoM, Telefono, Email, Usuario, Contrasena,id_Rol, id_Despacho) values ( '$this->nombre', '$this->apellidop', '$this->apellidom', '$this->telefono',  '$this->mail', 
+        $sql = "INSERT INTO Abogados (Nombre,ApellidoP, ApellidoM, Telefono, Email, Usuario, Contrasena,id_Rol, id_Despacho) values ( '$this->nombre', '$this->apellidoP', '$this->apellidoM', '$this->telefono',  '$this->mail', 
                 '$this->usuario', sha1('$this->pwd'),$this->id_rol, $this->id_despacho)";
         echo $sql;
 

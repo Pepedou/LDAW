@@ -1,42 +1,26 @@
 <!-- verificacion de usuario -->
 <?php
-//php5 ob_start();
-$host = "localhost"; // Host
-$username = "1015544_user"; // usuario mysql
-$password = "1015544"; // password
-$db_name = "ldaw_1015544"; // Database
-$tbl_name = "Usuarios"; // tabla
-// nos conectamos a la BD
-$enlace = mysql_connect("$host", "$username", "$password") or die("No puedo conectarme");
-mysql_select_db("$db_name") or die("No puedo seleccionar la DB");
+require './DatabaseManager.php';
 
-// cachamos usuario y password
+$tabla = "Abogados";
+$campos = "id";
+$db = new DatabaseManager();
+
+// Obtenemos usuario y password y filtramos para eliminar posibles inyecciones a MySQL
 $myusername = $_POST['usuario'];
 $mypassword = $_POST['pwd'];
 
-// Para eliminar posibles inyecciones a MySQL
-$myusername = stripslashes($myusername);
-$mypassword = stripslashes($mypassword);
-$myusername = mysql_real_escape_string($myusername);
-$mypassword = mysql_real_escape_string($mypassword);
+$sql = "SELECT * FROM $tabla WHERE Usuario='$myusername' AND Contrasena=sha1('$mypassword')";
 
-$sql = "SELECT * FROM $tbl_name WHERE usuario='$myusername' and pwd=sha1('$mypassword')";
+$db->connectToDatabase() or die("No se pudo obtener acceso a la base de datos.");
 
-$result = mysql_query($sql);
+$result = $db->executeQuery($sql);
 
-$fila = mysql_fetch_array($result, MYSQL_ASSOC);
+// Si el resultado hace match $myusername y $mypassword, nos debe de regresar 1
+if ($result->num_rows === 1) {
+    $fila = $result->fetch_assoc();
+    $nombre = $fila['Usuario'];
 
-$nombre = $fila['nombre'];
-
-// Contamos las lineas regresadas por el query
-$count = mysql_num_rows($result);
-
-mysql_free_result($resultado);
-
-mysql_close($enlace);
-
-// Si el resultado hace match $myusername y $mypassword, nos debe de regrasar 1
-if ($count == 1) {
     // Registramos $myusername, $mypassword y redireccionamos a "login_exitoso.php"
     session_register("myusername");
     session_register("mypassword");
@@ -44,5 +28,7 @@ if ($count == 1) {
     header("location:main.php");
 } else {
     echo "Usuario o password incorrecto";
+    header("Refresh: 3; url=index.html");
 }
+$db->closeConnection();
 ?>

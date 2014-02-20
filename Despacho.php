@@ -27,36 +27,32 @@ class Despacho {
         $this->direccion = "ND";
     }
 
-    public function get_Nombre() {
+    public function cargarDespachoDeBD($despacho) {
+        $dbManager = new DatabaseManager();
+        $dbManager->connectToDatabase() or die("No se pudo conectar a la BD.");
+        $resul = false;
+        $query = "SELECT Nombre,Direccion FROM Despachos WHERE Nombre='$despacho'";
 
-        if (strlen($this->nombre) > 0) {
-            //$query = "SELECT id FROM " . $this->tabla . " WHERE Nombre = " . $this->nombre;
-            $query = "SELECT id FROM" . $this->tabla ."WHERE Nombre = '$this->nombre'";
-            echo $query;
-            $dbManager = $this->dbManager;
-            if ($dbManager->connectToDatabase()) {
-                $resultado = $dbManager->executeQuery($query);
-                $dbManager->closeConnection();
-                $fila = $resultado->fetch_row();
-                return $fila[0];
-            } else
-                return FALSE;
+        $resultado = $dbManager->executeQuery($query);
+        if ($resultado->num_rows) {
+            $fila = $resultado->fetch_assoc();
+            $this->id = $fila['id'];
+            $this->nombre = $fila['Nombre'];
+            $this->direccion = $fila['Direccion'];
+            $resul = true;
         }
-
-        else {
-            echo 'Nombre no valido';
-        }
+        $dbManager->closeConnection();
+        return $resul;
     }
 
     public function eliminarDeBD() {
         if ($this->id > -1) {
             $query = "DELETE FROM " . $this->tabla . " WHERE ID = " . $this->id;
             $dbManager = $this->dbManager;
-            if ($dbManager->connectToDatabase()) {
-                $dbManager->executeQuery($query);
-                $dbManager->closeConnection();
-                return true;
-            }
+            $dbManager->connectToDatabase() or die("No se pudo conectar a la BD");
+            $dbManager->executeQuery($query);
+            $dbManager->closeConnection();
+            return true;
         } else {
             return false;
         }
