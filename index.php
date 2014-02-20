@@ -11,18 +11,9 @@ and open the template in the editor.
     </head>
     <body>
         <?php
-        include './Abogado.php';
-        include './Caso.php';
         include './Despacho.php';
-      
-        $caso = new Caso();
-        $caso->id_despacho = 1;
-        $caso->nombre= "Caso R versus el Gobierno";
-        $caso->almacenarEnBD();
-              
         $despacho = new Despacho();
         $despacho->almacenarEnBD();
-        
         ?>
     </body>
 </html>
