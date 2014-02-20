@@ -15,13 +15,12 @@ class DatabaseManager {
             $db;
 
     function connectToDatabase() { // create a function for connect database
-        $this->db = new mysqli($this->host, $this->username, $this->password, $this->nombreBD);
-
-        if (!$this->db->connect_errno > 0) {//Probamos la conexión
+        $this->db = new mysqli($this->host, $this->username, $this->password, $this->nombreBD);        
+        if ($this->db->connect_errno) {//Probamos la conexión
             echo "No se pudo conectar a la BD [" . $this->db->connect_error . "]<br>";
             return false;
-        } else {            
-            echo "Conexión establecida!";
+        } else {
+            echo "Conexión establecida!<br>";
             return true;
         }
     }
@@ -29,10 +28,10 @@ class DatabaseManager {
     function executeQuery($query) {
         if (!$resultado = $this->db->query($query)) {
             echo "Error al ejecutar el query [" . $this->db->error . "]<br>";
-            return false;
+            return NULL;
         } else {
             echo "Query Ejecutado! " . $this->db->affected_rows . " <br>";
-            return $resultado;
+            return $this->db;
         }
     }
 
