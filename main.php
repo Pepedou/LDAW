@@ -36,7 +36,7 @@ Released   : 20130602
                 <div id="menu">
                     <ul>
                         <li class="current_page_item"><a href="#" accesskey="1" title="">Homepage</a></li>
-                        <li><a href="#" accesskey="2" title="">Portfolio</a></li>
+                        <li><a href="generaDespachos.php" accesskey="2" title="">Despachos</a></li>
                         <li><a href="#" accesskey="3" title="">About Us</a></li>
                         <li><a href="logout.php" accesskey="5" title="">Cerrar sesi&oacute;n</a></li>
                     </ul>

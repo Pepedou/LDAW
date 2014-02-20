@@ -27,6 +27,27 @@ class Despacho {
         $this->direccion = "ND";
     }
 
+    public function get_Nombre() {
+
+        if (strlen($this->nombre) > 0) {
+            //$query = "SELECT id FROM " . $this->tabla . " WHERE Nombre = " . $this->nombre;
+            $query = "SELECT id FROM" . $this->tabla ."WHERE Nombre = '$this->nombre'";
+            echo $query;
+            $dbManager = $this->dbManager;
+            if ($dbManager->connectToDatabase()) {
+                $resultado = $dbManager->executeQuery($query);
+                $dbManager->closeConnection();
+                $fila = $resultado->fetch_row();
+                return $fila[0];
+            } else
+                return FALSE;
+        }
+
+        else {
+            echo 'Nombre no valido';
+        }
+    }
+
     public function eliminarDeBD() {
         if ($this->id > -1) {
             $query = "DELETE FROM " . $this->tabla . " WHERE ID = " . $this->id;
@@ -86,4 +107,5 @@ class Despacho {
         $dbManager->closeConnection();
         return $res;
     }
+
 }
