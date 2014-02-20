@@ -1,6 +1,6 @@
 <?php
 
-include ('Connection.php');
+include ('./DatabaseManager.php');
 
 
 /*
@@ -15,45 +15,39 @@ include ('Connection.php');
  * @author estef
  */
 class Abogado {
-   
-    public 
-     $id, $nombre, $apellidop, $apellidom, $telefono,  $mail, 
-     $usuario, $pwd,$id_rol, $id_despacho;
-    
-    public function _construct($user,$pass){
-              
-        if (verifica_usuario){
+
+    public
+            $id, $nombre, $apellidop, $apellidom, $telefono, $mail,
+            $usuario, $pwd, $id_rol, $id_despacho = -1;
+
+    public function _construct($user, $pass) {
+
+        if (verifica_usuario) {
             $this->usuario = $user;
             $this->pwd = $pass;
-        }
-        
-        else{
+        } else {
             echo 'Usuario no valido';
         }
-           
     }
-    
-    public function _destruct($id){
+
+    public function _destruct($id) {
         
     }
-    
-    public function verifica_usuario($user){
-        
-        $dbManager = new DatabaseManager();        
+
+    public function verifica_usuario($user) {
+
+        $dbManager = new DatabaseManager();
         $dbManager->connectToDatabase(); //i created a new object
-        $dbManager->selectDatabase(); 
-        
+        $dbManager->selectDatabase();
+
         $sql = "SELECT ";
-        
     }
-    
-    public function guardar(){
-        
-        $dbManager = new DatabaseManager();        
+
+    public function guardar() {
+
+        $dbManager = new DatabaseManager();
         $dbManager->connectToDatabase(); //i created a new object
-        $dbManager->selectDatabase();       
-        
+        $dbManager->selectDatabase();
     }
-    
-    
+
 }
