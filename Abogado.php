@@ -43,7 +43,7 @@ class Abogado {
         $dbManager->connectToDatabase(); //i created a new object
         $dbManager->selectDatabase(); 
         
-        
+        $sql = "SELECT ";
         
     }
     
