@@ -1,6 +1,6 @@
 <?php
 
-include ('Connection.php');
+include ('DatabaseManager.php');
 
 
 /*
@@ -20,15 +20,18 @@ class Abogado {
             $id, $nombre, $apellidop, $apellidom, $telefono, $mail,
             $usuario, $pwd, $id_rol, $id_despacho;
 
-    public function _construct($user, $pass) {
-
-        if (verifica_usuario) {
+    public function _construct($user, $pass, $id_despacho) {
+       
+        if ($this->verifica_usuario($user)) {
             $this->usuario = $user;
             $this->pwd = $pass;
+            $this->id_despacho = $id_despacho;
             echo 'Usuario Nuevo';
-        } else {
+        } 
+        else {
             echo 'Usuario no valido';
         }
+     
     }
 
     public function _destruct($id) {
@@ -36,6 +39,12 @@ class Abogado {
     }
 
     public function verifica_usuario($user) {
+        
+        if (strlen($user) === 0 || strlen($user)> 20){
+            echo 'Longitud de usuario no valida';
+        }
+        
+        else{
 
         $dbManager = new DatabaseManager();
         $dbManager->connectToDatabase(); //i created a new object
@@ -44,26 +53,28 @@ class Abogado {
         $sql = "SELECT Usuario FROM Abogados WHERE Usuario = $user";
         $result = $dbManager->executeQuery($sql);
         $num = mysql_num_rows($result);
+        echo $num;
 
         if ($num > 0) {
 
-            return 1; //se puede usar el usuario
+            return 0; //se puede usar el usuario
         } else {
 
-            return 0; //usuario ocupado
+            return 1; //usuario ocupado
         }
 
         $dbManager->closeConnection();
+        }
     }
 
-    public function guardar() {
+    public function almacenarEnBD() {
 
         $dbManager = new DatabaseManager();
         $dbManager->connectToDatabase(); //i created a new object
         $dbManager->selectDatabase();
 
         $sql = "INSERT INTO Abogados () values ( $nombre, $apellidop, $apellidom, $telefono,  $mail, 
-                $usuario, sha1($pwd),$id_rol, $id_despacho;)";
+                $usuario, sha1($pwd),$id_rol, $id_despacho)";
 
         $result = $dbManager->executeQuery($sql);
 
