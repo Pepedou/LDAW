@@ -1,42 +1,27 @@
 <!-- verificacion de usuario -->
 <?php
-//php5 ob_start();
-$host = "localhost"; // Host
-$username = "1015544_user"; // usuario mysql
-$password = "1015544"; // password
-$db_name = "ldaw_1015544"; // Database
-$tbl_name = "Usuarios"; // tabla
-// nos conectamos a la BD
-$enlace = mysql_connect("$host", "$username", "$password") or die("No puedo conectarme");
-mysql_select_db("$db_name") or die("No puedo seleccionar la DB");
+require './DatabaseManager.php';
 
-// cachamos usuario y password
-$myusername = $_POST['usuario'];
-$mypassword = $_POST['pwd'];
+$tabla = "Abogados";
+$campos = "id";
+$db = new DatabaseManager();
 
-// Para eliminar posibles inyecciones a MySQL
-$myusername = stripslashes($myusername);
-$mypassword = stripslashes($mypassword);
-$myusername = mysql_real_escape_string($myusername);
-$mypassword = mysql_real_escape_string($mypassword);
+// Obtenemos usuario y password y filtramos para eliminar posibles inyecciones a MySQL
+$myusername = mysqli_real_escape_string(filter_input(INPUT_POST, 'usuario', FILTER_SANITIZE_MAGIC_QUOTES));
+$mypassword = mysqli_real_escape_string(filter_input(INPUT_POST, 'pwd', FILTER_SANITIZE_MAGIC_QUOTES));
 
-$sql = "SELECT * FROM $tbl_name WHERE usuario='$myusername' and pwd=sha1('$mypassword')";
 
-$result = mysql_query($sql);
+$sql = "SELECT * FROM $tabla WHERE Usuario='$myusername' and Contrasena=sha1('$mypassword')";
 
-$fila = mysql_fetch_array($result, MYSQL_ASSOC);
+$db->connectToDatabase() or die("No se pudo obtener acceso a la base de datos.");
 
-$nombre = $fila['nombre'];
-
-// Contamos las lineas regresadas por el query
-$count = mysql_num_rows($result);
-
-mysql_free_result($resultado);
-
-mysql_close($enlace);
+$result = $db->executeQuery($sql);
 
 // Si el resultado hace match $myusername y $mypassword, nos debe de regrasar 1
-if ($count == 1) {
+if ($result->num_rows === 0) {
+    $fila = $result->fetch_assoc();
+    $nombre = $fila['Nombre'];
+
     // Registramos $myusername, $mypassword y redireccionamos a "login_exitoso.php"
     session_register("myusername");
     session_register("mypassword");
@@ -44,5 +29,6 @@ if ($count == 1) {
     header("location:main.php");
 } else {
     echo "Usuario o password incorrecto";
+    header("Refresh: 3; url=index.html");
 }
 ?>
