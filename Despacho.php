@@ -12,6 +12,10 @@
  * @author José Luis Valencia Herrera     A01015544
  */
 class Despacho {
-    private $id, $nombre, $apellidoP, $apellidoM, $telefono, $email, $usuario, $pwd, $idRol, $idDespacho;
+    public $id, $nombre, $direccion;    
     
+    public function __construct() {
+        echo "Nuevo despacho!";
+        
+    }
 }
