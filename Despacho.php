@@ -15,16 +15,30 @@ include './DatabaseManager.php';
 
 class Despacho {
 
-    public $id, $nombre, $direccion;
+    public $id = -1, $nombre, $direccion;
+    private $dbManager,
+            $tabla = "Despachos",
+            $campos = "Nombre,Direccion";
 
     public function __construct() {
         echo "Nuevo despacho!<br>";
+        $this->dbManager = new DatabaseManager();
         $this->nombre = "Despacho" . $this->id;
         $this->direccion = "ND";
     }
 
     public function eliminarDeBD() {
-        
+        if ($this->id > -1) {
+            $query = "DELETE FROM " . $this->tabla . " WHERE ID = " . $this->id;
+            $dbManager = $this->dbManager;
+            if ($dbManager->connectToDatabase()) {
+                $dbManager->executeQuery($query);
+                $dbManager->closeConnection();
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 
     public function validarNombre() {
@@ -52,17 +66,15 @@ class Despacho {
     }
 
     public function almacenarEnBD() {
-        $tabla = "Despachos";
-        $campos = "Nombre,Direccion";
-        $query = "INSERT INTO " . $tabla . " (" . $campos . ") VALUES ('" . $this->nombre . "','" . $this->direccion . "')";
+        $dbManager = $this->dbManager;
+        $query = "INSERT INTO " . $this->tabla . " (" . $this->campos . ") VALUES ('" . $this->nombre . "','" . $this->direccion . "')";
         $res = false;
         if ($this->validarDatos()) {
-            $dbManager = new DatabaseManager();
             $dbManager->connectToDatabase();
             $resultado = $dbManager->executeQuery($query);
-            if ($resultado === 1) {
-                echo "Despacho guardado en BD!<br>";                
-                $res =  true;
+            if ($resultado) {
+                echo "Despacho guardado en BD!<br>";
+                $res = true;
             } else {
                 echo "No se pudo guardar en BD!<br>";
                 $res = false;
@@ -70,9 +82,8 @@ class Despacho {
         } else {
             echo "Los datos están mal!<br>";
             $res = false;
-        }        
+        }
         $dbManager->closeConnection();
         return $res;
     }
-
 }

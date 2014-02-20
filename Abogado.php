@@ -19,10 +19,6 @@ class Abogado {
         }
     }
 
-    public function _destruct($id) {
-        
-    }
-
     public function _devuelveDespacho() {
 
         $dbManager = new DatabaseManager();
