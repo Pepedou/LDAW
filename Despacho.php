@@ -12,10 +12,30 @@
  * @author José Luis Valencia Herrera     A01015544
  */
 class Despacho {
-    public $id, $nombre, $direccion;    
-    
+
+    public $id, $nombre, $direccion;
+
     public function __construct() {
         echo "Nuevo despacho!";
-        
+        $this->id = 1;
+        $this->nombre = "Despacho" + $this->id;
+        $this->direccion = "ND";
     }
+
+    public function validarNombre() {
+        if (strlen($this->nombre) === 0 || strlen($this->nombre) > 50) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function validarDireccion() {
+        if (strlen($this->direccion) === 0 || strlen($this->direccion) > 70) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
 }
