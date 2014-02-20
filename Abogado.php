@@ -1,31 +1,16 @@
 <?php
 
-<<<<<<< HEAD
+
 include ('DatabaseManager.php');
-=======
-include ('./DatabaseManager.php');
->>>>>>> a8fe4eac9dcb3e2d6c3471c3b9c2bdd3bbbff289
 
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Clase para añadir, borrar, actualizar o borrar Abogados de la base de datos.
- *
- * @author estef
- */
 class Abogado {
 
     public
             $id, $nombre, $apellidop, $apellidom, $telefono, $mail,
-<<<<<<< HEAD
-            $usuario, $pwd, $id_rol, $id_despacho;
 
-    public function _construct($user, $pass, $id_despacho) {
+            $usuario, $pwd, $id_rol, $id_despacho=1;
+
+    public function _construct($user, $pass) {
        
         if ($this->verifica_usuario($user)) {
             $this->usuario = $user;
@@ -37,78 +22,58 @@ class Abogado {
             echo 'Usuario no valido';
         }
      
-=======
-            $usuario, $pwd, $id_rol, $id_despacho = -1;
-
-    public function _construct($user, $pass) {
-
-        if (verifica_usuario) {
-            $this->usuario = $user;
-            $this->pwd = $pass;
-        } else {
-            echo 'Usuario no valido';
-        }
->>>>>>> a8fe4eac9dcb3e2d6c3471c3b9c2bdd3bbbff289
     }
-
+    
     public function _destruct($id) {
         
     }
 
     public function verifica_usuario($user) {
-<<<<<<< HEAD
+
         
         if (strlen($user) === 0 || strlen($user)> 20){
             echo 'Longitud de usuario no valida';
         }
         
         else{
-=======
->>>>>>> a8fe4eac9dcb3e2d6c3471c3b9c2bdd3bbbff289
+
 
         $dbManager = new DatabaseManager();
-        $dbManager->connectToDatabase(); //i created a new object
-        $dbManager->selectDatabase();
+        $dbManager->connectToDatabase();   
+        
+        $query = "SELECT Usuario FROM Abogados WHERE Usuario='$user'";
+        
+        $resultado = $dbManager->executeQuery($query);       
 
-<<<<<<< HEAD
-        $sql = "SELECT Usuario FROM Abogados WHERE Usuario = $user";
-        $result = $dbManager->executeQuery($sql);
-        $num = mysql_num_rows($result);
-        echo $num;
-
-        if ($num > 0) {
-
-            return 0; //se puede usar el usuario
+        if ( ($resultado->affected_rows) > 0) {
+             
+            return 0; 
+            
         } else {
 
-            return 1; //usuario ocupado
+            return 1; 
         }
 
         $dbManager->closeConnection();
         }
     }
+
 
     public function almacenarEnBD() {
-=======
-        $sql = "SELECT ";
-    }
 
-    public function guardar() {
->>>>>>> a8fe4eac9dcb3e2d6c3471c3b9c2bdd3bbbff289
 
         $dbManager = new DatabaseManager();
-        $dbManager->connectToDatabase(); //i created a new object
-        $dbManager->selectDatabase();
-<<<<<<< HEAD
+        $dbManager->connectToDatabase();  
 
-        $sql = "INSERT INTO Abogados () values ( $nombre, $apellidop, $apellidom, $telefono,  $mail, 
-                $usuario, sha1($pwd),$id_rol, $id_despacho)";
 
-        $result = $dbManager->executeQuery($sql);
+        $sql = "INSERT INTO Abogados (Nombre,ApellidoP, ApellidoM, Telefono, Email, Usuario, Contrasena,id_Rol, id_Despacho) values ( '$this->nombre', '$this->apellidop', '$this->apellidom', '$this->telefono',  '$this->mail', 
+                '$this->usuario', sha1('$this->pwd'),$this->id_rol, $this->id_despacho)";
+        echo $sql;
+
+        $dbManager->executeQuery($sql);
 
         $dbManager->closeConnection();
-=======
->>>>>>> a8fe4eac9dcb3e2d6c3471c3b9c2bdd3bbbff289
+
     }
 
 }

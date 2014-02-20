@@ -27,6 +27,7 @@ class Caso {
     public function validarNombre() {
 
         if (strlen($this->nombre) === 0 || strlen($this->nombre) > 100) {
+            echo 'Nombre muy largo';
             return FALSE;
         } else {
             return TRUE;
@@ -39,11 +40,11 @@ class Caso {
         if ($this->validarNombre()) {
 
             $dbManager = new DatabaseManager();
-            $dbManager->connectToDatabase(); //i created a new object
-            $dbManager->selectDatabase();
-
-            $sql = "INSERT INTO Abogados (Nombre, Status, id_Despacho)values($nombre, $status, $id_despacho)";
-            $result = $dbManager->executeQuery($sql);
+            $dbManager->connectToDatabase();
+            
+            $sql = "INSERT INTO Casos (Nombre,id_Despacho)values('$this->nombre',$this->id_despacho)";
+            echo $sql;
+            $dbManager->executeQuery($sql);
 
             $dbManager->closeConnection();
         }
