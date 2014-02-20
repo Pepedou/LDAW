@@ -1,30 +1,21 @@
 <?php
 
 include ('./DatabaseManager.php');
+include ('./Despacho.php');
 
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Clase para añadir, borrar, actualizar o borrar Abogados de la base de datos.
- *
- * @author estef
- */
 class Abogado {
 
     public
             $id, $nombre, $apellidop, $apellidom, $telefono, $mail,
-            $usuario, $pwd, $id_rol, $id_despacho = -1;
+            $usuario, $pwd, $id_rol, $id_despacho = 1;
 
     public function _construct($user, $pass) {
 
-        if (verifica_usuario) {
+        if ($this->verifica_usuario($user)) {
             $this->usuario = $user;
             $this->pwd = $pass;
+            $this->id_despacho = $id_despacho;
+            echo 'Usuario Nuevo';
         } else {
             echo 'Usuario no valido';
         }
@@ -34,20 +25,61 @@ class Abogado {
         
     }
 
-    public function verifica_usuario($user) {
+    public function _devuelveDespacho() {
 
         $dbManager = new DatabaseManager();
-        $dbManager->connectToDatabase(); //i created a new object
-        $dbManager->selectDatabase();
+        $dbManager->connectToDatabase();
 
-        $sql = "SELECT ";
+        $despacho = new Despacho();
+
+        $query = "SELECT * FROM Despachos WHERE id=$this->id_despacho";
+        /*$resultado = $dbManager->executeQuery($query);*/
+        
+        
+        
     }
 
-    public function guardar() {
+    public function verifica_usuario($user) {
+
+
+        if (strlen($user) === 0 || strlen($user) > 20) {
+            echo 'Longitud de usuario no valida';
+        } else {
+
+
+            $dbManager = new DatabaseManager();
+            $dbManager->connectToDatabase();
+
+            $query = "SELECT Usuario FROM Abogados WHERE Usuario='$user'";
+
+            $resultado = $dbManager->executeQuery($query);
+
+            if (($resultado->affected_rows) > 0) {
+
+                return 0;
+            } else {
+
+                return 1;
+            }
+
+            $dbManager->closeConnection();
+        }
+    }
+
+    public function almacenarEnBD() {
+
 
         $dbManager = new DatabaseManager();
-        $dbManager->connectToDatabase(); //i created a new object
-        $dbManager->selectDatabase();
+        $dbManager->connectToDatabase();
+
+
+        $sql = "INSERT INTO Abogados (Nombre,ApellidoP, ApellidoM, Telefono, Email, Usuario, Contrasena,id_Rol, id_Despacho) values ( '$this->nombre', '$this->apellidop', '$this->apellidom', '$this->telefono',  '$this->mail', 
+                '$this->usuario', sha1('$this->pwd'),$this->id_rol, $this->id_despacho)";
+        echo $sql;
+
+        $dbManager->executeQuery($sql);
+
+        $dbManager->closeConnection();
     }
 
 }
