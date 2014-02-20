@@ -17,7 +17,7 @@ class DatabaseManager {
     function connectToDatabase() { // create a function for connect database
         $this->db = new mysqli($this->host, $this->username, $this->password, $this->nombreBD);
 
-        if (!$this->db->connect_errno > 0) {//Probamos la conexión
+        if ($this->db->connect_errno) {//Probamos la conexión
             echo "No se pudo conectar a la BD [" . $this->db->connect_error . "]<br>";
             return false;
         } else {            

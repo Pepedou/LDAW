@@ -86,5 +86,4 @@ class Despacho {
         $dbManager->closeConnection();
         return $res;
     }
-
 }
