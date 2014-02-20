@@ -1,7 +1,5 @@
 <?php
 
-include ('./DatabaseManager.php');
-include ('./Despacho.php');
 
 class Abogado {
 
@@ -53,13 +51,15 @@ class Abogado {
             $query = "SELECT Usuario FROM Abogados WHERE Usuario='$user'";
 
             $resultado = $dbManager->executeQuery($query);
-
-            if (($resultado->affected_rows) > 0) {
+            //$row = $resultado->fetch_array(MYSQLI_NUM);
+              /* obtener el array de objetos */
+                         
+            if (($resultado->num_rows > 0)) {
 
                 return 0;
             } else {
 
-                return 1;
+                return 1;//sí esta libre para usarse
             }
 
             $dbManager->closeConnection();

@@ -12,6 +12,12 @@ and open the template in the editor.
     <body>
         <?php
         include './Despacho.php';
+        include './Abogado.php';
+
+        $abogado = new Abogado();
+        $abogado->_construct(estef, 123);
+      
+        
         $despacho = new Despacho();
         $despacho->almacenarEnBD();
         ?>
