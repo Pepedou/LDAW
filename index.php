@@ -11,7 +11,10 @@ and open the template in the editor.
     </head>
     <body>
         <?php
-            phpinfo();
+            include 'Abogado.php';
+            $abogado = new Abogado();
+            $abogado->_construct(estef, 123);
+            
         ?>
     </body>
 </html>
