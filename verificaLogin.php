@@ -17,7 +17,7 @@ $db->connectToDatabase() or die("No se pudo obtener acceso a la base de datos.")
 
 $result = $db->executeQuery($sql);
 
-// Si el resultado hace match $myusername y $mypassword, nos debe de regrasar 1
+// Si el resultado hace match $myusername y $mypassword, nos debe de regresar 1
 if ($result->num_rows === 0) {
     $fila = $result->fetch_assoc();
     $nombre = $fila['Nombre'];
@@ -31,4 +31,5 @@ if ($result->num_rows === 0) {
     echo "Usuario o password incorrecto";
     header("Refresh: 3; url=index.html");
 }
+$db->closeConnection();
 ?>
