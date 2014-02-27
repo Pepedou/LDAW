@@ -29,7 +29,6 @@ if (!session_is_registered(myusername)) {
 
 
             }
-
         </script>
     </head>    
     <body onload="mostrar(0);">  
