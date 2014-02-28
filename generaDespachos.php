@@ -71,7 +71,7 @@ if (!session_is_registered(myusername)) {
 
         <div  id="borrar">
 
-            <p>Ingresa el ID del despacho a borrar<p>
+            <p>Ingresa el nombre del despacho a borrar<p>
 
             <form  name="borra_despacho" method="post" action="maneja_despachos.php">
 
@@ -80,7 +80,7 @@ if (!session_is_registered(myusername)) {
                        value="Delete">
 
                 <input type ="text"
-                       name="id">
+                       name="nombre">
 
                 <input type="submit"
                        value="Enviar">

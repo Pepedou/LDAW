@@ -6,29 +6,28 @@ class Abogado {
 
     public
             $id, $nombre, $apellidoP, $apellidoM, $telefono, $mail,
-            $usuario = "", $pwd, $id_rol, $id_despacho = 1;
+            $pwd, $id_rol, $id_despacho = 1;
 
     public function _construct() {
         $this->id = -1;
     }
 
-    public function cargarUsuarioDeBD($usuario) {
+    public function cargarUsuarioDeBD($mail) {
         $dbManager = new DatabaseManager();
         $dbManager->connectToDatabase() or die("No se pudo conectar a la BD.");
         $resul = false;
-        $query = "SELECT * FROM Abogados WHERE Usuario='$usuario'";
+        $query = "SELECT * FROM Abogados WHERE email='$mail'";
 
         $resultado = $dbManager->executeQuery($query);
         if ($resultado->num_rows) {
             $fila = $resultado->fetch_assoc();
             $this->id = $fila['id'];
-            $this->nombre = $fila['Nombre'];
-            $this->apellidoP = $fila['ApellidoP'];
-            $this->apellidoM = $fila['ApellidoM'];
-            $this->telefono = $fila['Telefono'];
-            $this->mail = $fila['Email'];
-            $this->usuario = $fila['Usuario'];
-            $this->pwd = $fila['Contrasena'];
+            $this->nombre = $fila['nombre'];
+            $this->apellidoP = $fila['apellidoP'];
+            $this->apellidoM = $fila['apellidoM'];
+            $this->telefono = $fila['telefono'];
+            $this->mail = $fila['email'];
+            $this->pwd = $fila['contrasena'];
             $this->id_rol = $fila['id_Rol'];
             $this->id_despacho = $fila['id_Despacho'];
             $resul = true;
@@ -37,7 +36,7 @@ class Abogado {
         return $resul;
     }
 
-    public function devuelveDespacho() {
+    public function cargarDespacho() {
         $dbManager = new DatabaseManager();
         $dbManager->connectToDatabase();
 
@@ -48,19 +47,17 @@ class Abogado {
     }
 
     public function verificaUsuario() {
-        if (strlen($this->usuario) === 0 || strlen($this->usuario) > 20) {
+        if (strlen($this->mail) === 0 || strlen($this->mail) > 30) {
             echo 'Longitud de usuario no valida';
             return false;
         } else {
             $dbManager = new DatabaseManager();
             $dbManager->connectToDatabase();
 
-            $query = "SELECT Usuario FROM Abogados WHERE Usuario='$user'";
+            $query = "SELECT email FROM Abogados WHERE email='$this->mail'";
 
             $resultado = $dbManager->executeQuery($query);
-            //$row = $resultado->fetch_array(MYSQLI_NUM);
-            /* obtener el array de objetos */
-
+            
             if (($resultado->num_rows)) {
                 $dbManager->closeConnection();
                 return false;
@@ -75,13 +72,30 @@ class Abogado {
         $dbManager = new DatabaseManager();
         $dbManager->connectToDatabase();
 
-        $sql = "INSERT INTO Abogados (Nombre,ApellidoP, ApellidoM, Telefono, Email, Usuario, Contrasena,id_Rol, id_Despacho) values ( '$this->nombre', '$this->apellidoP', '$this->apellidoM', '$this->telefono',  '$this->mail', 
-                '$this->usuario', sha1('$this->pwd'),$this->id_rol, $this->id_despacho)";
-        echo $sql;
+        $sql = "INSERT INTO Abogados (nombre,apellidoP, apellidoM, telefono, email, contrasena,id_Rol, id_Despacho) values ( '$this->nombre', '$this->apellidoP', '$this->apellidoM', '$this->telefono',  '$this->mail', 
+                sha1('$this->pwd'),$this->id_rol, $this->id_despacho)";
+        //echo $sql;
 
         $dbManager->executeQuery($sql);
 
         $dbManager->closeConnection();
     }
+    
+    public function get_Id($mail){
+        
+        $dbManager = new DatabaseManager();
+        $dbManager->connectToDatabase();
+        
+        $query = "Select id FROM Abogados WHERE email = '$mail' LIMIT 1";
+        $resultado = $dbManager->executeQuery($query);
+        $row = $resultado->fetch_assoc();
+        $dbManager->closeConnection();
+        echo $row;
+        $this->id = $row;
+        
+        
+    }
+    
+    
 
 }
