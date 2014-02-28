@@ -20,8 +20,8 @@ class DatabaseManager {
         if ($this->db->connect_errno) {//Probamos la conexión
             echo "No se pudo conectar a la BD [" . $this->db->connect_error . "]<br>";
             return false;
-        } else {
-            echo "Conexión establecida!<br>";
+        } else {            
+            echo "Conexión establecida!";
             return true;
         }
     }
@@ -29,10 +29,10 @@ class DatabaseManager {
     function executeQuery($query) {
         if (!$resultado = $this->db->query($query)) {
             echo "Error al ejecutar el query [" . $this->db->error . "]<br>";
-            return NULL;
+            return false;
         } else {
             echo "Query Ejecutado! " . $this->db->affected_rows . " <br>";
-            return $this->db;
+            return $resultado;
         }
     }
 
