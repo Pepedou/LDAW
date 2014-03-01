@@ -13,10 +13,11 @@ class Abogado {
     }
 
     public function cargarUsuarioDeBD($mail) {
-        $dbManager = new DatabaseManager();
+        $dbManager = DatabaseManager::getInstance();
         $dbManager->connectToDatabase() or die("No se pudo conectar a la BD.");
         $resul = false;
         $query = "SELECT * FROM Abogados WHERE email='$mail'";
+        print $query;
 
         $resultado = $dbManager->executeQuery($query);
         if ($resultado->num_rows) {
@@ -37,7 +38,7 @@ class Abogado {
     }
 
     public function cargarDespacho() {
-        $dbManager = new DatabaseManager();
+        $dbManager = DatabaseManager::getInstance();
         $dbManager->connectToDatabase();
 
         $despacho = new Despacho();
@@ -51,7 +52,7 @@ class Abogado {
             echo 'Longitud de usuario no valida';
             return false;
         } else {
-            $dbManager = new DatabaseManager();
+            $dbManager = DatabaseManager::getInstance();
             $dbManager->connectToDatabase();
 
             $query = "SELECT email FROM Abogados WHERE email='$this->mail'";
@@ -69,7 +70,7 @@ class Abogado {
     }
 
     public function almacenarEnBD() {
-        $dbManager = new DatabaseManager();
+        $dbManager = DatabaseManager::getInstance();
         $dbManager->connectToDatabase();
 
         $sql = "INSERT INTO Abogados (nombre,apellidoP, apellidoM, telefono, email, contrasena,id_Rol, id_Despacho) values ( '$this->nombre', '$this->apellidoP', '$this->apellidoM', '$this->telefono',  '$this->mail', 
@@ -83,7 +84,7 @@ class Abogado {
     
     public function get_Id($mail){
         
-        $dbManager = new DatabaseManager();
+        $dbManager = DatabaseManager::getInstance();
         $dbManager->connectToDatabase();
         
         $query = "Select id FROM Abogados WHERE email = '$mail' LIMIT 1";

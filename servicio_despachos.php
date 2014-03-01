@@ -3,7 +3,7 @@
 header('content-type: application/json; charset=utf-8');
 include './DatabaseManager.php';
 
-$dbManager = new DatabaseManager();
+$dbManager = DatabaseManager::getInstance();
 $dbManager->connectToDatabase();
 
 
@@ -86,8 +86,6 @@ switch ($op) {
         break;
 
     case "u" :
-
-
         $param = $_GET['param']; //Cambiar a Post
 
         $id = $param['id'];
@@ -97,7 +95,7 @@ switch ($op) {
         $id_M = $param['id_M'];
         $cd = $param['cd'];
         $id_Edo = $param['id_Edo'];
-        $cp = $param['cp'];
+        $cp = $param['cp'];       
 
         $query_dir = "SELECT id_Direccion FROM Despachos WHERE id = '$id'";
         $result_dir = $dbManager->executeQuery($query_dir);
@@ -108,30 +106,8 @@ switch ($op) {
             $query_up = "UPDATE Despachos SET nombre='$nombre' WHERE id='$id'";
             $dbManager->executeQuery($query_up);
         }
-        if (strlen($calle) > 0) {
-            $query_up = "UPDATE Direcciones SET calle='$calle' WHERE id='$id_dir'";
-            $dbManager->executeQuery($query_up);
-        }
-        if (strlen($colonia) > 0) {
-            $query_up = "UPDATE Direcciones SET colonia='$colonia' WHERE id='$id_dir'";
-            $dbManager->executeQuery($query_up);
-        }
-        if (strlen($id_M) > 0) {
-            $query_up = "UPDATE Direcciones SET id_Municipio='$id_M' WHERE id='$id_dir'";
-            $dbManager->executeQuery($query_up);
-        }
-        if (strlen($cd) > 0) {
-            $query_up = "UPDATE Direcciones SET ciudad='$cd' WHERE id='$id_dir'";
-            $dbManager->executeQuery($query_up);
-        }
-        if (strlen($id_Edo) > 0) {
-            $query_up = "UPDATE Direcciones SET id_Estado='$id_Edo' WHERE id='$id_dir'";
-            $dbManager->executeQuery($query_up);
-        }
-        if (strlen($cp) > 0) {
-            $query_up = "UPDATE Direcciones SET cp='$cp' WHERE id='$id_dir'";
-            $dbManager->executeQuery($query_up);
-        }
+        $query_up = "UPDATE Direcciones SET calle = '$calle', colonia = '$colonia', ciudad = '$ciudad', id_Municipio = $id_M, id_Estado = $id_Edo, cp = $cp WHERE id = $id_dir";
+        $dbManager->executeQuery($query_up);
 
         break;
 

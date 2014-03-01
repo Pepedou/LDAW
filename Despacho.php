@@ -22,13 +22,13 @@ class Despacho {
 
     public function __construct() {
         echo "Nuevo despacho!<br>";
-        $this->dbManager = new DatabaseManager();
+        $this->dbManager = DatabaseManager::getInstance();
         $this->nombre = "Despacho" . $this->id;
         $this->direccion = "ND";
     }
 
     public function cargarDespachoDeBD($despacho) {
-        $dbManager = new DatabaseManager();
+        $dbManager = DatabaseManager::getInstance();
         $dbManager->connectToDatabase() or die("No se pudo conectar a la BD.");
         $resul = false;
         $query = "SELECT Nombre,Direccion FROM Despachos WHERE Nombre='$despacho'";
@@ -106,7 +106,7 @@ class Despacho {
     
        public function get_Id($nombre){
         
-        $dbManager = new DatabaseManager();
+        $dbManager = DatabaseManager::getInstance();
         $dbManager->connectToDatabase();
         $query = "Select id FROM Despachos WHERE Nombre = '$nombre' LIMIT 1";
         $resultado = $dbManager->executeQuery($query);

@@ -4,9 +4,13 @@ if (!session_is_registered(myusername)) {
     header("Location: index.html");
 }
 include './Abogado.php';
+include './Debug.php';
 $nombreUsuario = $_COOKIE['usuario'];
+print "Usuario: " . $nombreUsuario;
 $miUsuario = new Abogado();
-$miUsuario->cargarUsuarioDeBD($nombreUsuario);
+$exito = $miUsuario->cargarUsuarioDeBD($nombreUsuario);
+$debug = Debug::getInstance();
+$debug->alertAndLog($miUsuario->nombre);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!--
@@ -49,7 +53,7 @@ Released   : 20130602
                 <div id="content">
                     <div class="article borders">
                         <div class="title">
-                            <h2>Bienvenido <?php echo $miUsuario->nombre ?></h2>
+                            <h2>Bienvenido <?php if($exito) echo $miUsuario->nombre; else echo "Usuario(a)"; ?></h2>
                         </div>
                         <table border="0" width="100%">
                             <tr>

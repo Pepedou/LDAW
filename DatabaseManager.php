@@ -7,26 +7,28 @@
  */
 class DatabaseManager {
 
-    private
-            $host = "localhost",
-            $username = "1018566_user",
-            $password = "1018566",
-            $nombreBD = "ldaw@1018566",
-            $db;
+    static private $instancia = NULL;
 
-    function connectToDatabase() { // create a function for connect database
+    public static function getInstance() {
+        if (self::$instancia == NULL) {
+            self::$instancia = new DatabaseManager();
+        }
+        return self::$instancia;
+    }
+
+    public function connectToDatabase() { // create a function for connect database
         $this->db = new mysqli($this->host, $this->username, $this->password, $this->nombreBD);
 
         if ($this->db->connect_errno) {//Probamos la conexión
             echo "No se pudo conectar a la BD [" . $this->db->connect_error . "]<br>";
             return false;
-        } else {            
+        } else {
             echo "Conexión establecida!";
             return true;
         }
     }
 
-    function executeQuery($query) {
+    public function executeQuery($query) {
         if (!$resultado = $this->db->query($query)) {
             echo "Error al ejecutar el query [" . $this->db->error . "]<br>";
             return false;
@@ -36,10 +38,26 @@ class DatabaseManager {
         }
     }
 
-    function closeConnection() { // close the connection
+    public function closeConnection() { // close the connection
         $this->db->close();
         echo "Conexión terminada<br>";
     }
+
+    private function __construct() {
+        $this->host = "localhost";
+        $this->username = "1018566_user";
+        $this->password = "1018566";
+        $this->nombreBD = "ldaw@1018566";
+        $this->db;
+    }
+
+    private
+            $host,
+            $username,
+            $password,
+            $nombreBD,
+            $db;
+
 }
 ?>
 
