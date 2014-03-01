@@ -103,5 +103,19 @@ class Despacho {
         $dbManager->closeConnection();
         return $res;
     }
+    
+       public function get_Id($nombre){
+        
+        $dbManager = new DatabaseManager();
+        $dbManager->connectToDatabase();
+        $query = "Select id FROM Despachos WHERE Nombre = '$nombre' LIMIT 1";
+        $resultado = $dbManager->executeQuery($query);
+        $row = mysql_fetch_assoc($resultado);
+        $dbManager->closeConnection();
+        echo $row;
+        $this->id = $row;
+        
+        
+    }
 
 }
