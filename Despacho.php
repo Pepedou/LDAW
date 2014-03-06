@@ -11,24 +11,23 @@
  *
  * @author José Luis Valencia Herrera     A01015544
  */
-include './DatabaseManager.php';
+include_once './EntidadBD.php';
 
-class Despacho {
+class Despacho extends EntidadBD {
 
-    public $id = -1, $nombre, $direccion;
-    private $dbManager,
-            $tabla = "Despachos",
+    public $nombre, $direccion;
+    private $tabla = "Despachos",
             $campos = "Nombre,Direccion";
 
     public function __construct() {
-        echo "Nuevo despacho!<br>";
-        $this->dbManager = DatabaseManager::getInstance();
+        parent::__construct();
+        $this->id = -1;
         $this->nombre = "Despacho" . $this->id;
         $this->direccion = "ND";
     }
 
-    public function cargarDespachoDeBD($despacho) {
-        $dbManager = DatabaseManager::getInstance();
+    public function cargarDeBD($despacho) {
+        $dbManager = $this->dbManager;
         $dbManager->connectToDatabase() or die("No se pudo conectar a la BD.");
         $resul = false;
         $query = "SELECT Nombre,Direccion FROM Despachos WHERE Nombre='$despacho'";
@@ -103,19 +102,75 @@ class Despacho {
         $dbManager->closeConnection();
         return $res;
     }
-    
-       public function get_Id($nombre){
-        
-        $dbManager = DatabaseManager::getInstance();
+
+    public function get_Id($nombre) {
+        $dbManager = $this->dbManager;
         $dbManager->connectToDatabase();
         $query = "Select id FROM Despachos WHERE Nombre = '$nombre' LIMIT 1";
         $resultado = $dbManager->executeQuery($query);
         $row = mysql_fetch_assoc($resultado);
         $dbManager->closeConnection();
-        echo $row;
-        $this->id = $row;
+        $this->id = $row['id'];
+    }
+
+    public function guardarDatos(array $misDatos = array()) {
+        $this->nombre = $misDatos['nombre'];
+        $this->direccion = $misDatos['direccion'];
+    }
+
+    public function procesarForma() {
+        $this->nombre = $_REQUEST['nombre'];
+        $this->direccion = $_REQUEST['direccion'];
+    }
+
+    public function generarFormaInsercion() {
+        print
+                "<form action='prueba2.php' method='get'>
+            <table>            
+                <tr>
+                    <td>
+                        <p>Nombre del despacho</p>
+                    </td>
+                    <td>
+                        <input type='text' name='nombre' />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Dirección del despacho</p>
+                    </td>
+                    <td>
+                        <input type='text' name='direccion' />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type='submit' value='Aceptar' />
+                    </td>
+                </tr>
+            </table>
+         </form>
+        ";
+    }
+
+    public function generarFormaActualizacion() {
         
-        
+    }
+
+    public function generarFormaBorrado() {
+        $dbM = $this->dbManager;
+        $dbM->connectToDatabase();
+        $query = "Select id,nombre FROM Despachos";
+        $resultado = $dbM->executeQuery($query);
+        print
+                "<select>";
+        while ($row = $resultado->fetch_assoc()) {
+            print
+            "<option value=".$row['id'].">".$row['nombre']."</option>";            
+        }
+        print
+                "</select>";
+        $dbM->closeConnection();
     }
 
 }

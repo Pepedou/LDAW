@@ -6,7 +6,6 @@ if (!session_is_registered(myusername)) {
 include './Abogado.php';
 include './Debug.php';
 $nombreUsuario = $_COOKIE['usuario'];
-print "Usuario: " . $nombreUsuario;
 $miUsuario = new Abogado();
 $exito = $miUsuario->cargarUsuarioDeBD($nombreUsuario);
 $debug = Debug::getInstance();

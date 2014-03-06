@@ -5,6 +5,9 @@
  *
  * @author estef
  */
+
+include './Debug.php';
+
 class DatabaseManager {
 
     static private $instancia = NULL;
