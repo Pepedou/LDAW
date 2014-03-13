@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Despacho
  *
@@ -119,13 +113,19 @@ class Despacho extends EntidadBD {
     }
 
     public function procesarForma() {
-        $this->nombre = $_REQUEST['nombre'];
-        $this->direccion = $_REQUEST['direccion'];
+        if (isset($_REQUEST['nombre'], $_REQUEST['direccion'])) {
+            $this->nombre = $_REQUEST['nombre'];
+            $this->direccion = $_REQUEST['direccion'];
+            Debug::getInstance()->alert("Despacho nuevo: " . $this->nombre);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function generarFormaInsercion() {
         print
-                "<form action='prueba2.php' method='get'>
+                "<form action='altas.php' method='get'>
             <table>            
                 <tr>
                     <td>
@@ -166,7 +166,7 @@ class Despacho extends EntidadBD {
                 "<select>";
         while ($row = $resultado->fetch_assoc()) {
             print
-            "<option value=".$row['id'].">".$row['nombre']."</option>";            
+                    "<option value=" . $row['id'] . ">" . $row['nombre'] . "</option>";
         }
         print
                 "</select>";
