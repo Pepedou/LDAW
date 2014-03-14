@@ -19,7 +19,7 @@ class Debug {
     public function alert($texto) {
         echo " 
                 <script type=\"text/javascript\"> 
-                    alert(\"Debug: $texto\"); 
+                    alert(\"[Debug] $texto\"); 
                 </script>";
     }
 
@@ -29,14 +29,14 @@ class Debug {
 
         if (is_writable($nombreArchivo)) {
             if (!$archivo = fopen($nombreArchivo, 'a')) {
-                $this->alert("No se puede abrir el archivo ($nombreArchivo). Verifica que los permisos sean 766.");
+                $this->alert("No se puede abrir el archivo ($nombreArchivo). Verifique que los permisos sean 766.");
                 return false;
             }
 
             // Escribir $texto a nuestro archivo abierto.
             //Agregar hora
             if (fwrite($archivo, $texto) === FALSE) {
-                $this->alert("No se puede escribir en el archivo ($nombreArchivo). Verifica que los permisos sean 766.");
+                $this->alert("No se puede escribir en el archivo ($nombreArchivo). Verifique que los permisos sean 766.");
                 return false;
             }
             fclose($archivo);

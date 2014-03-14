@@ -1,15 +1,24 @@
 <?php
 
-include './DatabaseManager.php';
+include_once './EntidadBD.php';
 
-class Abogado {
+class Abogado extends EntidadBD {
 
-    public
-            $id, $nombre, $apellidoP, $apellidoM, $telefono, $mail,
-            $pwd, $id_rol, $id_despacho = 1;
+    static private $tabla_static = "Abogados";
 
     public function _construct() {
-        $this->id = -1;
+        $this->tabla = static::$tabla_static;
+        $this->atributos = array(
+            "id" => -1,
+            "nombre" => "",
+            "apellidoP" => "",
+            "apellidoM" => "",
+            "telefono" => 0,
+            "email" => "",
+            "contrasena" => "",
+            "id_Rol" => -1,
+            "id_Despacho" => -1,
+            "visible" => 1);
     }
 
     public function cargarUsuarioDeBD($mail) {
@@ -58,7 +67,7 @@ class Abogado {
             $query = "SELECT email FROM Abogados WHERE email='$this->mail'";
 
             $resultado = $dbManager->executeQuery($query);
-            
+
             if (($resultado->num_rows)) {
                 $dbManager->closeConnection();
                 return false;
@@ -81,22 +90,45 @@ class Abogado {
 
         $dbManager->closeConnection();
     }
-    
-    public function get_Id($mail){
-        
-        $dbManager = DatabaseManager::getInstance();
-        $dbManager->connectToDatabase();
-        
-        $query = "Select id FROM Abogados WHERE email = '$mail' LIMIT 1";
-        $resultado = $dbManager->executeQuery($query);
-        $row = $resultado->fetch_assoc();
-        $dbManager->closeConnection();
-        echo $row;
-        $this->id = $row;
-        
+
+    public function cargarDeBD($entidad) {
         
     }
-    
-    
+
+    public function eliminarDeBD() {
+        
+    }
+
+    public function generarFormaActualizacion() {
+        
+    }
+
+    public function generarFormaBorrado() {
+        
+    }
+
+    public function generarFormaInsercion() {
+        
+    }
+
+    public function guardarDatos($misDatos) {
+        
+    }
+
+    public function procesarForma() {
+        
+    }
+
+    public function validarDatos() {
+        
+    }
+
+    public static function getID($discriminante, $valor) {
+        
+    }
+
+    public static function getID_MultDiscr($arregloDiscrValor) {
+        
+    }
 
 }
