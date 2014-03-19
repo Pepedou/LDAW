@@ -1,64 +1,28 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of Despacho
- *
- * @author José Luis Valencia Herrera     A01015544
- */
+* Description of Despacho
+*
+* @author José Luis Valencia Herrera A01015544
+*/
 include_once './EntidadBD.php';
 
 class Despacho extends EntidadBD {
 
-    public $nombre, $direccion;
-    private $tabla = "Despachos",
-            $campos = "Nombre,Direccion";
+    static private $tabla_static = "Despachos";
 
     public function __construct() {
         parent::__construct();
-        $this->id = -1;
-        $this->nombre = "Despacho" . $this->id;
-        $this->direccion = "ND";
-    }
-
-    public function cargarDeBD($despacho) {
-        $dbManager = $this->dbManager;
-        $dbManager->connectToDatabase() or die("No se pudo conectar a la BD.");
-        $resul = false;
-        $query = "SELECT Nombre,Direccion FROM Despachos WHERE Nombre='$despacho'";
-
-        $resultado = $dbManager->executeQuery($query);
-        if ($resultado->num_rows) {
-            $fila = $resultado->fetch_assoc();
-            $this->id = $fila['id'];
-            $this->nombre = $fila['Nombre'];
-            $this->direccion = $fila['Direccion'];
-            $resul = true;
-        }
-        $dbManager->closeConnection();
-        return $resul;
-    }
-
-    public function eliminarDeBD() {
-        if ($this->id > -1) {
-            $query = "DELETE FROM " . $this->tabla . " WHERE ID = " . $this->id;
-            $dbManager = $this->dbManager;
-            $dbManager->connectToDatabase() or die("No se pudo conectar a la BD");
-            $dbManager->executeQuery($query);
-            $dbManager->closeConnection();
-            return true;
-        } else {
-            return false;
-        }
+        $this->tabla = static::$tabla_static;
+        $this->atributos = array(
+            "id" => -1,
+            "nombre" => "NULL",
+            "id_Direccion" => -1);
+        $this->discr = "nombre";
     }
 
     public function validarNombre() {
-        if (strlen($this->nombre) === 0 || strlen($this->nombre) > 50) {
+        if (strlen($this->atributos['nombre']) === 0 || strlen($this->atributos['nombre']) > 50) {
             return false;
         } else {
             return true;
@@ -66,7 +30,7 @@ class Despacho extends EntidadBD {
     }
 
     public function validarDireccion() {
-        if (strlen($this->direccion) === 0 || strlen($this->direccion) > 70) {
+        if (strlen($this->atributos['id_Direccion']) === 0 || strlen($this->atributos['id_Direccion']) > 70) {
             return false;
         } else {
             return true;
@@ -81,77 +45,25 @@ class Despacho extends EntidadBD {
         }
     }
 
-    public function almacenarEnBD() {
-        $dbManager = $this->dbManager;
-        $query = "INSERT INTO " . $this->tabla . " (" . $this->campos . ") VALUES ('" . $this->nombre . "','" . $this->direccion . "')";
-        $res = false;
-        if ($this->validarDatos()) {
-            $dbManager->connectToDatabase();
-            $resultado = $dbManager->executeQuery($query);
-            if ($resultado) {
-                echo "Despacho guardado en BD!<br>";
-                $res = true;
-            } else {
-                echo "No se pudo guardar en BD!<br>";
-                $res = false;
-            }
-        } else {
-            echo "Los datos están mal!<br>";
-            $res = false;
-        }
-        $dbManager->closeConnection();
-        return $res;
-    }
-
-    public function get_Id($nombre) {
-        $dbManager = $this->dbManager;
-        $dbManager->connectToDatabase();
-        $query = "Select id FROM Despachos WHERE Nombre = '$nombre' LIMIT 1";
-        $resultado = $dbManager->executeQuery($query);
-        $row = mysql_fetch_assoc($resultado);
-        $dbManager->closeConnection();
-        $this->id = $row['id'];
-    }
-
-    public function guardarDatos(array $misDatos = array()) {
-        $this->nombre = $misDatos['nombre'];
-        $this->direccion = $misDatos['direccion'];
-    }
-
     public function procesarForma() {
-        $this->nombre = $_REQUEST['nombre'];
-        $this->direccion = $_REQUEST['direccion'];
+        if (isset($_REQUEST['nombre'], $_REQUEST['id_Direccion'])) {
+            $this->atributos['nombre'] = $_REQUEST['nombre'];
+            $this->atributos['id_Direccion'] = $_REQUEST['id_Direccion'];
+            Debug::getInstance()->alert("Despacho nuevo: " . $this->atributos['nombre']);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function generarFormaInsercion() {
-        print
-                "<form action='prueba2.php' method='get'>
-            <table>            
-                <tr>
-                    <td>
-                        <p>Nombre del despacho</p>
-                    </td>
-                    <td>
-                        <input type='text' name='nombre' />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Dirección del despacho</p>
-                    </td>
-                    <td>
-                        <input type='text' name='direccion' />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type='submit' value='Aceptar' />
-                    </td>
-                </tr>
-            </table>
-         </form>
-        ";
+        $BASE_DIR = '/home/ldaw-1018566/html_container/content/Proyecto/';
+        $smarty = new Smarty;
+        $smarty->template_dir = '/home/ldaw-1018566/html_container/content/Proyecto/Smarty/demo/templates/';
+        $smarty->compile_dir = '/home/ldaw-1018566/html_container/content/Proyecto/Smarty/demo/templates_c/';
+        $smarty->display($BASE_DIR.'Vistas/Despachos/Vista_Despachos.tpl');
     }
+
 
     public function generarFormaActualizacion() {
         
@@ -166,11 +78,50 @@ class Despacho extends EntidadBD {
                 "<select>";
         while ($row = $resultado->fetch_assoc()) {
             print
-            "<option value=".$row['id'].">".$row['nombre']."</option>";            
+                    "<option value=" . $row['id'] . ">" . $row['nombre'] . "</option>";
         }
         print
                 "</select>";
         $dbM->closeConnection();
     }
 
+    public static function getID($discriminante, $valor) {
+        $dbManager = DatabaseManager::getInstance();
+        $dbManager->connectToDatabase();
+        $query = "SELECT id FROM " . static::$tabla_static . " WHERE $discriminante = '$valor' LIMIT 1";
+        $resultado = $dbManager->executeQuery($query);
+        $dbManager->closeConnection();
+        if ($resultado != false) {
+            if ($resultado->num_rows > 0) {
+                $row = $resultado->fetch_assoc();
+                return $row['id'];
+            } else {
+                return -1;
+            }
+        }
+        Debug::getInstance()->alert("EntidadBD::getID => No se encontró el ID");
+        return -1;
+    }
+
+    public static function getID_MultDiscr($arregloDiscrValor) {
+        foreach ($arregloDiscrValor as $campo => $valor) {
+            $condicion .= "$campo = '$valor' AND ";
+        }
+        $condicion = preg_replace('/\W\w+\s*(\W*)$/', '$1', $condicion); //Elimina el último AND
+
+        $query = "SELECT id FROM " . static::$tabla_static . " WHERE $condicion LIMIT 1";
+        $resultado = $this->dbExecute($query);
+        if ($resultado != false) {
+            if ($resultado->num_rows > 0) {
+                $row = $resultado->fetch_assoc();
+                return $row['id'];
+            } else {
+                return -1;
+            }
+        }
+        Debug::getInstance()->alert("EntidadBD::getID => No se encontró el ID");
+        return -1;
+    }
+
 }
+
