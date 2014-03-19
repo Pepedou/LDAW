@@ -1,4 +1,5 @@
 <!doctype html>
+ <head>
 <?php
 include_once './Despacho.php';
 
@@ -10,14 +11,11 @@ function html(EntidadBD $entidad) {
 
 $objeto = new Despacho();
 ?>
-
-<html>
-    <head>
+   
         <meta charset="UTF-8">
         <title></title>
-    </head>
-    <body>
-        <h1>Altas</h1>
+</head>
+    
 <?php html($objeto); ?>
     </body>
 </html>

@@ -1,9 +1,17 @@
 <?php
 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
-include './Smarty/libs/Smarty.class.php';
+/**
+ * Description of Despacho
+ *
+ * @author José Luis Valencia Herrera     A01015544
+ */
 include_once './EntidadBD.php';
-
 
 class Despacho extends EntidadBD {
 
@@ -111,22 +119,38 @@ class Despacho extends EntidadBD {
     }
 
     public function procesarForma() {
-        if (isset($_REQUEST['nombre'], $_REQUEST['direccion'])) {
-            $this->nombre = $_REQUEST['nombre'];
-            $this->direccion = $_REQUEST['direccion'];
-            Debug::getInstance()->alert("Despacho nuevo: " . $this->nombre);
-            return true;
-        } else {
-            return false;
-        }
+        $this->nombre = $_REQUEST['nombre'];
+        $this->direccion = $_REQUEST['direccion'];
     }
 
     public function generarFormaInsercion() {
-        $BASE_DIR = '/home/ldaw-1018566/html_container/content/Proyecto/';
-        $smarty = new Smarty;
-        $smarty->template_dir = '/home/ldaw-1018566/html_container/content/Proyecto/Smarty/demo/templates/';
-        $smarty->compile_dir = '/home/ldaw-1018566/html_container/content/Proyecto/Smarty/demo/templates_c/';
-        $smarty->display($BASE_DIR.'Vistas/Despachos/Vista_Despachos.tpl');
+        print
+                "<form action='prueba2.php' method='get'>
+            <table>            
+                <tr>
+                    <td>
+                        <p>Nombre del despacho</p>
+                    </td>
+                    <td>
+                        <input type='text' name='nombre' />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Dirección del despacho</p>
+                    </td>
+                    <td>
+                        <input type='text' name='direccion' />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type='submit' value='Aceptar' />
+                    </td>
+                </tr>
+            </table>
+         </form>
+        ";
     }
 
     public function generarFormaActualizacion() {
@@ -142,7 +166,7 @@ class Despacho extends EntidadBD {
                 "<select>";
         while ($row = $resultado->fetch_assoc()) {
             print
-                    "<option value=" . $row['id'] . ">" . $row['nombre'] . "</option>";
+            "<option value=".$row['id'].">".$row['nombre']."</option>";            
         }
         print
                 "</select>";
