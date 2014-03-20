@@ -1,7 +1,9 @@
+{include file="../header.tpl" title="Altas"}
+{include file="./Funciones_Ajax.tpl"}
 
-<!--{include file="/home/ldaw-1018566/html_container/content/Proyecto/Vistas/Despachos/Funciones_Ajax.tpl"}!-->
+</head>
 <body onload="llenaEstados();">
-    <h1>Altas</h1>    
+    <h1>Despachos</h1>    
     <form action='altas.php' method='get'>
         <table>            
             <tr>
@@ -43,3 +45,6 @@
             </tr>
         </table>
     </form>
+    
+       </body>
+</html>
