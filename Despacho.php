@@ -17,7 +17,8 @@ class Despacho extends EntidadBD {
         $this->atributos = array(
             "id" => -1,
             "nombre" => "NULL",
-            "id_Direccion" => -1);
+            "id_Direccion" => -1,
+            "visible" => 1);
         $this->discr = "nombre";
     }
 
@@ -93,7 +94,7 @@ class Despacho extends EntidadBD {
     public function generarFormaBorrado() {
         $dbM = $this->dbManager;
         $dbM->connectToDatabase();
-        $query = "Select id,nombre FROM Despachos";
+        $query = "Select id,nombre FROM " . static::$tabla_static;
         $resultado = $dbM->executeQuery($query);
         print
                 "<select>";
@@ -124,14 +125,19 @@ class Despacho extends EntidadBD {
         return -1;
     }
 
-    public static function getID_MultDiscr($arregloDiscrValor) {
+    public static function getID_MultDiscr(array $arregloDiscrValor) {
         foreach ($arregloDiscrValor as $campo => $valor) {
-            $condicion .= "$campo = '$valor' AND ";
+            if ($campo != 'id') {
+                $condicion .= "$campo = '$valor' AND ";
+            }
         }
         $condicion = preg_replace('/\W\w+\s*(\W*)$/', '$1', $condicion); //Elimina el último AND
 
+        $dbManager = DatabaseManager::getInstance();
+        $dbManager->connectToDatabase();
         $query = "SELECT id FROM " . static::$tabla_static . " WHERE $condicion LIMIT 1";
-        $resultado = $this->dbExecute($query);
+        $resultado = $dbManager->executeQuery($query);
+        $dbManager->closeConnection();
         if ($resultado != false) {
             if ($resultado->num_rows > 0) {
                 $row = $resultado->fetch_assoc();
@@ -142,6 +148,10 @@ class Despacho extends EntidadBD {
         }
         Debug::getInstance()->alert("EntidadBD::getID => No se encontró el ID");
         return -1;
+    }
+
+    public static function getNombreTabla() {
+        return static::$tabla_static;
     }
 
 }

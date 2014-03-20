@@ -6,7 +6,7 @@ SET storage_engine=INNODB;
 
 SOURCE Ajax_Estados.sql;
 
-CREATE TABLE Direcciones (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, calle varchar(30) NOT NULL DEFAULT 'N/D', colonia varchar(30) NOT NULL DEFAULT 'N/D', id_Municipio int NOT NULL, ciudad varchar(30) NOT NULL, id_Estado int NOT NULL, cp int NOT NULL DEFAULT 0, FOREIGN KEY(id_Municipio) REFERENCES Municipios(id) ON DELETE RESTRICT, FOREIGN KEY (id_Estado) REFERENCES Estados(id) ON DELETE RESTRICT);
+CREATE TABLE Direcciones (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, calle varchar(30) NOT NULL DEFAULT 'N/D', no_exterior varchar(10) DEFAULT "-", no_interior varchar(10) DEFAULT "-", colonia varchar(30) NOT NULL DEFAULT 'N/D', id_Municipio int NOT NULL, ciudad varchar(30) NOT NULL, id_Estado int NOT NULL, cp varchar(10) NOT NULL DEFAULT "0", FOREIGN KEY(id_Municipio) REFERENCES Municipios(id) ON DELETE RESTRICT, FOREIGN KEY (id_Estado) REFERENCES Estados(id) ON DELETE RESTRICT);
 
 CREATE TABLE Complejidades (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, complejidad int NOT NULL);
 

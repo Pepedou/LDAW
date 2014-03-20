@@ -11,7 +11,7 @@ abstract class EntidadBD extends ServicioGenerico {
 
     protected $debug, $dbManager, $existente;
 
-    protected function __construct() {
+    public function __construct() {
         $this->debug = Debug::getInstance();
         $this->dbManager = DatabaseManager::getInstance();
         $this->existente = false;
@@ -19,14 +19,15 @@ abstract class EntidadBD extends ServicioGenerico {
 
     abstract static public function getID($discriminante, $valor);
 
-    abstract static public function getID_MultDiscr($arregloDiscrValor);
+    abstract static public function getID_MultDiscr(array $arregloDiscrValor);
+
+    abstract static public function getNombreTabla();
 
     public function revisarExistencia($discriminante, $valor) {
-        $query = "SELECT COUNT(id) FROM $this->tabla WHERE $discriminante = '$valor' LIMIT 1";
+        $query = "SELECT id FROM $this->tabla WHERE $discriminante = '$valor' LIMIT 1";
         $resultado = $this->dbExecute($query);
         if ($resultado != false) {
-            $row = $resultado->fetch_assoc();
-            if ($row['COUNT(id)'] > 0) {
+            if ($resultado->num_rows > 0) {
                 $this->existente = true;
                 return true;
             } else {
@@ -39,15 +40,15 @@ abstract class EntidadBD extends ServicioGenerico {
         }
     }
 
-    public function revisarExistencia_MultDiscr($arregloDiscrValor) {
+    public function revisarExistencia_MultDiscr(array $arregloDiscrValor) {
         foreach ($arregloDiscrValor as $campo => $valor) {
             $condicion .= "$campo = '$valor' AND ";
         }
         $condicion = preg_replace('/\W\w+\s*(\W*)$/', '$1', $condicion); //Elimina el último AND
-        
+
         $query = "SELECT COUNT(id) FROM $this->tabla WHERE $condicion LIMIT 1";
         $resultado = $this->dbExecute($query);
-        if ($resultado != false) {
+        if ($resultado != false && $resultado->num_rows) {
             $row = $resultado->fetch_assoc();
             if ($row['COUNT(id)'] > 0) {
                 $this->existente = true;
@@ -63,9 +64,18 @@ abstract class EntidadBD extends ServicioGenerico {
     }
 
     public function cargarDeBD($discriminante, $valor) {
+        if($discriminante === 'id' && $valor === -1){//Si se busca por ID, hay que usar todos
+            if($this->cargarDeBD_MultDiscr($this->atributos)){//Si encuentra el miembro
+                $this->discrValor = $this->atributos['id'];//Pongo el valor del ID como discriminante
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
         $query = "SELECT * FROM $this->tabla WHERE $discriminante = '$valor' LIMIT 1";
         $resultado = $this->dbExecute($query);
-        if ($resultado != false) {
+        if ($resultado != false && $resultado->num_rows) {
             foreach ($resultado->fetch_assoc() as $campo => $valor) {
                 $this->atributos[$campo] = $valor;
             }
@@ -74,18 +84,21 @@ abstract class EntidadBD extends ServicioGenerico {
             return true;
         } else {
             Debug::getInstance()->alert("EntidadBD::cargarDeBD => No se pudo cargar.");
+            $this->existente = false;
             return false;
         }
     }
 
-    public function cargarDeBD_MultDiscr($arregloDiscrValor) {
+    public function cargarDeBD_MultDiscr(array $arregloDiscrValor) {
         foreach ($arregloDiscrValor as $campo => $valor) {
-            $condicion .= "$campo = '$valor' AND ";
+            if ($campo != 'id') {
+                $condicion .= "$campo = '$valor' AND ";
+            }
         }
         $condicion = preg_replace('/\W\w+\s*(\W*)$/', '$1', $condicion); //Elimina el último AND
         $query = "SELECT * FROM $this->tabla WHERE $condicion LIMIT 1";
         $resultado = $this->dbExecute($query);
-        if ($resultado != false) {
+        if ($resultado != false && $resultado->num_rows) {
             foreach ($resultado->fetch_assoc() as $campo => $valor) {
                 $this->atributos[$campo] = $valor;
             }
@@ -93,11 +106,14 @@ abstract class EntidadBD extends ServicioGenerico {
             return true;
         } else {
             Debug::getInstance()->alert("EntidadBD::cargarDeBD_MultDiscr => No se pudo cargar.");
+            $this->existente = false;
             return false;
         }
     }
 
     public function almacenarEnBD() {
+        $this->actualizarValorDiscr(); //Me aseguro de que el discriminante tenga el valor correcto
+        $this->revisarExistencia($this->discr, $this->discrValor);
         if (!$this->existente) {//Reviso si ya existe, si no, lo creo
             foreach ($this->atributos as $campo => $campoValor) {//Genero string de campos y valores
                 if ($campo != "id") {
@@ -111,8 +127,8 @@ abstract class EntidadBD extends ServicioGenerico {
             $query = "INSERT INTO $this->tabla ($subqueryCamps) VALUES ($subqueryVals)";
             $resultado = $this->dbExecute($query);
             if ($resultado != false) {
+                $this->existente = true;
                 $this->cargarDeBD($this->discr, $this->atributos[$this->discr]);
-                $this->actualizarValorDiscr(); //Me aseguro de que el discriminante tenga el valor correcto
                 return true;
             } else {
                 Debug::getInstance()->alert("EntidadBD::almacenarEnBD => No se pudo insertar.");
@@ -166,14 +182,18 @@ abstract class EntidadBD extends ServicioGenerico {
 
     abstract public function procesarForma();
 
-    public function guardarDatos($misDatos) {
-        foreach ($this->atributos as $campo) {
+    public function guardarDatos(array $misDatos) {
+        foreach ($this->atributos as $campo => $valor) {
             $this->atributos[$campo] = $misDatos[$campo];
         }
     }
 
     protected function actualizarValorDiscr() {
-        $this->discrValor = $this->atributos[$this->discr];
+        if ($this->discr === 'id') {
+            $this->discrValor = static::getID_MultDiscr($this->atributos);
+        } else {
+            $this->discrValor = $this->atributos[$this->discr];
+        }
     }
 
     abstract public function validarDatos();

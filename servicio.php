@@ -2,24 +2,25 @@
 
 include_once './Abogado.php';
 include_once './Despacho.php';
+include_once './Direccion.php';
 
 function procesa(EntidadBD $entidad, $operacion, $params) {
     $entidad->guardarDatos($params);
     switch ($operacion) {
         case 'st':
-            $entidad->selectTodos();
+            $entidad->service_selectTodos();
             break;
         case 'si':
-            $entidad->selectIndividual();
+            $entidad->service_selectIndividual();
             break;
         case 'in':
-            $entidad->insert();
+            $entidad->service_insert();
             break;
         case 'up':
-            $entidad->update();
+            $entidad->service_update();
             break;
         case 'del':
-            $entidad->delete();
+            $entidad->service_delete();
             break;
     }
 }
@@ -38,6 +39,27 @@ switch ($tipo) {
         break;
 }
 
-procesa($objeto, $operacion, $params);
+//$dir = new Direccion();
+//$dir->guardarDatos(array(
+//    "calle" => "Vasco de Quiroga",
+//    "colonia" => "Santa Fe",
+//    "no_exterior" => "100",
+//    "no_interior" => "2A",
+//    "id_Municipio" => Direccion::getIDMunicipio("Zacatecas"),
+//    "ciudad" => "Ciudad de Zacatecas",
+//    "id_Estado" => Direccion::getIDEstadoDeMunicipio("Zacatecas"),
+//    "cp" => "01780"
+//));
+//if ($dir->almacenarEnBD()) {
+//    $dir->printData();
+//}
+//
+//$dir->service_selectIndividual();
+
+$dir = new Direccion();
+$dir->cargarDeBD('id', 1);
+$dir->service_selectTodos();
+
+//procesa($objeto, $operacion, $params);
 
 //Para el cliente: https://stackoverflow.com/questions/17953468/how-to-pass-a-multidimensional-associative-array-in-url
