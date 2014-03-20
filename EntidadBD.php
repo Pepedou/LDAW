@@ -35,22 +35,23 @@ abstract class EntidadBD extends ServicioGenerico {
                 return false;
             }
         } else {
-            $this->debug->alert("EntidadBD::revisarExistencia => Error en la consulta");
+            $this->debug->alert("EntidadBD::revisarExistencia => Error en la consulta " . $query);
             return false;
         }
     }
 
     public function revisarExistencia_MultDiscr(array $arregloDiscrValor) {
         foreach ($arregloDiscrValor as $campo => $valor) {
-            $condicion .= "$campo = '$valor' AND ";
+            if ($campo != 'id') {
+                $condicion .= "$campo = '$valor' AND ";
+            }
         }
         $condicion = preg_replace('/\W\w+\s*(\W*)$/', '$1', $condicion); //Elimina el último AND
 
-        $query = "SELECT COUNT(id) FROM $this->tabla WHERE $condicion LIMIT 1";
+        $query = "SELECT id FROM $this->tabla WHERE $condicion LIMIT 1";
         $resultado = $this->dbExecute($query);
-        if ($resultado != false && $resultado->num_rows) {
-            $row = $resultado->fetch_assoc();
-            if ($row['COUNT(id)'] > 0) {
+        if ($resultado != false) {
+            if ($resultado->num_rows) {
                 $this->existente = true;
                 return true;
             } else {
@@ -58,18 +59,18 @@ abstract class EntidadBD extends ServicioGenerico {
                 return false;
             }
         } else {
-            $this->debug->alert("EntidadBD::revisarExistencia => Error en la consulta");
+            $this->debug->alert("EntidadBD::revisarExistencia_MultDiscr => Error en la consulta " . $query);
+            $this->existente = false;
             return false;
         }
     }
 
     public function cargarDeBD($discriminante, $valor) {
-        if($discriminante === 'id' && $valor === -1){//Si se busca por ID, hay que usar todos
-            if($this->cargarDeBD_MultDiscr($this->atributos)){//Si encuentra el miembro
-                $this->discrValor = $this->atributos['id'];//Pongo el valor del ID como discriminante
+        if ($discriminante === 'id' && $valor === -1) {//Si se busca por ID, hay que usar todos
+            if ($this->cargarDeBD_MultDiscr($this->atributos)) {//Si encuentra el miembro
+                $this->discrValor = $this->atributos['id']; //Pongo el valor del ID como discriminante
                 return true;
-            }
-            else{
+            } else {
                 return false;
             }
         }
@@ -113,7 +114,11 @@ abstract class EntidadBD extends ServicioGenerico {
 
     public function almacenarEnBD() {
         $this->actualizarValorDiscr(); //Me aseguro de que el discriminante tenga el valor correcto
-        $this->revisarExistencia($this->discr, $this->discrValor);
+        if ($this->discr === 'id' && $this->discrValor === -1) {//Si se busca por id y no se ha cargado el objeto
+            $this->revisarExistencia_MultDiscr($this->atributos);
+        } else {
+            $this->revisarExistencia($this->discr, $this->discrValor);
+        }
         if (!$this->existente) {//Reviso si ya existe, si no, lo creo
             foreach ($this->atributos as $campo => $campoValor) {//Genero string de campos y valores
                 if ($campo != "id") {
@@ -189,11 +194,10 @@ abstract class EntidadBD extends ServicioGenerico {
     }
 
     protected function actualizarValorDiscr() {
-        if ($this->discr === 'id') {
-            $this->discrValor = static::getID_MultDiscr($this->atributos);
-        } else {
-            $this->discrValor = $this->atributos[$this->discr];
+        if ($this->discr === 'id' && $this->discrValor === -1) {
+            $this->atributos['id'] = static::getID_MultDiscr($this->atributos);
         }
+        $this->discrValor = $this->atributos[$this->discr];
     }
 
     abstract public function validarDatos();

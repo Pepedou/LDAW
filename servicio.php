@@ -3,6 +3,7 @@
 include_once './Abogado.php';
 include_once './Despacho.php';
 include_once './Direccion.php';
+include_once './Complejidad.php';
 
 function procesa(EntidadBD $entidad, $operacion, $params) {
     $entidad->guardarDatos($params);
@@ -56,9 +57,14 @@ switch ($tipo) {
 //
 //$dir->service_selectIndividual();
 
-$dir = new Direccion();
-$dir->cargarDeBD('id', 1);
-$dir->service_selectTodos();
+$comp = new Complejidad();
+$comp->guardarDatos(array(
+    "complejidad" => 3
+));
+
+$comp->almacenarEnBD();
+
+$comp->service_selectIndividual();
 
 //procesa($objeto, $operacion, $params);
 

@@ -20,6 +20,7 @@ class Despacho extends EntidadBD {
             "id_Direccion" => -1,
             "visible" => 1);
         $this->discr = "nombre";
+        $this->discrValor = $this->atributos[$this->discr];
     }
 
     public function validarNombre() {

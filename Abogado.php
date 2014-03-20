@@ -22,6 +22,7 @@ class Abogado extends EntidadBD {
             "id_Despacho" => -1,
             "visible" => 1);
         $this->discr = "email";
+        $this->discrValor = $this->atributos[$this->discr];
     }
 
     public function cargarDespachos() {
