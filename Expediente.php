@@ -1,42 +1,41 @@
 <?php
 
 /**
- * Clase para la creación, actualización y borrado de Casos
+ * Description of Expediente
  *
- * @author José Luis Valencia Herrera   A01015544
+ * @author José Luis Valencia Herrera     A01015544
  */
 include_once './EntidadBD.php';
-include_once './Despacho.php';
+include_once './Caso.php';
 
-class Caso extends EntidadBD {
+class Expediente extends EntidadBD {
 
-    static private $tabla_static = "Casos";
+    static private $tabla_static = "Complejidades";
 
     public function __construct() {
         parent::__construct();
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
             "id" => -1,
-            "nombre" => "",
-            "status" => 0,
-            "id_Despacho" => -1,
+            "id_Caso" => -1,
             "visible" => 1);
-        $this->discr = "nombre";
+        $this->discr = "id";
         $this->discrValor = $this->atributos[$this->discr];
     }
 
-    public function cargarDespacho() {
-        $despacho = new Despacho();
-        $query = "SELECT * FROM " . Despacho::getTabla() . " WHERE id=" . $this->atributos['id_Despacho'] . " LIMIT 1";
+    public function cargarDireccion() {
+        $caso = new Caso();
+        $query = "SELECT * FROM " . Caso::getTabla() . " WHERE id=" . $this->atributos['id_Caso'];
         $resultado = $this->dbExecute($query);
-        Debug::getInstance()->alert($query);
 
         if ($resultado->num_rows) {
-            $fila = $resultado->fetch_assoc();
-            $despacho->guardarDatos($fila);
+            while ($fila = $resultado->fetch_assoc()) {
+                $caso->guardarDatos($fila);
+//                $despacho->printData();
+            }
         }
 
-        return $despacho;
+        return $caso;
     }
 
     public function generarFormaActualizacion() {

@@ -22,7 +22,6 @@ class Direccion extends EntidadBD {
             "colonia" => "NULL",
             "id_Municipio" => -1,
             "ciudad" => "NULL",
-            "id_Estado" => -1,
             "cp" => 0);
         $this->discr = "id";
         $this->discrValor = $this->atributos[$this->discr];
@@ -79,16 +78,12 @@ class Direccion extends EntidadBD {
         $query = "SELECT id FROM " . static::$tabla_static . " WHERE $condicion LIMIT 1";
         $resultado = $dbManager->executeQuery($query);
         $dbManager->closeConnection();
-        if ($resultado != false) {
-            if ($resultado->num_rows > 0) {
-                $row = $resultado->fetch_assoc();
-                return $row['id'];
-            } else {
-                return -1;
-            }
+        if ($resultado != false && $resultado->num_rows) {
+            $row = $resultado->fetch_assoc();
+            return $row['id'];
+        } else {
+            return -1;
         }
-        Debug::getInstance()->alert("EntidadBD::getID => No se encontró el ID");
-        return -1;
     }
 
     public static function getNombreTabla() {

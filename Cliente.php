@@ -1,42 +1,46 @@
 <?php
 
 /**
- * Clase para la creación, actualización y borrado de Casos
+ * Description of Cliente
  *
- * @author José Luis Valencia Herrera   A01015544
+ * @author José Luis Valencia Herrera     A01015544
  */
 include_once './EntidadBD.php';
-include_once './Despacho.php';
+include_once './Direccion.php';
 
-class Caso extends EntidadBD {
+class Cliente extends EntidadBD {
 
-    static private $tabla_static = "Casos";
+    static private $tabla_static = "Clientes";
 
     public function __construct() {
         parent::__construct();
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
             "id" => -1,
-            "nombre" => "",
-            "status" => 0,
-            "id_Despacho" => -1,
+            "nombre" => "NULL",
+            "apellidoP" => "NULL",
+            "apellidoM" => "NULL",
+            "id_Direccion" => -1,
+            "telefono" => 0,
+            "email" => "NULL",
             "visible" => 1);
-        $this->discr = "nombre";
+        $this->discr = "email";
         $this->discrValor = $this->atributos[$this->discr];
     }
 
-    public function cargarDespacho() {
-        $despacho = new Despacho();
-        $query = "SELECT * FROM " . Despacho::getTabla() . " WHERE id=" . $this->atributos['id_Despacho'] . " LIMIT 1";
+    public function cargarDireccion() {
+        $direccion = new Direccion();
+        $query = "SELECT * FROM " . Direccion::getTabla() . " WHERE id=" . $this->atributos['id_Direccion'];
         $resultado = $this->dbExecute($query);
-        Debug::getInstance()->alert($query);
 
         if ($resultado->num_rows) {
-            $fila = $resultado->fetch_assoc();
-            $despacho->guardarDatos($fila);
+            while ($fila = $resultado->fetch_assoc()) {
+                $direccion->guardarDatos($fila);
+//                $despacho->printData();
+            }
         }
 
-        return $despacho;
+        return $direccion;
     }
 
     public function generarFormaActualizacion() {

@@ -4,6 +4,9 @@ include_once './Abogado.php';
 include_once './Despacho.php';
 include_once './Direccion.php';
 include_once './Complejidad.php';
+include_once './Documento.php';
+include_once './Caso.php';
+include_once './Cliente.php';
 
 function procesa(EntidadBD $entidad, $operacion, $params) {
     $entidad->guardarDatos($params);
@@ -51,20 +54,30 @@ switch ($tipo) {
 //    "id_Estado" => Direccion::getIDEstadoDeMunicipio("Zacatecas"),
 //    "cp" => "01780"
 //));
-//if ($dir->almacenarEnBD()) {
-//    $dir->printData();
-//}
-//
-//$dir->service_selectIndividual();
+//$dir->almacenarEnBD();
 
-$comp = new Complejidad();
-$comp->guardarDatos(array(
-    "complejidad" => 3
-));
+//$doc = new Documento();
+//$doc->guardarDatos(array(
+//    "documento" => "doc.docx",
+//    "id_Expediente" => 1,
+//    "id_Tipo" => 1,
+//    "visible" => 1
+//));
+//$doc->almacenarEnBD();
+//$doc->service_selectIndividual();
 
-$comp->almacenarEnBD();
-
-$comp->service_selectIndividual();
+//$cliente = new Cliente();
+//$cliente->guardarDatos(array(
+//    "nombre" => "Juan ",
+//    "apellidoP" => "Pérez",
+//    "apellidoM" => "Juárez",
+//    "id_Direccion" => $dir->atributos['id'],
+//    "telefono" => 55851891,
+//    "email" => "juan@gmail.com",
+//    "visible" => 1    
+//));
+//$cliente->almacenarEnBD();
+//$cliente->printData();
 
 //procesa($objeto, $operacion, $params);
 

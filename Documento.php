@@ -1,42 +1,27 @@
 <?php
 
 /**
- * Clase para la creación, actualización y borrado de Casos
+ * Description of Documento
  *
- * @author José Luis Valencia Herrera   A01015544
+ * @author José Luis Valencia Herrera     A01015544
  */
 include_once './EntidadBD.php';
-include_once './Despacho.php';
 
-class Caso extends EntidadBD {
+class Documento extends EntidadBD {
 
-    static private $tabla_static = "Casos";
+    static private $tabla_static = "Documentos";
 
     public function __construct() {
         parent::__construct();
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
             "id" => -1,
-            "nombre" => "",
-            "status" => 0,
-            "id_Despacho" => -1,
+            "documento" => "",
+            "id_Expediente" => -1,
+            "id_Tipo" => -1,
             "visible" => 1);
-        $this->discr = "nombre";
+        $this->discr = "id";
         $this->discrValor = $this->atributos[$this->discr];
-    }
-
-    public function cargarDespacho() {
-        $despacho = new Despacho();
-        $query = "SELECT * FROM " . Despacho::getTabla() . " WHERE id=" . $this->atributos['id_Despacho'] . " LIMIT 1";
-        $resultado = $this->dbExecute($query);
-        Debug::getInstance()->alert($query);
-
-        if ($resultado->num_rows) {
-            $fila = $resultado->fetch_assoc();
-            $despacho->guardarDatos($fila);
-        }
-
-        return $despacho;
     }
 
     public function generarFormaActualizacion() {
