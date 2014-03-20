@@ -1,21 +1,15 @@
-<!doctype html>
- <head>
 <?php
-include_once './Despacho.php';
-
-function html(EntidadBD $entidad) {
-    if (!$entidad->procesarForma()) {
-        $entidad->generarFormaInsercion();
-    }
-}
-
-$objeto = new Despacho();
-?>
-   
-        <meta charset="UTF-8">
-        <title></title>
-</head>
+    include_once './Clases/Despacho.php';
     
+    
+
+    function html(EntidadBD $entidad) {
+        if (!$entidad->procesarForma()) {
+            
+            $entidad->generarFormaInsercion($entidad::$smarty);
+        }
+    }
+
+    $objeto = new Despacho();
+    ?>
 <?php html($objeto); ?>
-    </body>
-</html>
