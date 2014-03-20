@@ -1,11 +1,12 @@
 <?php
 
 /**
-* Description of Despacho
-*
-* @author José Luis Valencia Herrera A01015544
-*/
-include_once './EntidadBD.php';
+ * Description of Despacho
+ *
+ * @author José Luis Valencia Herrera A01015544
+ */
+include_once 'EntidadBD.php';
+
 
 class Despacho extends EntidadBD {
 
@@ -46,42 +47,47 @@ class Despacho extends EntidadBD {
     }
 
     public function procesarForma() {
-        if (isset($_REQUEST['nombre'], $_REQUEST['id_Direccion'])) {
-            $this->atributos['nombre'] = $_REQUEST['nombre'];
-            $this->atributos['id_Direccion'] = $_REQUEST['id_Direccion'];
-            Debug::getInstance()->alert("Despacho nuevo: " . $this->atributos['nombre']);
-            return true;
-        } else {
-            return false;
+           
+        $direccion = Array();
+       foreach ($this->atributos as $campo => $valor){
+            if(isset($_REQUEST[$campo])){
+                $this->atributos[$campo] = $_REQUEST[$campo];
+                if($campo == "calle"){}
+            }
         }
-    }
-
-    public function generarFormaInsercion() {
-        $BASE_DIR = '/home/ldaw-1018566/html_container/content/Proyecto/';
-        $smarty = new Smarty;
-        $smarty->template_dir = '/home/ldaw-1018566/html_container/content/Proyecto/Smarty/demo/templates/';
-        $smarty->compile_dir = '/home/ldaw-1018566/html_container/content/Proyecto/Smarty/demo/templates_c/';
-        $smarty->display($BASE_DIR.'Vistas/Despachos/Vista_Despachos.tpl');
-    }
-
-
-    public function generarFormaActualizacion() {
+        $this->almacenarEnBD();
         
     }
 
-    public function generarFormaBorrado() {
+    public function generarFormaInsercion($smarty) {
+        
+        $smarty->display($this->BASE_DIR . 'Vistas/Despachos/Vista_Despachos.tpl');
+    }
+
+    public function generarFormaActualizacion($smarty) {
+        
+    }
+
+    public function generarFormaBorrado($smarty) {
         $dbM = $this->dbManager;
-        $dbM->connectToDatabase();
+        $dbM->connectToDatabase;
+
         $query = "Select id,nombre FROM Despachos";
         $resultado = $dbM->executeQuery($query);
-        print
-                "<select>";
+        $arreglo_valor = Array();
+        $arreglo_valor[0] = "Selecciona";
+        
+        /*Agregamos los resultados a un arreglo*/
         while ($row = $resultado->fetch_assoc()) {
-            print
-                    "<option value=" . $row['id'] . ">" . $row['nombre'] . "</option>";
+          
+            $arreglo_valor[$row['id']] = $row['nombre'];
         }
-        print
-                "</select>";
+        /*Mandamos el arreglo a la forma*/
+        $smarty->assign('opciones',$arreglo_valor);
+        $smarty->assign('select', 0);
+        $smarty->assign('nombre',"Borrar Despachos");
+        /*Imprimir documento*/
+        $smarty->display($this->BASE_DIR . 'Vistas/Despachos/Mostrar_Despachos.tpl');        
         $dbM->closeConnection();
     }
 
@@ -123,5 +129,12 @@ class Despacho extends EntidadBD {
         return -1;
     }
 
+    
+    public function agrega_Direccion($array){
+        
+        
+        
+        
+    }
+    
 }
-
