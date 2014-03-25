@@ -1,46 +1,38 @@
 <?php
-
 /**
- * Description of Cliente
+ * Description of Rol
  *
  * @author José Luis Valencia Herrera     A01015544
  */
+
 include_once './EntidadBD.php';
-include_once './Direccion.php';
 
-class Cliente extends EntidadBD {
-
-    static private $tabla_static = "Clientes";
+class Rol extends EntidadBD {
+        static private $tabla_static = "Roles";
 
     public function __construct() {
         parent::__construct();
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
             "id" => -1,
-            "nombre" => "NULL",
-            "apellidoP" => "NULL",
-            "apellidoM" => "NULL",
-            "id_Direccion" => -1,
-            "telefono" => 0,
-            "email" => "NULL",
-            "visible" => 1);
-        $this->discr = "email";
+            "rol" => "");
+        $this->discr = "id";
         $this->discrValor = $this->atributos[$this->discr];
     }
-
-    public function cargarDireccion() {
-        $direccion = new Direccion();
-        $query = "SELECT * FROM " . Direccion::getNombreTabla() . " WHERE id=" . $this->atributos['id_Direccion'] . " LIMIT 1";
+    
+    public function eliminarDeBD() {
+        $query = "DELETE FROM " . static::$tabla_static . " WHERE id = " . $this->atributos['id'];
         $resultado = $this->dbExecute($query);
-
-        if ($resultado->num_rows) {
-            $fila = $resultado->fetch_assoc();
-            $direccion->guardarDatos($fila);
+        if($resultado === true){
+            Debug::getInstance()->alert("Rol " . $this->atributos['id'] . " eliminado exitosamente.");
+            return true;
         }
-
-        return $direccion;
+        else{
+            Debug::getInstance()->alert("Rol " . $this->atributos['id'] . " no se pudo eliminar.");
+            return false;
+        }
     }
-
+    
     public function generarFormaActualizacion() {
         
     }

@@ -32,10 +32,25 @@ CREATE TABLE Clientes(id int PRIMARY KEY AUTO_INCREMENT, nombre varchar(30) NOT 
 
 CREATE TABLE Abogados_Clientes (id int NOT NULL PRIMARY KEY AUTO_INCREMENT, id_Abogado int NOT NULL, id_Cliente int NOT NULL, FOREIGN KEY(id_Abogado) REFERENCES Abogados(id) ON DELETE CASCADE, FOREIGN KEY(id_Cliente) REFERENCES Clientes(id) ON DELETE CASCADE);
 
-CREATE TABLE Logs (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, id_Documento int NOT NULL, fecha date NOT NULL, visible bool NOT NULL DEFAULT TRUE, id_Abogado int NOT NULL, FOREIGN KEY(id_Documento) REFERENCES Documentos(id) ON DELETE CASCADE, FOREIGN KEY(id_Abogado) REFERENCES Abogados(id) ON DELETE CASCADE);
+CREATE TABLE Logs (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, id_Documento int NOT NULL, fecha date NOT NULL, id_Abogado int NOT NULL, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY(id_Documento) REFERENCES Documentos(id) ON DELETE CASCADE, FOREIGN KEY(id_Abogado) REFERENCES Abogados(id) ON DELETE CASCADE);
 
 CREATE TABLE Pagos (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, cantidad decimal(30,5) NOT NULL, id_Cliente int NOT NULL, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY(id_Cliente) REFERENCES Clientes(id) ON DELETE CASCADE);
 
+INSERT INTO Direcciones (calle, no_exterior, no_interior, colonia,id_Municipio, ciudad, cp) VALUES ("Av. Vasco de Quiroga", "1000", "A", "Santa Fe", 1, "Ciudad de México", "01780");
+
+INSERT INTO Despachos (nombre, id_Direccion) VALUES ("Despacho 1", 1);
+
+INSERT INTO Roles (rol) VALUES ("Administrador");
+
+INSERT INTO Abogados (nombre, apellidoP, apellidoM, telefono, email, contrasena, id_Rol, id_Despacho) VALUES ("José Luis", "Valencia", "Herrera", 55851891, "pepedou@gmail.com", SHA1("asdf"), 1, 1);
+
+INSERT INTO Tipos (tipo) VALUES ("PDF");
+
+INSERT INTO Casos (nombre, status, id_Despacho) VALUES ("PÉREZ VS JUÁREZ", 1, 1);
+
+INSERT INTO Expedientes (id_Caso) VALUES (1);
+
+INSERT INTO Documentos (documento, id_Expediente, id_Tipo) VALUES ("ASDF", 1, 1);
 
 
 

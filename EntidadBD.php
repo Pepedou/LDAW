@@ -165,7 +165,7 @@ abstract class EntidadBD extends ServicioGenerico {
     }
 
     public function eliminarDeBD() {
-        $query = "UPDATE $this->tabla SET visible = 0 WHERE id = '$this->atributos['id']'";
+        $query = "UPDATE $this->tabla SET visible = 0 WHERE id = '" . $this->atributos['id'] . "'";
         $resultado = $this->dbExecute($query);
         if ($resultado === true) {
             return true;
@@ -188,9 +188,10 @@ abstract class EntidadBD extends ServicioGenerico {
     abstract public function procesarForma();
 
     public function guardarDatos(array $misDatos) {
-        foreach ($this->atributos as $campo => $valor) {
+        foreach ($misDatos as $campo => $valor) {
             $this->atributos[$campo] = $misDatos[$campo];
         }
+        $this->actualizarValorDiscr();
     }
 
     protected function actualizarValorDiscr() {

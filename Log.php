@@ -1,44 +1,40 @@
 <?php
 
 /**
- * Description of Cliente
+ * Description of Log
  *
  * @author José Luis Valencia Herrera     A01015544
  */
-include_once './EntidadBD.php';
-include_once './Direccion.php';
+include_once './Abogado.php';
 
-class Cliente extends EntidadBD {
+class Log extends EntidadBD {
 
-    static private $tabla_static = "Clientes";
+    static private $tabla_static = "Logs";
 
     public function __construct() {
         parent::__construct();
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
             "id" => -1,
-            "nombre" => "NULL",
-            "apellidoP" => "NULL",
-            "apellidoM" => "NULL",
-            "id_Direccion" => -1,
-            "telefono" => 0,
-            "email" => "NULL",
+            "id_Documento" => -1,
+            "fecha" => date("Y-m-d"),
+            "id_Abogado" => -1,
             "visible" => 1);
-        $this->discr = "email";
+        $this->discr = "id";
         $this->discrValor = $this->atributos[$this->discr];
     }
 
-    public function cargarDireccion() {
-        $direccion = new Direccion();
-        $query = "SELECT * FROM " . Direccion::getNombreTabla() . " WHERE id=" . $this->atributos['id_Direccion'] . " LIMIT 1";
+    public function cargarAbogado() {
+        $abogado = new Abogado();
+        $query = "SELECT * FROM " . Abogado::getNombreTabla() . " WHERE id=" . $this->atributos['id_Abogado'] . " LIMIT 1";
         $resultado = $this->dbExecute($query);
 
         if ($resultado->num_rows) {
             $fila = $resultado->fetch_assoc();
-            $direccion->guardarDatos($fila);
+            $abogado->guardarDatos($fila);
         }
 
-        return $direccion;
+        return $abogado;
     }
 
     public function generarFormaActualizacion() {

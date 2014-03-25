@@ -25,13 +25,12 @@ class Expediente extends EntidadBD {
 
     public function cargarDireccion() {
         $caso = new Caso();
-        $query = "SELECT * FROM " . Caso::getTabla() . " WHERE id=" . $this->atributos['id_Caso'];
+        $query = "SELECT * FROM " . Caso::getNombreTabla() . " WHERE id=" . $this->atributos['id_Caso'] . " LIMIT 1";
         $resultado = $this->dbExecute($query);
 
         if ($resultado->num_rows) {
             while ($fila = $resultado->fetch_assoc()) {
                 $caso->guardarDatos($fila);
-//                $despacho->printData();
             }
         }
 

@@ -2,6 +2,7 @@
 
 include './EntidadBD.php';
 include './Despacho.php';
+include_once './Rol.php';
 
 class Abogado extends EntidadBD {
 
@@ -25,28 +26,24 @@ class Abogado extends EntidadBD {
         $this->discrValor = $this->atributos[$this->discr];
     }
 
-    public function cargarDespachos() {
-        $despachos = array();
+    public function cargarDespacho() {
+        $despacho = new Despacho();
 
-        $query = "SELECT * FROM " . Despacho::getTabla() . " WHERE id=" . $this->atributos['id_Despacho'];
+        $query = "SELECT * FROM " . Despacho::getNombreTabla() . " WHERE id=" . $this->atributos['id_Despacho'];
         $resultado = $this->dbExecute($query);
         Debug::getInstance()->alert($query);
 
-        if ($resultado->num_rows) {
-            while ($fila = $resultado->fetch_assoc()) {
-                $despacho = new Despacho();
-                $despacho->guardarDatos($fila);
-                array_push($despachos, $despacho);
-//                $despacho->printData();
-            }
+        if ($resultado != false && $resultado->num_rows) {
+            $fila = $resultado->fetch_assoc();
+            $despacho->guardarDatos($fila);
         }
 
-        return $despachos;
+        return $despacho;
     }
 
     public function getRol() {
         $rol = array();
-        $query = "SELECT rol FROM Roles where id = " . $this->atributos['id_Rol'] . " LIMIT 1";
+        $query = "SELECT rol FROM " . Rol::getNombreTabla() . " WHERE id = " . $this->atributos['id_Rol'] . " LIMIT 1";
         $resultado = $this->dbExecute($query);
 
         if ($resultado->num_rows) {
@@ -76,13 +73,14 @@ class Abogado extends EntidadBD {
     }
 
     public function guardarDatos(array $misDatos) {
-        foreach ($this->atributos as $campo => $valor) {
-            if ($campo === "contrasena") {
+        foreach ($misDatos as $campo => $valor) {
+            if ($campo === "contrasena" && $this->existente != false) {
                 $this->atributos[$campo] = sha1($misDatos[$campo]);
             } else {
                 $this->atributos[$campo] = $misDatos[$campo];
             }
         }
+        $this->actualizarValorDiscr();
     }
 
     public function generarFormaActualizacion() {
@@ -147,4 +145,5 @@ class Abogado extends EntidadBD {
     public static function getNombreTabla() {
         return static::$tabla_static;
     }
+
 }

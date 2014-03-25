@@ -7,6 +7,11 @@ include_once './Complejidad.php';
 include_once './Documento.php';
 include_once './Caso.php';
 include_once './Cliente.php';
+include_once './Log.php';
+include_once './Pago.php';
+include_once './Rol.php';
+include_once './Tarea.php';
+include_once './Tipo.php';
 
 function procesa(EntidadBD $entidad, $operacion, $params) {
     $entidad->guardarDatos($params);
@@ -55,7 +60,6 @@ switch ($tipo) {
 //    "cp" => "01780"
 //));
 //$dir->almacenarEnBD();
-
 //$doc = new Documento();
 //$doc->guardarDatos(array(
 //    "documento" => "doc.docx",
@@ -65,19 +69,57 @@ switch ($tipo) {
 //));
 //$doc->almacenarEnBD();
 //$doc->service_selectIndividual();
-
 //$cliente = new Cliente();
 //$cliente->guardarDatos(array(
 //    "nombre" => "Juan ",
 //    "apellidoP" => "Pérez",
 //    "apellidoM" => "Juárez",
-//    "id_Direccion" => $dir->atributos['id'],
+//    "id_Direccion" => 1,
 //    "telefono" => 55851891,
 //    "email" => "juan@gmail.com",
 //    "visible" => 1    
 //));
 //$cliente->almacenarEnBD();
 //$cliente->printData();
+//
+////$log = new Log();
+////$log->cargarDeBD("id", 1);
+////$log->eliminarDeBD();
+//
+//$pago = new Pago();
+//$pago->guardarDatos(array(
+//    "cantidad" => 10.10,
+//    "id_Cliente" => 1
+//));
+//
+//$pago->almacenarEnBD();
+//
+//$pago->service_selectTodos();
+//$rol = new Rol();
+//$rol->guardarDatos(array(
+//    "rol" => "Administrador"
+//));        
+//$rol->almacenarEnBD();
+//$rol->service_selectIndividual();
+//$rol->eliminarDeBD();
+
+//$tarea = new Tarea();
+//$tarea->guardarDatos(array(
+//    "descripcion" => "Tarea1",
+//    "id_Abogado" => 1,
+//    "id_Caso" => 1
+//));
+//
+//$tarea->almacenarEnBD();
+
+$tipo = new Tipo();
+$tipo->guardarDatos(array(
+    "tipo" => "PDF"
+));
+$tipo->eliminarDeBD();
+
+$tipo->service_selectIndividual();
+
 
 //procesa($objeto, $operacion, $params);
 

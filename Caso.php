@@ -27,7 +27,7 @@ class Caso extends EntidadBD {
 
     public function cargarDespacho() {
         $despacho = new Despacho();
-        $query = "SELECT * FROM " . Despacho::getTabla() . " WHERE id=" . $this->atributos['id_Despacho'] . " LIMIT 1";
+        $query = "SELECT * FROM " . Despacho::getNombreTabla() . " WHERE id=" . $this->atributos['id_Despacho'] . " LIMIT 1";
         $resultado = $this->dbExecute($query);
         Debug::getInstance()->alert($query);
 

@@ -23,12 +23,13 @@ class ServicioGenerico {
             }
             print_r(json_encode($json));
         }
-        return $resultado;
+        return $json;
     }
 
     public function service_selectIndividual() {
         $json = array();
         $query = "SELECT * FROM $this->tabla WHERE $this->discr = '$this->discrValor'";
+        Debug::getInstance()->alert($query);
         $resultado = $this->dbExecute($query);
         if ($resultado != false) {
             array_push($json, ($resultado->fetch_assoc()));
