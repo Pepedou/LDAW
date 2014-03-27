@@ -44,6 +44,37 @@ switch ($op) {
         echo "</select>";
         $dbM->closeConnection();
         break;
+    case 3: //despachos
+        $dbM = DatabaseManager::getInstance();
+        $dbM->connectToDatabase();
+        $query = "SELECT id, nombre  FROM Despachos";
+        $resultado = $dbM->executeQuery($query);
+        echo "<select name=\"despacho\">
+          <option>Seleccione Despacho</option>";
+
+        while ($row = $resultado->fetch_assoc()) {
+
+            echo"<option value =" . $row['id'] . " >" . $row['nombre'] . "</option>";
+        }
+        echo "</select>";
+        $dbM->closeConnection();
+
+        break;
+    case 4:
+        $dbM = DatabaseManager::getInstance();
+        $dbM->connectToDatabase();
+        $query = "SELECT id, rol  FROM Roles";
+        $resultado = $dbM->executeQuery($query);
+        echo "<select name=\"rol\">
+          <option>Seleccione Rol</option>";
+
+        while ($row = $resultado->fetch_assoc()) {
+
+            echo"<option value =" . $row['id'] . " >" . $row['rol'] . "</option>";
+        }
+        echo "</select>";
+        $dbM->closeConnection();
+        break;
     default:
         echo"Necesito la opcion";
         break;

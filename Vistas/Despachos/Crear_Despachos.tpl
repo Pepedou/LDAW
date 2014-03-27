@@ -5,11 +5,11 @@
 <body onload="llenaEstados();">
     <h1>Despachos</h1>    
     <form action='altas.php' method='get'>
-        
-     {include file="./campos_Despachos.tpl"}
+
+        {include file="./campos_Despachos.tpl"}
         
     </form>
-       </body>
+</body>
 </html>
 
 

@@ -8,15 +8,14 @@
             <table>            
                 <tr>
                     <td>
-                        <input type='text' name= {$entry} />
+                        <label for={$entry@key}>{$entry@key}</label>
+                        <input type='text' name= {$entry@key} />
 
                     </td>
                 </tr>
-                {include file="./Forma_alta.tpl"}
+                
                 
             </table>
 
         {/foreach}
-    </form>
-</body>
-</html>
+  

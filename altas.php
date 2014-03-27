@@ -1,8 +1,7 @@
 <?php
 
-include_once './Clases/Despacho.php';
-include_once './Clases/Direccion.php';
-
+//include_once './Clases/Despacho.php';
+include_once './Clases/Abogado.php';
 
 function html(EntidadBD $entidad) {
     if (!$entidad->procesarForma(1)) {
@@ -11,6 +10,6 @@ function html(EntidadBD $entidad) {
     }
 }
 
-$objeto = new Despacho();
+$objeto = new Abogado();
 ?>
 <?php html($objeto); ?>

@@ -9,6 +9,7 @@ class Abogado extends EntidadBD {
 
     public function __construct() {
         parent::__construct();
+
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
             "id" => -1,
@@ -89,16 +90,35 @@ class Abogado extends EntidadBD {
         
     }
 
-    public function generarFormaBorrado() {
+    public function generarFormaBorrado($seleccion) {
         
     }
 
     public function generarFormaInsercion() {
-        
+        static::$smarty->assign('nombre', "Nuevo Abogado");
+        $data = array();
+
+        foreach ($this->atributos as $campo => $valor) {
+            if($campo !== "id" && $campo !== "id_Rol" && $campo !== "visible" && $campo !== "id_Despacho"){
+                
+                $data[$campo] = $campo[$valor];
+            }
+                       
+        }
+        static::$smarty->assign('data', $data);
+        static::$smarty->display($this->BASE_DIR . 'Vistas/Abogados/Altas.tpl');
     }
 
-    public function procesarForma() {
-        
+    public function procesarForma($op) {
+
+        switch ($op) {
+
+            case 1: //alta
+
+
+
+                break;
+        }
     }
 
     public function validarDatos() {
@@ -151,4 +171,5 @@ class Abogado extends EntidadBD {
     public static function getNombreTabla() {
         return static::$tabla_static;
     }
+
 }
