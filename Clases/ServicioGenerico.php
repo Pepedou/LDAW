@@ -10,9 +10,9 @@ include_once 'DatabaseManager.php';
 class ServicioGenerico {
 
     protected $tabla, $discr, $discrValor;
-    public $atributos;
+    public $atributos = array();
 
-    public function selectTodos() {
+    public function service_selectTodos() {
         $json = array();
         $query = "SELECT * FROM $this->tabla";
         $resultado = $this->dbExecute($query);
@@ -26,18 +26,20 @@ class ServicioGenerico {
         return $resultado;
     }
 
-    public function selectIndividual() {
+    public function service_selectIndividual() {
         $json = array();
         $query = "SELECT * FROM $this->tabla WHERE $this->discr = '$this->discrValor'";
+        print_r($query);
         $resultado = $this->dbExecute($query);
         if ($resultado != false) {
             array_push($json, ($resultado->fetch_assoc()));
             print_r(json_encode($json));
+            $result = (json_encode($json));
         }
-        return $resultado;
+        return $result;
     }
 
-    public function insert() {
+    public function service_insert() {
         foreach ($this->atributos as $campo => $campoValor) {
             if ($campo != "id") {
                 $subqueryCamps .= $campo . ",";
@@ -58,7 +60,7 @@ class ServicioGenerico {
         return $resultado;
     }
 
-    public function update() {
+    public function service_update() {
         $json = array();
         foreach ($this->atributos as $campo => $campoValor) {
             if ($campo != "id") {
@@ -79,7 +81,7 @@ class ServicioGenerico {
         return $resultado;
     }
 
-    public function delete() {
+    public function service_delete() {
         $json = array();
         $query = "UPDATE $this->tabla SET visible = 0 WHERE $this->discr = '$this->discrValor'";
         Debug::getInstance()->alert("DELETE - $query");

@@ -15,7 +15,33 @@ if (!session_is_registered(myusername)) {
                 if (valor === 0) {
                     document.getElementById("agregar").style.display = "none";
                     document.getElementById("borrar").style.display = "none";
-                }
+                }  print
+                "<form action='altas.php' method='get'>
+            <table>            
+                <tr>
+                    <td>
+                        <p>Nombre del despacho</p>
+                    </td>
+                    <td>
+                        <input type='text' name='nombre' />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Dirección del despacho</p>
+                    </td>
+                    <td>
+                        <input type='text' name='id_Direccion' />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type='submit' value='Aceptar' />
+                    </td>
+                </tr>
+            </table>
+         </form>
+        ";
                 else if (valor === 1) {
 
                     document.getElementById("agregar").style.display = "block";

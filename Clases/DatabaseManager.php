@@ -45,14 +45,18 @@ class DatabaseManager {
     }
 
     public function executeQuery($query) {
+       
         if (!$resultado = $this->db->query($query)) {
+          
             Debug::getInstance()->alert("DBManager => Error [" . $this->db->error . "] al ejecutar el query -> " . $query);
         }
         return $resultado;
     }
 
     public function closeConnection() { // close the connection
+        
         $this->db->close();
+       
     }
 
 }

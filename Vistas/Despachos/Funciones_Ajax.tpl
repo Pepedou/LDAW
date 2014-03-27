@@ -18,7 +18,7 @@
                 }
             }
         }
-       
+
         return xmlhttp;
     }
 
@@ -31,7 +31,7 @@
 
             req.onreadystatechange = function() {
                 if (req.readyState === 4) {
-                   if (req.status === 200) {
+                    if (req.status === 200) {
                         document.getElementById('estados').innerHTML = req.responseText;
                     } else {
                         alert("Hay un problema al utilizar  XMLHTTP:\n" + req.statusText);
@@ -43,4 +43,29 @@
             req.send(null);
         }
     }
+
+
+    function llenaMunicipios(estadoId) {
+
+        var strURL = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Servicios/select_direccion.php?op=2&edo="+estadoId;
+         
+        var req = getXMLHTTP();
+        if (req) {
+
+            req.onreadystatechange = function() {
+                if (req.readyState == 4) {
+                    // only if "OK"
+                    if (req.status == 200) {
+                        document.getElementById('municipios').innerHTML = req.responseText;
+                    } else {
+                        alert("Hay un problema al utilizar  XMLHTTP:\n" + req.statusText);
+                    }
+                }
+            }
+            req.open("GET", strURL, true);
+            req.send(null);
+        }
+
+    }
+
 </script>
