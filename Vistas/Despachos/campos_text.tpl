@@ -8,7 +8,7 @@
         <td>
             <input id = "nombre" type='text' name='nombre' value = "
                    {php}
-                    if ($exito) echo $desp->atributos["nombre"]; else echo "Selecciona";
+                    if ($exito) echo $desp->atributos["nombre"]; else echo  $desp->atributos["nombre"];
                    {/php}
                    " readonly/>    
 
@@ -22,7 +22,7 @@
             <label for="calle">Calle</label>
             <input id = "calle" type='text' name='calle' value = "
                    {php}
-                    if ($exito2) echo $dir->calle; else echo "Calle";
+                    if ($exito2) echo $dir->atributos["calle"]; else echo "Calle";
                    {/php}
                    " readonly/>    
             </p>                     

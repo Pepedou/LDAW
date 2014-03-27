@@ -1,3 +1,5 @@
+{include file="../header.tpl" title="Despachos"}
+
 {php}  
 if(isset($_REQUEST['nombre'])){
     
@@ -8,10 +10,10 @@ if(isset($_REQUEST['nombre'])){
     $dir = new Direccion();
     $exito2 = $dir->cargarDeBD("id",$desp->atributos['id_Direccion']);
     if ($exito2){ Debug::getinstance()->alert("Direccion Cargada"); }
+    Debug::getinstance()->alert($dir->atributos["calle"]);
 } 
 {/php}
 
-{include file="../header.tpl" title="Despachos"}
 {include file="./Funciones_Llena.tpl"}
 </head>
 <body onload="show(1);">
@@ -22,6 +24,8 @@ if(isset($_REQUEST['nombre'])){
         {html_options name=opciones options=$opciones selected=$select onchange="show(1);nombre_desp(this);"}
 
     </form>
+        
+        <p> {php}echo  $desp->atributos["nombre"]; {/php} </p>
     <!-- Desplegar campos correspondientes del despacho a borrar-->
     <form id="campos" name="forma_campos" action='bajas.php?nombre='>
 
