@@ -80,14 +80,12 @@ class Despacho extends EntidadBD {
     }
 
     public function generarFormaInsercion() {
-        static::$smarty->display($this->BASE_DIR . 'Vistas/Despachos/Crear_Despachos.tpl');
-        /* static::$smarty->assign('nombre', "Prueba");
-          static::$smarty->assign('data',  $this->atributos);
-          static::$smarty->display($this->BASE_DIR . 'Vistas/Forma_alta.tpl'); */
+        static::$smarty->display($this->BASE_DIR . 'Vistas/Despachos/Altas.tpl');
+   
     }
 
     public function generarFormaActualizacion() {
-        
+         static::$smarty->display($this->BASE_DIR . 'Vistas/Despachos/Cambios.tpl');
     }
 
     public function generarFormaBorrado($seleccion) {
@@ -112,7 +110,7 @@ class Despacho extends EntidadBD {
                 static::$smarty->assign('select', $seleccion);
                 static::$smarty->assign('nombre', "Borrar Despachos");
                 /* Imprimir documento */
-                static::$smarty->display($this->BASE_DIR . 'Vistas/Despachos/Borrar_Despachos.tpl');
+                static::$smarty->display($this->BASE_DIR . 'Vistas/Despachos/Bajas.tpl');
             } else {
                 Debug::getInstance()->alert("No existen registros");
             }

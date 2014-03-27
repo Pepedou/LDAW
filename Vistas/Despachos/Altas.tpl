@@ -6,7 +6,7 @@
     <h1>Despachos</h1>    
     <form action='altas.php' method='get'>
 
-        {include file="./campos_Despachos.tpl"}
+        {include file="./campos_input.tpl"}
         
     </form>
 </body>

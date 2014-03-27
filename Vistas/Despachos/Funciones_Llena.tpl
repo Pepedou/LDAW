@@ -1,15 +1,15 @@
 <script>
     function nombre_desp(name) {
-        
-        var sel = name.options[name.selectedIndex].value;       
+
+        var sel = name.options[name.selectedIndex].value;
         if (sel !== 0) {
             var x = name.options[name.selectedIndex].text;
             var input = document.getElementById("nombre");
-            input.value= x;
-            newUrl = "bajas.php?nombre=" + x + "&sel="+sel;            
+            input.value = x;
+            newUrl = "bajas.php?nombre=" + x + "&sel=" + sel;
             document.location.href = newUrl;
         }
-    
+
     }
 
     function show(val) {
@@ -24,5 +24,9 @@
             document.getElementById("campos").style.display = "block";
         }
     }
+    
+    function actualiza(despacho) {
 
+
+    }
 </script>

@@ -4,10 +4,10 @@ if(isset($_REQUEST['nombre'])){
     $desp = new Despacho();
     $exito = $desp->cargarDeBD("nombre", $_REQUEST['nombre']);
     if ($exito){ Debug::getinstance()->alert("Despacho Cargado:");}
-    //echo $desp->nombre;
+    print_r ($desp->atributos);
     $dir = new Direccion();
     $exito2 = $dir->cargarDeBD("id",$desp->atributos['id_Direccion']);
-    if ($exito2){ Debug::getinstance()->alert("Direccion Cargado"); }
+    if ($exito2){ Debug::getinstance()->alert("Direccion Cargada"); }
 } 
 {/php}
 
