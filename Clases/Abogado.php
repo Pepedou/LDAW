@@ -86,11 +86,11 @@ class Abogado extends EntidadBD {
         }
     }
 
-    public function generarFormaActualizacion() {
+    public function generarFormaActualizacion($seleccion, $nombre) {
         
     }
 
-    public function generarFormaBorrado($seleccion) {
+    public function generarFormaBorrado($seleccion,$nombre) {
         
     }
 

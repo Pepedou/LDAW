@@ -1,6 +1,7 @@
 <?php
 
-include_once './DatabaseManager.php';
+include_once 'DatabaseManager.php';
+
 
 /**
  * Description of ServicioGenerico

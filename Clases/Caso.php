@@ -43,7 +43,7 @@ class Caso extends EntidadBD {
         
     }
 
-    public function generarFormaBorrado($seleccion) {
+    public function generarFormaBorrado($seleccion,$nombre) {
         
     }
 

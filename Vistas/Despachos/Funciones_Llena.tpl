@@ -24,9 +24,16 @@
             document.getElementById("campos").style.display = "block";
         }
     }
-    
-    function actualiza(despacho) {
 
+    function actualiza(name) {
+        var sel = name.options[name.selectedIndex].value;
+        if (sel !== 0) {
+            var x = name.options[name.selectedIndex].text;
+            var input = document.getElementById("nombre");
+            input.value = x;
+            newUrl = "cambios.php?nombre=" + x + "&sel=" + sel;
+            document.location.href = newUrl;
+        }
 
     }
 </script>

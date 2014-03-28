@@ -1,6 +1,7 @@
 <?php
 
 include_once 'ServicioGenerico.php';
+
 include_once '/home/ldaw-1018566/html_container/content/Proyecto/Smarty/libs/SmartyBC.class.php';
 
 /**
@@ -122,11 +123,14 @@ abstract class EntidadBD extends ServicioGenerico {
     public function almacenarEnBD() {
         $this->actualizarValorDiscr(); //Me aseguro de que el discriminante tenga el valor correcto
         if ($this->discr === 'id' && $this->discrValor === -1) {//Si se busca por id y no se ha cargado el objeto
+             Debug::getInstance()->alert("Revisando1");
             $this->revisarExistencia_MultDiscr($this->atributos);
         } else {
+            Debug::getInstance()->alert("Revisando2");
             $this->revisarExistencia($this->discr, $this->discrValor);
         }
         if (!$this->existente) {//Reviso si ya existe, si no, lo creo
+            Debug::getInstance()->alert("no existe");
             foreach ($this->atributos as $campo => $campoValor) {//Genero string de campos y valores
                 if ($campo != "id") {
                     $subqueryCamps .= $campo . ",";
@@ -150,6 +154,7 @@ abstract class EntidadBD extends ServicioGenerico {
             /* Obtengo el ID real, es importante que el valor del discriminante
              * sea el mismo que tenía originalmente mediante $this->actualizarValorDiscr();
              */
+            Debug::getInstance()->alert("Ya existe");
             $this->atributos['id'] = static::getID($this->discr, $this->discrValor);
 
             foreach ($this->atributos as $campo => $valor) {//Creo asignaciones SQL
@@ -172,7 +177,8 @@ abstract class EntidadBD extends ServicioGenerico {
     }
 
     public function eliminarDeBD() {
-        $query = "UPDATE $this->tabla SET visible = 0 WHERE id = '$this->atributos['id']'";
+        Debug::getInstance()->alert("BOrrando:" .$this->atributos["id"]);
+        $query = "UPDATE $this->tabla SET visible = 0 WHERE id =" .$this->atributos['id'];
         $resultado = $this->dbExecute($query);
         if ($resultado === true) {
             return true;
@@ -188,9 +194,9 @@ abstract class EntidadBD extends ServicioGenerico {
 
     abstract public function generarFormaInsercion();
 
-    abstract public function generarFormaActualizacion();
+    abstract public function generarFormaActualizacion($seleccion, $nombre);
 
-    abstract public function generarFormaBorrado($seleccion);
+    abstract public function generarFormaBorrado($seleccion, $nombre);
 
     public function procesarForma($op){
         foreach ($this->atributos as $campo => $valor){

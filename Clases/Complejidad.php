@@ -25,7 +25,7 @@ class Complejidad extends EntidadBD {
         
     }
 
-    public function generarFormaBorrado($selecciona) {
+    public function generarFormaBorrado($selecciona,$nombre) {
         
     }
 

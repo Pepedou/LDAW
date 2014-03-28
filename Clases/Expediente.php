@@ -5,8 +5,8 @@
  *
  * @author José Luis Valencia Herrera     A01015544
  */
-include_once './EntidadBD.php';
-include_once './Caso.php';
+include_once 'EntidadBD.php';
+include_once 'Caso.php';
 
 class Expediente extends EntidadBD {
 

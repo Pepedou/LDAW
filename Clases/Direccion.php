@@ -27,11 +27,11 @@ class Direccion extends EntidadBD {
         $this->discrValor = $this->atributos[$this->discr];
     }
 
-    public function generarFormaActualizacion() {
+    public function generarFormaActualizacion($seleccion,$nombre) {
         
     }
 
-    public function generarFormaBorrado($seleccion) {
+    public function generarFormaBorrado($seleccion,$nombre) {
         
     }
 
@@ -121,7 +121,19 @@ class Direccion extends EntidadBD {
         $resultado = $dbM->executeQuery($query);
         $dbM->closeConnection();
         $fila = $resultado->fetch_assoc();
+       
         return $fila['Estados_id'];
     }
+    
+      static public function getMunicipio($id_municipio) {
+        $query = "SELECT Municipio FROM Municipios WHERE id = '$id_municipio'";
+        $dbM = DatabaseManager::getInstance();
+        $dbM->connectToDatabase();
+        $resultado = $dbM->executeQuery($query);
+        $dbM->closeConnection();
+        $fila = $resultado->fetch_assoc();
+        return $fila['id'];
+    }
+
 
 }

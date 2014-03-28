@@ -1,10 +1,10 @@
 <?php
 
 //include_once './Clases/Despacho.php';
-//include_once './Clases/Abogado.php';
+include_once './Clases/Abogado.php';
 //include_once './Clases/Complejidad.php';
-include_once './Clases/Caso.php';
-
+//include_once './Clases/Caso.php';
+$op = $_REQUEST['op'];
 function html(EntidadBD $entidad) {
     if (!$entidad->procesarForma(1)) {
 
@@ -12,6 +12,9 @@ function html(EntidadBD $entidad) {
     }
 }
 
-$objeto = new Caso();
+$objeto = new Despacho();
+           
+
+
 ?>
 <?php html($objeto); ?>

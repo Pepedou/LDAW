@@ -2,20 +2,17 @@
 {include file="./Funciones_Llena.tpl"}
 {include file="./Funciones_Ajax.tpl"}
 </head>
-<body onload="llenaDespachos()">
-    <h1>{$nombre}</h1>    
-    <form action='cambios.php' method='get'>
+<body onload="llenaDespachos(); llenaEstados();">
+    <h1>{$nombre}</h1>        
 
         <td >
             <label for="despachos">Despacho</label>
-            <select id="despachos" name ="id_Despacho" onchange='actualiza(this);'>
+            <select id="despachos" name ="id_Despacho" selected="{$sel}" onchange='actualiza(this);'>
             </select>
         </td>
 
-    </form>
-
     <!-- Desplegar campos correspondientes a actualizar-->
-    <form id="campos" name="forma_campos" action='bajas.php?nombre='>
+    <form id="campos" name="forma_campos" action='cambios.php'>
 
         {include file="./campos_input.tpl"}
     </form>

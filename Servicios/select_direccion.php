@@ -47,7 +47,7 @@ switch ($op) {
     case 3: //despachos
         $dbM = DatabaseManager::getInstance();
         $dbM->connectToDatabase();
-        $query = "SELECT id, nombre  FROM Despachos";
+        $query = "SELECT id, nombre  FROM Despachos WHERE visible = 1";
         $resultado = $dbM->executeQuery($query);
         echo "<select name=\"despacho\">
           <option>Seleccione Despacho</option>";
