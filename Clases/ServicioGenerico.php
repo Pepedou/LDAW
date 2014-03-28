@@ -1,6 +1,6 @@
 <?php
 
-include_once 'DatabaseManager.php';
+include_once './DatabaseManager.php';
 
 /**
  * Description of ServicioGenerico
@@ -23,20 +23,19 @@ class ServicioGenerico {
             }
             print_r(json_encode($json));
         }
-        return $resultado;
+        return $json;
     }
 
     public function service_selectIndividual() {
         $json = array();
         $query = "SELECT * FROM $this->tabla WHERE $this->discr = '$this->discrValor'";
-        print_r($query);
+        Debug::getInstance()->alert($query);
         $resultado = $this->dbExecute($query);
         if ($resultado != false) {
             array_push($json, ($resultado->fetch_assoc()));
             print_r(json_encode($json));
-            $result = (json_encode($json));
         }
-        return $result;
+        return $resultado;
     }
 
     public function service_insert() {
