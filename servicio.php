@@ -141,7 +141,6 @@ $objeto = $factory->create($tipo);
 $reflector = new ReflectionClass($objeto);
 
 if ($reflector->isSubclassOf('EntidadBD')) {
-
     procesa($objeto, $operacion, $params, $callback);
 } else if ($reflector->isSubclassOf('RelacionMaM')) {
     procesaMaM($objeto, $operacion, $params, $callback);

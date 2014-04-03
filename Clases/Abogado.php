@@ -1,8 +1,7 @@
 <?php
 
-include_once ''; './EntidadBD.php';
- include_once ''; './Despacho.php';
-include_once './Rol.php';
+include 'EntidadBD.php';
+include 'Despacho.php';
 
 class Abogado extends EntidadBD {
 
@@ -10,6 +9,7 @@ class Abogado extends EntidadBD {
 
     public function __construct() {
         parent::__construct();
+
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
             "id" => -1,
@@ -26,24 +26,28 @@ class Abogado extends EntidadBD {
         $this->discrValor = $this->atributos[$this->discr];
     }
 
-    public function cargarDespacho() {
-        $despacho = new Despacho();
+    public function cargarDespachos() {
+        $despachos = array();
 
-        $query = "SELECT * FROM " . Despacho::getNombreTabla() . " WHERE id=" . $this->atributos['id_Despacho'];
+        $query = "SELECT * FROM " . Despacho::getTabla() . " WHERE id=" . $this->atributos['id_Despacho'];
         $resultado = $this->dbExecute($query);
         Debug::getInstance()->alert($query);
 
-        if ($resultado != false && $resultado->num_rows) {
-            $fila = $resultado->fetch_assoc();
-            $despacho->guardarDatos($fila);
+        if ($resultado->num_rows) {
+            while ($fila = $resultado->fetch_assoc()) {
+                $despacho = new Despacho();
+                $despacho->guardarDatos($fila);
+                array_push($despachos, $despacho);
+//                $despacho->printData();
+            }
         }
 
-        return $despacho;
+        return $despachos;
     }
 
     public function getRol() {
         $rol = array();
-        $query = "SELECT rol FROM " . Rol::getNombreTabla() . " WHERE id = " . $this->atributos['id_Rol'] . " LIMIT 1";
+        $query = "SELECT rol FROM Roles where id = " . $this->atributos['id_Rol'] . " LIMIT 1";
         $resultado = $this->dbExecute($query);
 
         if ($resultado->num_rows) {
@@ -52,27 +56,6 @@ class Abogado extends EntidadBD {
             }
         }
         return $rol;
-    }
-
-    public function verificaLogin(array $datos, $callback) {
-        $email = $datos['email'];
-        $pwd = $datos['contrasena'];
-        $data = array();
-        $query = "SELECT email FROM " . static::$tabla_static . " WHERE email = '$email' AND contrasena = '" . sha1($pwd) . "' LIMIT 1";
-        $resultado = $this->dbExecute($query);
-        if ($resultado != false) {
-            $row = $resultado->fetch_assoc();
-            $data[] = array("email" => $row['email']);
-        } else {
-            $data[] = array("email" => "NULL");
-        }
-        $finalData = array("Resultados" => $data);
-        if ($callback != "") {
-            $json = "$callback(" . json_encode($finalData) . ")";
-        } else {
-            $json = json_encode($finalData);
-        }
-        print_r($json);
     }
 
     public function verificaUsuario() {
@@ -94,30 +77,48 @@ class Abogado extends EntidadBD {
     }
 
     public function guardarDatos(array $misDatos) {
-        foreach ($misDatos as $campo => $valor) {
-            if ($campo === "contrasena" && $this->existente != false) {
+        foreach ($this->atributos as $campo => $valor) {
+            if ($campo === "contrasena") {
                 $this->atributos[$campo] = sha1($misDatos[$campo]);
             } else {
                 $this->atributos[$campo] = $misDatos[$campo];
             }
         }
-        $this->actualizarValorDiscr();
     }
 
-    public function generarFormaActualizacion() {
+    public function generarFormaActualizacion($seleccion, $nombre) {
         
     }
 
-    public function generarFormaBorrado() {
+    public function generarFormaBorrado($seleccion,$nombre) {
         
     }
 
     public function generarFormaInsercion() {
-        
+        static::$smarty->assign('nombre', "Nuevo Abogado");
+        $data = array();
+
+        foreach ($this->atributos as $campo => $valor) {
+            if($campo !== "id" && $campo !== "id_Rol" && $campo !== "visible" && $campo !== "id_Despacho"){
+                
+                $data[$campo] = $campo[$valor];
+            }
+                       
+        }
+        static::$smarty->assign('data', $data);
+        static::$smarty->display($this->BASE_DIR . 'Vistas/Abogados/Altas.tpl');
     }
 
-    public function procesarForma() {
-        
+    public function procesarForma($op) {
+
+        switch ($op) {
+
+            case 1: //alta
+
+
+
+                break;
+        }
     }
 
     public function validarDatos() {
@@ -155,12 +156,16 @@ class Abogado extends EntidadBD {
         $query = "SELECT id FROM " . static::$tabla_static . " WHERE $condicion LIMIT 1";
         $resultado = $dbManager->executeQuery($query);
         $dbManager->closeConnection();
-        if ($resultado != false && $resultado->num_rows) {
-            $row = $resultado->fetch_assoc();
-            return $row['id'];
-        } else {
-            return -1;
+        if ($resultado != false) {
+            if ($resultado->num_rows > 0) {
+                $row = $resultado->fetch_assoc();
+                return $row['id'];
+            } else {
+                return -1;
+            }
         }
+        Debug::getInstance()->alert("EntidadBD::getID => No se encontró el ID");
+        return -1;
     }
 
     public static function getNombreTabla() {

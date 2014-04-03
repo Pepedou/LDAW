@@ -1,39 +1,68 @@
 <?php
 
 /**
- * Description of Complejidad
- *
- * @author José Luis Valencia Herrera     A01015544
- */
-include_once './EntidadBD.php';
+* Clase para la creación, actualización y borrado de Casos
+*
+* @author José Luis Valencia Herrera A01015544
+*/
+include_once 'EntidadBD.php';
+include_once 'Despacho.php';
 
-class Complejidad extends EntidadBD {
+class Caso extends EntidadBD {
 
-    static private $tabla_static = "Complejidades";
+    static private $tabla_static = "Casos";
 
     public function __construct() {
         parent::__construct();
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
             "id" => -1,
-            "complejidad" => "");
-        $this->discr = "id";
+            "nombre" => "",
+            "status" => 0,
+            "id_Despacho" => -1,
+            "visible" => 1);
+        $this->discr = "nombre";
         $this->discrValor = $this->atributos[$this->discr];
+    }
+
+    public function cargarDespacho() {
+        $despacho = new Despacho();
+        $query = "SELECT * FROM " . Despacho::getNombreTabla() . " WHERE id=" . $this->atributos['id_Despacho'] . " LIMIT 1";
+        $resultado = $this->dbExecute($query);
+        Debug::getInstance()->alert($query);
+
+        if ($resultado->num_rows) {
+            $fila = $resultado->fetch_assoc();
+            $despacho->guardarDatos($fila);
+        }
+
+        return $despacho;
     }
 
     public function generarFormaActualizacion() {
         
     }
 
-    public function generarFormaBorrado() {
+    public function generarFormaBorrado($seleccion,$nombre) {
         
     }
 
     public function generarFormaInsercion() {
-        
+        static::$smarty->assign('nombre', "Nuevo Caso");
+        $data = array();
+
+        foreach ($this->atributos as $campo => $valor) {
+            if($campo !== "id" && $campo !== "visible" && $campo !== "id_Despacho" && $campo !==status){
+                
+                $data[$campo] = $campo[$valor];
+            }
+                       
+        }
+        static::$smarty->assign('data', $data);
+        static::$smarty->display($this->BASE_DIR . 'Vistas/Casos/Altas.tpl');
     }
 
-    public function procesarForma() {
+    public function procesarForma($op) {
         
     }
 
@@ -84,5 +113,5 @@ class Complejidad extends EntidadBD {
         return static::$tabla_static;
     }
 
-//put your code here
 }
+

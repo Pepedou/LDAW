@@ -1,23 +1,20 @@
-<!doctype html>
 <?php
-include_once './Despacho.php';
 
+//include_once './Clases/Despacho.php';
+include_once './Clases/Abogado.php';
+//include_once './Clases/Complejidad.php';
+//include_once './Clases/Caso.php';
+$op = $_REQUEST['op'];
 function html(EntidadBD $entidad) {
-    if (!$entidad->procesarForma()) {
-        $entidad->generarFormaInsercion();
+    if (!$entidad->procesarForma(1)) {
+
+       $entidad->generarFormaInsercion();
     }
 }
 
 $objeto = new Despacho();
-?>
+           
 
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title></title>
-    </head>
-    <body>
-        <h1>Altas</h1>
+
+?>
 <?php html($objeto); ?>
-    </body>
-</html>
