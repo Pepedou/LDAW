@@ -36,21 +36,23 @@ class Pago extends EntidadBD {
         return $cliente;
     }
 
-    public function generarFormaActualizacion() {
-        
+    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
+     
+
     }
 
-    public function generarFormaBorrado() {
+    public function generarFormaBorrado($seleccion, $nombre) {
         
     }
 
     public function generarFormaInsercion() {
-        
+
+        static::$smarty->assign('accion', "Registrar");
+        static::$smarty->assign('header', "Registrar Pago");
+        static::$smarty->display($this->BASE_DIR . 'Vistas/Pagos/Altas.tpl');
     }
 
-    public function procesarForma() {
-        
-    }
+    
 
     public function validarDatos() {
         

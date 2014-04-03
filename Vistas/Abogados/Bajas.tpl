@@ -1,8 +1,8 @@
 {include file="../header.tpl" title="Despachos"}
-{include file="./Funciones_Llena.tpl"}
-{include file="./Funciones_Ajax.tpl"}
+{include file="../Despachos/Funciones_Llena.tpl"}
+{include file="../Despachos/Funciones_Ajax.tpl"}
 </head>
-<body onload="llenaEntidad('{$name}','{$tabla}','{$campo}');">
+<body onload="llenaDespachos(); llenaRoles(); llenaEntidad('{$name}','{$tabla}','{$campo}');">
     
     <h1>Elimina {$tabla}</h1>        
 
@@ -11,12 +11,11 @@
             <select id="{$name}" name ="{$name}" selected="{$sel}" onchange="nombre_desp(this);">
             </select>
         </td>
-        
-    <!-- Desplegar campos correspondientes del despacho a borrar-->
-    
-         
+
+    <!-- Desplegar campos correspondientes a actualizar-->
+    <form action=''>
         {include file="./campos_text.tpl"}
-  
+    </form>
 
 </body>
 </html>

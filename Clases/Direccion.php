@@ -27,7 +27,7 @@ class Direccion extends EntidadBD {
         $this->discrValor = $this->atributos[$this->discr];
     }
 
-    public function generarFormaActualizacion($seleccion,$nombre) {
+    public function generarFormaActualizacion($seleccion,$nombre,$accion, $carpeta) {
         
     }
 

@@ -16,6 +16,7 @@ class Documento extends EntidadBD {
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
             "id" => -1,
+            "nombre"=>"",
             "documento" => "",
             "id_Expediente" => -1,
             "id_Tipo" => -1,
@@ -24,21 +25,78 @@ class Documento extends EntidadBD {
         $this->discrValor = $this->atributos[$this->discr];
     }
 
-    public function generarFormaActualizacion() {
+    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
+        $name = "Selecciona";
+        $sel_exp = 0;
+        $sel_tipo = 0;
+
+        if ($nombre !== "Selecciona") {
+            $doc = new Documento();
+            $exito = $doc->cargarDeBD("nombre", $nombre);
+            if ($exito) {
+                /* Actualizo el valor de name */
+                $name = $doc->atributos["nombre"];
+                $sel_exp = $doc->atributos["id_Expediente"];
+                $sel_tipo = $doc->atributos["id_Tipo"];
+                
+                $exp = new Expediente();
+                $exito2 = $exp->cargarDeBD("id", $sel_exp);
+                /*Cargar Expediente*/
+                if ($exito2) {
+                   
+                    $doc_exp = $exp->atributos["nombre"];
+                   
+                } else {
+                    $doc_exp = "No encontrado";
+                   
+                }
+                
+                /*Cargar Tipo*/
+                $tipo = new Tipo();
+                $exito3 = $tipo->cargarDeBD("id", $sel_tipo);
+               
+                if ($exito3) {
+                   
+                    $doc_tipo = $exp->atributos["tipo"];
+                   
+                } else {
+                    $doc_tipo = "No encontrado";
+                   
+                }
+            }
+        }
         
+         
+        static::$smarty->assign('doc_nombre', $name);
+        static::$smarty->assign('nombre', $accion . "Documentos");
+        static::$smarty->assign('select_exp', $sel_exp);
+        static::$smarty->assign('select_tipo', $sel_tipo);
+        static::$smarty->assign('doc_exp', $doc_exp);
+        static::$smarty->assign('doc_tipo', $doc_tipo);
+        static::$smarty->assign('sel', $seleccion);
+        static::$smarty->assign('name', "documentos");
+        static::$smarty->assign('tabla', "Documentos");
+        static::$smarty->assign('campo', "nombre");
+        static::$smarty->assign('accion', $accion);
+        /* Imprimir documento */
+        static::$smarty->display($this->BASE_DIR . 'Vistas/Documentos/' . $carpeta . '.tpl');
     }
 
-    public function generarFormaBorrado() {
+    public function generarFormaBorrado($seleccion, $nombre) {
         
     }
 
     public function generarFormaInsercion() {
+
+        static::$smarty->assign('accion', "Registrar");
+        static::$smarty->assign('header', "Nuevo Documento");
+        static::$smarty->display($this->BASE_DIR . 'Vistas/Documentos/Altas.tpl');
+    }
+
+    public function procesarForma($op) {
         
     }
 
-    public function procesarForma() {
-        
-    }
 
     public function validarDatos() {
         

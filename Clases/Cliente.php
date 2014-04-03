@@ -41,20 +41,123 @@ class Cliente extends EntidadBD {
         return $direccion;
     }
 
-    public function generarFormaActualizacion() {
-        
+    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
+        $name = "Selecciona";
+        $apellido_p = "Apellido Paterno";
+        $apellido_m = "Apellido Materno";
+        $telefono = "Tel.";
+        $email = "Email";
+
+
+        if ($nombre !== "Selecciona") {
+            $cliente = new Cliente();
+            $exito = $cliente->cargarDeBD("nombre", $nombre);
+            if ($exito) {
+
+                /* Actualizo valores del cliente */
+                $name = $cliente->atributos["nombre"];
+                $apellido_p = $cliente->atributos["apellidoP"];
+                $apellido_m = $cliente->atributos["apellidoM"];
+                $telefono = $cliente->atributos["telefono"];
+                $email = $cliente->atributos["email"];
+
+                /* Cargo la direccion */
+                $dir = new Direccion();
+                $exito2 = $dir->cargarDeBD("id", $cliente->atributos['id_Direccion']);
+                if ($exito2) {
+
+                    $calle = $dir->atributos["calle"];
+                    $cp = $dir->atributos["cp"];
+                    $col = $dir->atributos["colonia"];
+                    $no_ext = $dir->atributos["no_exterior"];
+                    $no_int = $dir->atributos["no_interior"];
+                    $cd = $dir->atributos["ciudad"];
+                }
+            }
+        }
+        static::$smarty->assign('nombre', $accion . "Despachos");
+        static::$smarty->assign('cliente_nombre', $name);
+        static::$smarty->assign('cliente_apep', $apellido_p);
+        static::$smarty->assign('cliente_apem', $apellido_m);
+        static::$smarty->assign('cliente_tel', $telefono);
+        static::$smarty->assign('cliente_email', $email);
+
+        static::$smarty->assign('cliente_calle', $calle);
+        static::$smarty->assign('cliente_col', $col);
+        static::$smarty->assign('cliente_cp', $cp);
+        static::$smarty->assign('cliente_cd', $cd);
+        static::$smarty->assign('cliente_int', $no_int);
+        static::$smarty->assign('cliente_ext', $no_ext);
+
+        static::$smarty->assign('sel', $seleccion);
+        static::$smarty->assign('name', "clientes");
+        static::$smarty->assign('tabla', "Clientes");
+        static::$smarty->assign('campo', "nombre");
+        static::$smarty->assign('accion', $accion);
+        /* Imprimir documento */
+        static::$smarty->display($this->BASE_DIR . 'Vistas/Clientes/' . $carpeta . '.tpl');
     }
 
-    public function generarFormaBorrado() {
+    public function generarFormaBorrado($seleccion, $nombre) {
         
     }
 
     public function generarFormaInsercion() {
-        
+
+        static::$smarty->assign('nombre', "Nuevo Cliente");
+        static::$smarty->assign('accion', "Registrar");
+        static::$smarty->assign('header', "Alta de Clientes");
+
+        static::$smarty->display($this->BASE_DIR . 'Vistas/Clientes/Altas.tpl');
     }
 
-    public function procesarForma() {
-        
+    public function procesarForma($op) {
+        switch ($op) {
+            case 1:
+                $dir = new Direccion();
+                foreach ($this->atributos as $campo => $valor) {
+
+                    $this->atributos[$campo] = $_REQUEST[$campo];
+                }
+
+                foreach ($dir->atributos as $campo => $valor) {
+                    $dir->atributos[$campo] = $_REQUEST[$campo]; //guarda los atributos para la direccion              
+                }
+                if ($dir->atributos["calle"] != NULL) {
+                    $dir->almacenarEnBD();
+                    $id = $dir->getID("calle", $dir->atributos["calle"]);
+                    $this->atributos["id_Direccion"] = $id;
+                    $this->atributos["visible"] = 1;
+                    if ($this->almacenarEnBD())
+                        Debug::getInstance()->alert("Registro Exitoso.");
+                }
+                break;
+            case 2:
+                $this->procesa_bajas();
+                break;
+            case 3:
+                  if ($_REQUEST['sel'] !== 0) {
+                    $dir = new Direccion();
+                    foreach ($this->atributos as $campo => $valor) {
+
+                        $this->atributos[$campo] = $_REQUEST[$campo]; 
+                    }
+                        $this->atributos["visible"] = 1;
+                    foreach ($dir->atributos as $campo => $valor) {
+                        $dir->atributos[$campo] = $_REQUEST[$campo]; //guarda los atributos para la direccion              
+                    }
+                    if ($dir->atributos["calle"] != NULL) {
+                        $dir->almacenarEnBD();
+                        $id = $dir->getID("calle", $dir->atributos["calle"]);
+                        $this->atributos["id_Direccion"] = $id;
+                        if ($this->almacenarEnBD())
+                            Debug::getInstance()->alert("Actualización Exitosa.");
+                    }
+                }
+                break;
+            default :
+                break;
+        }
     }
 
     public function validarDatos() {

@@ -32,20 +32,12 @@ class Rol extends EntidadBD {
             return false;
         }
     }
-    
-    public function generarFormaActualizacion() {
-        
-    }
-
-    public function generarFormaBorrado() {
-        
-    }
 
     public function generarFormaInsercion() {
         
     }
 
-    public function procesarForma() {
+    public function procesarForma($op) {
         
     }
 

@@ -6,11 +6,29 @@
             var x = name.options[name.selectedIndex].text;
             var input = document.getElementById("nombre");
             input.value = x;
-            newUrl = "bajas.php?nombre=" + x + "&sel=" + sel;
+            var op = document.getElementById("op");  
+            var o = op.value; 
+            
+            newUrl = "bajas.php?nombre=" + x + "&sel=" + sel +"&op=" + o;
             document.location.href = newUrl;
         }
 
     }
+    function eliminar(){    
+       
+            var x = document.getElementById("nombre");  
+            var a = x.value;   
+            
+            var op = document.getElementById("op");  
+            var o = op.value; 
+            
+            newUrl = "bajas.php?nombre=" + a + "&elim=1" +"&op=" +o;            
+            document.location.href = newUrl;
+            alert("");
+            
+        }
+    
+    
 
     function show(val) {
 
@@ -31,7 +49,11 @@
             var x = name.options[name.selectedIndex].text;
             var input = document.getElementById("nombre");
             input.value = x;
-            newUrl = "cambios.php?nombre=" + x + "&sel=" + sel;
+            
+            var op = document.getElementById("op");  
+            var o = op.value; 
+            
+            newUrl = "cambios.php?nombre=" + x + "&sel=" + sel +"&op=" +o; 
             document.location.href = newUrl;
         }
 

@@ -38,7 +38,7 @@ abstract class EntidadBD extends ServicioGenerico {
             if ($resultado->num_rows > 0) {
                 $this->existente = true;
                 return true;
-            } else {
+            } else {              
                 $this->existente = false;
                 return false;
             }
@@ -61,8 +61,10 @@ abstract class EntidadBD extends ServicioGenerico {
         if ($resultado != false) {
             if ($resultado->num_rows) {
                 $this->existente = true;
+                Debug::getInstance()->alert("Entro");
                 return true;
             } else {
+                
                 $this->existente = false;
                 return false;
             }
@@ -121,16 +123,18 @@ abstract class EntidadBD extends ServicioGenerico {
     }
 
     public function almacenarEnBD() {
+        
+        
+        
         $this->actualizarValorDiscr(); //Me aseguro de que el discriminante tenga el valor correcto
         if ($this->discr === 'id' && $this->discrValor === -1) {//Si se busca por id y no se ha cargado el objeto
-             Debug::getInstance()->alert("Revisando1");
+           
             $this->revisarExistencia_MultDiscr($this->atributos);
         } else {
-            Debug::getInstance()->alert("Revisando2");
             $this->revisarExistencia($this->discr, $this->discrValor);
         }
         if (!$this->existente) {//Reviso si ya existe, si no, lo creo
-            Debug::getInstance()->alert("no existe");
+            
             foreach ($this->atributos as $campo => $campoValor) {//Genero string de campos y valores
                 if ($campo != "id") {
                     $subqueryCamps .= $campo . ",";
@@ -154,7 +158,7 @@ abstract class EntidadBD extends ServicioGenerico {
             /* Obtengo el ID real, es importante que el valor del discriminante
              * sea el mismo que tenía originalmente mediante $this->actualizarValorDiscr();
              */
-            Debug::getInstance()->alert("Ya existe");
+            //Debug::getInstance()->alert("Ya existe");
             $this->atributos['id'] = static::getID($this->discr, $this->discrValor);
 
             foreach ($this->atributos as $campo => $valor) {//Creo asignaciones SQL
@@ -177,8 +181,8 @@ abstract class EntidadBD extends ServicioGenerico {
     }
 
     public function eliminarDeBD() {
-        Debug::getInstance()->alert("BOrrando:" .$this->atributos["id"]);
-        $query = "UPDATE $this->tabla SET visible = 0 WHERE id =" .$this->atributos['id'];
+        
+        $query = "UPDATE $this->tabla SET visible = 0 WHERE id =" . $this->atributos['id'];
         $resultado = $this->dbExecute($query);
         if ($resultado === true) {
             return true;
@@ -192,19 +196,34 @@ abstract class EntidadBD extends ServicioGenerico {
         print_r($this->atributos);
     }
 
-    abstract public function generarFormaInsercion();
+    public function generarFormaInsercion() {
+        
+    }
 
-    abstract public function generarFormaActualizacion($seleccion, $nombre);
+    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
+        
+    }
 
-    abstract public function generarFormaBorrado($seleccion, $nombre);
+    public function generarFormaBorrado($seleccion, $nombre) {
+        
+    }
 
-    public function procesarForma($op){
-        foreach ($this->atributos as $campo => $valor){
-            if(isset($_REQUEST[$campo])){
-                $this->atributos[$campo] = $_REQUEST[$campo];
-            }
+    public function procesarForma($op) {
+      switch ($op) {
+
+            case 1: //alta           
+
+                $this->procesa_insert();
+                break;
+            case 2:
+                $this->procesa_bajas();
+                break;
+            case 3:
+                $this->procesa_cambios();
+                break;
+            default :
+                break;
         }
-        $this->almacenarEnBD();
     }
 
     public function guardarDatos(array $misDatos) {
@@ -221,4 +240,73 @@ abstract class EntidadBD extends ServicioGenerico {
     }
 
     abstract public function validarDatos();
+
+    public function all_set() {
+        $count = 0;
+        $att_count = count($this->atributos) - 2; //menos id y visible
+
+        foreach ($this->atributos as $campo => $valor) {
+            if ($campo != 'id' && $campo != 'visible') {
+
+                if (isset($_REQUEST[$campo])) {
+
+                    $count = $count + 1;
+                } 
+            }
+        }
+       // Debug::getInstance()->alert("Atributos Presentes:" . $count);
+        //Debug::getInstance()->alert("Atributos de la Entidad" . $att_count);
+        if ($count === $att_count) {
+           // Debug::getInstance()->alert("Todos los atributos puestos");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function procesa_insert() {
+
+        foreach ($this->atributos as $campo => $valor) {
+            if (isset($_REQUEST[$campo])) {
+                $this->atributos[$campo] = $_REQUEST[$campo];
+            }
+        }
+        //Debug::getInstance()->alert("Visible:".$this->atributos["visible"]);
+        if ($this->all_set()) {
+            if ($this->almacenarEnBD()) {
+                Debug::getInstance()->alert("Registro Exitoso.");
+            }
+        }
+    }
+
+    public function procesa_bajas() {
+
+        if (isset($_REQUEST['nombre']) && isset($_REQUEST['elim'])) {
+            $this->atributos["id"] = $this->getID("nombre", $_REQUEST['nombre']);
+
+            if ($this->eliminarDeBD())
+                Debug::getInstance()->alert("Registro Eliminado.");
+        }
+    }
+
+    public function procesa_cambios() {
+
+        if ($_REQUEST['sel'] !== 0) {
+            
+            $this->atributos['id'] = $this->getID($this->discr, $_REQUEST[$this->discr]);
+            foreach ($this->atributos as $campo => $valor) {
+                if (isset($_REQUEST[$campo])) {
+                    $this->atributos[$campo] = $_REQUEST[$campo];
+                }
+            }
+            if ($this->all_set()) {
+                if ($this->almacenarEnBD()) {
+                    Debug::getInstance()->alert("Actualización Exitosa.");
+                } else {
+                    Debug::getInstance()->alert("Actualización Errónea.");
+                }
+            }
+        }
+    }
+
 }
