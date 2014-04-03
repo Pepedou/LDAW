@@ -16,11 +16,12 @@ class Documento extends EntidadBD {
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
             "id" => -1,
+            "nombre" => "",
             "documento" => "",
             "id_Expediente" => -1,
             "id_Tipo" => -1,
             "visible" => 1);
-        $this->discr = "id";
+        $this->discr = "nombre";
         $this->discrValor = $this->atributos[$this->discr];
     }
 

@@ -17,9 +17,10 @@ class Expediente extends EntidadBD {
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
             "id" => -1,
-            "id_Caso" => -1,
+            "id_Caso" => -1, 
+            "nombre" => "",
             "visible" => 1);
-        $this->discr = "id";
+        $this->discr = "nombre";
         $this->discrValor = $this->atributos[$this->discr];
     }
 

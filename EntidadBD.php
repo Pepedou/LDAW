@@ -195,7 +195,10 @@ abstract class EntidadBD extends ServicioGenerico {
     }
 
     protected function actualizarValorDiscr() {
-        if ($this->discr === 'id' && $this->discrValor === -1) {
+        /*Si el discriminante es ID, tengo que ver si necesito cargar el id de la base de datos.
+         * Esto lo determino si tanto el valor del discriminante como el atributo id son los default.
+         */
+        if ($this->discr === 'id' && $this->discrValor === -1 && $this->atributos['id'] == -1) {
             $this->atributos['id'] = static::getID_MultDiscr($this->atributos);
         }
         $this->discrValor = $this->atributos[$this->discr];

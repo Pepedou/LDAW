@@ -18,19 +18,19 @@ CREATE TABLE Abogados (id int PRIMARY KEY AUTO_INCREMENT, nombre varchar(30) NOT
 
 CREATE TABLE Casos (id int PRIMARY KEY AUTO_INCREMENT, nombre varchar(100), status int, id_Despacho int, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY (id_Despacho) REFERENCES Despachos(id) ON DELETE CASCADE);
 
-CREATE TABLE Abogados_Casos (id int PRIMARY KEY AUTO_INCREMENT, id_Abogado int, id_Caso int, FOREIGN KEY(id_Abogado) REFERENCES Abogados(id) ON DELETE CASCADE, FOREIGN KEY (id_Caso) REFERENCES Casos(id) ON DELETE CASCADE);
+CREATE TABLE Abogados_Casos ( id_Abogado int NOT NULL, id_Caso int NOT NULL, PRIMARY KEY(id_Abogado, id_Caso), FOREIGN KEY(id_Abogado) REFERENCES Abogados(id) ON DELETE CASCADE, FOREIGN KEY (id_Caso) REFERENCES Casos(id) ON DELETE CASCADE);
 
-CREATE TABLE Tareas (id int PRIMARY KEY AUTO_INCREMENT, descripcion varchar(250), inicio DATE , fin DATE, status int , id_Abogado int, id_Caso int, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY(id_Abogado) REFERENCES Abogados(id) ON DELETE CASCADE, FOREIGN KEY(id_Caso) REFERENCES Casos(id) ON DELETE CASCADE);
+CREATE TABLE Tareas (id int PRIMARY KEY AUTO_INCREMENT, nombre varchar(100), descripcion varchar(250), inicio DATE , fin DATE, status int , id_Abogado int, id_Caso int, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY(id_Abogado) REFERENCES Abogados(id) ON DELETE CASCADE, FOREIGN KEY(id_Caso) REFERENCES Casos(id) ON DELETE CASCADE);
 
-CREATE TABLE Expedientes(id int PRIMARY KEY AUTO_INCREMENT, id_Caso int, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY (id_Caso) REFERENCES Casos(id) ON DELETE CASCADE);
+CREATE TABLE Expedientes(id int PRIMARY KEY AUTO_INCREMENT, id_Caso int, nombre varchar(50) NOT NULL, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY (id_Caso) REFERENCES Casos(id) ON DELETE CASCADE);
 
 CREATE TABLE Tipos(id int PRIMARY KEY AUTO_INCREMENT, tipo varchar(10) NOT NULL);
 
-CREATE TABLE Documentos (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, documento blob NOT NULL, id_Expediente int NOT NULL, id_Tipo int NOT NULL, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY(id_Expediente) REFERENCES Expedientes(id) ON DELETE CASCADE);
+CREATE TABLE Documentos (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre varchar(200) NOT NULL, documento blob NOT NULL, id_Expediente int NOT NULL, id_Tipo int NOT NULL, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY(id_Expediente) REFERENCES Expedientes(id) ON DELETE CASCADE);
 
 CREATE TABLE Clientes(id int PRIMARY KEY AUTO_INCREMENT, nombre varchar(30) NOT NULL, apellidoP varchar(30) NOT NULL, apellidoM varchar(30) NOT NULL, id_Direccion int NOT NULL, telefono int, email varchar(50) NOT NULL, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY(id_Direccion) REFERENCES Direcciones(id) ON DELETE CASCADE);
 
-CREATE TABLE Abogados_Clientes (id int NOT NULL PRIMARY KEY AUTO_INCREMENT, id_Abogado int NOT NULL, id_Cliente int NOT NULL, FOREIGN KEY(id_Abogado) REFERENCES Abogados(id) ON DELETE CASCADE, FOREIGN KEY(id_Cliente) REFERENCES Clientes(id) ON DELETE CASCADE);
+CREATE TABLE Abogados_Clientes (id_Abogado int NOT NULL, id_Cliente int NOT NULL, PRIMARY KEY(id_Abogado, id_Cliente), FOREIGN KEY(id_Abogado) REFERENCES Abogados(id) ON DELETE CASCADE, FOREIGN KEY(id_Cliente) REFERENCES Clientes(id) ON DELETE CASCADE);
 
 CREATE TABLE Logs (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, id_Documento int NOT NULL, fecha date NOT NULL, id_Abogado int NOT NULL, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY(id_Documento) REFERENCES Documentos(id) ON DELETE CASCADE, FOREIGN KEY(id_Abogado) REFERENCES Abogados(id) ON DELETE CASCADE);
 
@@ -44,13 +44,19 @@ INSERT INTO Roles (rol) VALUES ("Administrador");
 
 INSERT INTO Abogados (nombre, apellidoP, apellidoM, telefono, email, contrasena, id_Rol, id_Despacho) VALUES ("José Luis", "Valencia", "Herrera", 55851891, "pepedou@gmail.com", SHA1("asdf"), 1, 1);
 
+INSERT INTO Clientes (nombre, apellidoP, apellidoM, id_Direccion, telefono, email) VALUES ("Juan Abrupto", "Carrazco", "Solís", 1, 22101465, "jabrc@gmail.com");
+
 INSERT INTO Tipos (tipo) VALUES ("PDF");
 
 INSERT INTO Casos (nombre, status, id_Despacho) VALUES ("PÉREZ VS JUÁREZ", 1, 1);
 
-INSERT INTO Expedientes (id_Caso) VALUES (1);
+INSERT INTO Expedientes (id_Caso, nombre) VALUES (1, "Pruebas");
 
 INSERT INTO Documentos (documento, id_Expediente, id_Tipo) VALUES ("ASDF", 1, 1);
+
+INSERT INTO Abogados_Casos VALUES (1, 1);
+
+INSERT INTO Abogados_Clientes VALUES (1, 1);
 
 
 

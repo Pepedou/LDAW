@@ -47,6 +47,43 @@ class Direccion extends EntidadBD {
         
     }
 
+    public function service_selectTodos($callback) {
+        $json = array();
+        $query = "SELECT  " . static::$tabla_static . ".id, calle, no_exterior, no_interior, colonia, Municipios.Municipio, ciudad, Estados.Estado, cp from " . static::$tabla_static . " JOIN Municipios ON " . static::$tabla_static . ".id_Municipio = Municipios.id JOIN Estados ON Estados.id = Municipios.Estados_id";
+        $resultado = $this->dbExecute($query);
+        /* Genero el JSON con los resultados */
+        if ($resultado != false) {
+            while ($fila = $resultado->fetch_assoc()) {
+                array_push($json, $fila);
+            }
+            $finalData = array("Resultados" => $json);
+            if ($callback != "") {
+                $json = "$callback(" . json_encode($finalData) . ")";
+            } else {
+                $json = json_encode($finalData);
+            }
+            print_r($json);
+        }
+        return $json;
+    }
+
+    public function service_selectIndividual($callback) {
+        $json = array();
+        $query = "SELECT  " . static::$tabla_static . ".id, calle, no_exterior, no_interior, colonia, Municipios.Municipio, ciudad, Estados.Estado, cp from " . static::$tabla_static . " JOIN Municipios ON " . static::$tabla_static . ".id_Municipio = Municipios.id JOIN Estados ON Estados.id = Municipios.Estados_id WHERE " . static::$tabla_static . ".id = " . $this->atributos['id'];
+        $resultado = $this->dbExecute($query);
+        if ($resultado != false) {
+            array_push($json, ($resultado->fetch_assoc()));
+            $finalData = array("Resultados" => $json);
+            if ($callback != "") {
+                $json = "$callback(" . json_encode($finalData) . ")";
+            } else {
+                $json = json_encode($finalData);
+            }
+            print_r($json);
+        }
+        return $resultado;
+    }
+
     public static function getID($discriminante, $valor) {
         $dbManager = DatabaseManager::getInstance();
         $dbManager->connectToDatabase();

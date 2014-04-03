@@ -1,35 +1,50 @@
 <?php
 
-include_once './Abogado.php';
-include_once './Despacho.php';
-include_once './Direccion.php';
-include_once './Complejidad.php';
-include_once './Documento.php';
-include_once './Caso.php';
-include_once './Cliente.php';
-include_once './Log.php';
-include_once './Pago.php';
-include_once './Rol.php';
-include_once './Tarea.php';
-include_once './Tipo.php';
+include_once './EntidadFactory.php';
 
-function procesa(EntidadBD $entidad, $operacion, $params) {
-    $entidad->guardarDatos($params);
+function procesa(EntidadBD $entidad, $operacion, $params, $callback) {
+    if ($params != null) {
+        $entidad->guardarDatos($params);
+    }
     switch ($operacion) {
+        case lg:
+            $abogado = new Abogado();
+            $abogado->verificaLogin($params, $callback);
+            break;
         case 'st':
-            $entidad->service_selectTodos();
+            $entidad->service_selectTodos($callback);
             break;
         case 'si':
-            $entidad->service_selectIndividual();
+            $entidad->service_selectIndividual($callback);
             break;
         case 'in':
-            $entidad->service_insert();
+            $entidad->service_insert($callback);
             break;
         case 'up':
-            $entidad->service_update();
+            $entidad->service_update($callback);
             break;
         case 'del':
-            $entidad->service_delete();
+            $entidad->service_delete($callback);
+            break;
+    }
+}
+
+function procesaMaM(RelacionMaM $entidad, $operacion, $params, $callback) {
+    if ($params != null) {
+        $entidad->guardarDatos($params);
+    }
+    switch ($operacion) {
+        case 'st':
+            $entidad->service_selectTodos($callback);
+            break;
+        case 'si':
+            $entidad->service_selectIndividual($callback);
+            break;
+        case 'in':
+            $entidad->service_insert($callback);
+            break;
+        case 'del':
+            $entidad->service_delete($callback);
             break;
     }
 }
@@ -37,16 +52,10 @@ function procesa(EntidadBD $entidad, $operacion, $params) {
 $tipo = $_GET['entidad'];
 $operacion = $_GET['op'];
 $params = $_REQUEST['params'];
-$objeto = NULL;
+$callback = $_REQUEST['callback'];
 
-switch ($tipo) {
-    case 'Abogado':
-        $objeto = new Abogado();
-        break;
-    case 'Despacho':
-        $objeto = new Despacho();
-        break;
-}
+$factory = new EntidadFactory();
+$objeto = $factory->create($tipo);
 
 //$dir = new Direccion();
 //$dir->guardarDatos(array(
@@ -102,7 +111,6 @@ switch ($tipo) {
 //$rol->almacenarEnBD();
 //$rol->service_selectIndividual();
 //$rol->eliminarDeBD();
-
 //$tarea = new Tarea();
 //$tarea->guardarDatos(array(
 //    "descripcion" => "Tarea1",
@@ -111,16 +119,33 @@ switch ($tipo) {
 //));
 //
 //$tarea->almacenarEnBD();
+//$tipo = new Tipo();
+//$tipo->guardarDatos(array(
+//    "tipo" => "PDF"
+//));
+//$tipo->eliminarDeBD();
+//
+//$tipo->service_selectIndividual();
+//$ac = new AbogadosClientes();
+//$ac->guardarDatos(array(
+//    "id_Abogado" => 1,
+//    "id_Cliente" => 1
+//));
+//
+//$ac->almacenarEnBD();
+//
+//$abogs = $ac->cargarAbogados(); 
+//
+//$ac->service_selectIndividual($callback);
 
-$tipo = new Tipo();
-$tipo->guardarDatos(array(
-    "tipo" => "PDF"
-));
-$tipo->eliminarDeBD();
+$reflector = new ReflectionClass($objeto);
 
-$tipo->service_selectIndividual();
+if ($reflector->isSubclassOf('EntidadBD')) {
 
-
-//procesa($objeto, $operacion, $params);
-
+    procesa($objeto, $operacion, $params, $callback);
+} else if ($reflector->isSubclassOf('RelacionMaM')) {
+    procesaMaM($objeto, $operacion, $params, $callback);
+} else {
+    print_r("NULL");
+}
 //Para el cliente: https://stackoverflow.com/questions/17953468/how-to-pass-a-multidimensional-associative-array-in-url

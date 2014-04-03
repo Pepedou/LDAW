@@ -17,6 +17,7 @@ class Tarea extends EntidadBD {
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
             "id" => -1,
+            "nombre" => "",
             "descripcion" => "",
             "inicio" => date("Y-m-d"),
             "fin" => date("Y-m-d"),

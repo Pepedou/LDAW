@@ -54,6 +54,27 @@ class Abogado extends EntidadBD {
         return $rol;
     }
 
+    public function verificaLogin(array $datos, $callback) {
+        $email = $datos['email'];
+        $pwd = $datos['contrasena'];
+        $data = array();
+        $query = "SELECT email FROM " . static::$tabla_static . " WHERE email = '$email' AND contrasena = '" . sha1($pwd) . "' LIMIT 1";
+        $resultado = $this->dbExecute($query);
+        if ($resultado != false) {
+            $row = $resultado->fetch_assoc();
+            $data[] = array("email" => $row['email']);
+        } else {
+            $data[] = array("email" => "NULL");
+        }
+        $finalData = array("Resultados" => $data);
+        if ($callback != "") {
+            $json = "$callback(" . json_encode($finalData) . ")";
+        } else {
+            $json = json_encode($finalData);
+        }
+        print_r($json);
+    }
+
     public function verificaUsuario() {
         if (strlen($this->atributos['mail']) === 0 || strlen($this->atributos['mail']) > 30) {
             echo 'Longitud de usuario no valida';
