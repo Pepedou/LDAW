@@ -43,6 +43,9 @@ switch ($op) {
     case 'Tarea':
         $objeto = new Tarea();
         break;
+    case 'Documento':
+        $objeto = new Documento();
+        break;
     default :
         Debug::getInstance()->alert("Entidad no Encontrada");
         break;

@@ -2,7 +2,7 @@
 {include file="./Funciones_Ajax.tpl"}
 
 </head>
-<body onload="llenaEstados();">
+<body onload="llenaEstados();llenaEntidad('{$name}','{$tabla}','{$campo}');">
     <h1>Despachos</h1>    
     <form action='altas.php' method='get'>
 

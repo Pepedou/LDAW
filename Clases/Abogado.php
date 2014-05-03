@@ -1,8 +1,8 @@
 <?php
 
-include_once 'EntidadBD.php';
-include_once 'Despacho.php';
-include_once 'Rol.php';
+include_once './Clases/EntidadBD.php';
+include_once './Clases/Despacho.php';
+include_once './Clases/Rol.php';
 
 class Abogado extends EntidadBD {
 
@@ -30,7 +30,7 @@ class Abogado extends EntidadBD {
     public function cargarDespachos() {
         $despachos = array();
 
-        $query = "SELECT * FROM " . Despacho::getTabla() . " WHERE id=" . $this->atributos['id_Despacho'];
+        $query = "SELECT * FROM " . Despacho::getNombreTabla() . " WHERE id=" . $this->atributos['id_Despacho'];
         $resultado = $this->dbExecute($query);
         Debug::getInstance()->alert($query);
 
@@ -44,6 +44,22 @@ class Abogado extends EntidadBD {
         }
 
         return $despachos;
+    }
+    
+    /*Funcion corregida resultado de pruebas*/
+     public function cargarDespachos2() {
+       
+        $despacho = new Despacho();
+        $query = "SELECT * FROM " . Despacho::getNombreTabla() . " WHERE id=" . $this->atributos['id_Despacho'];
+        $resultado = $this->dbExecute($query);
+        Debug::getInstance()->alert($query);
+
+          if ($resultado->num_rows) {
+            $fila = $resultado->fetch_assoc();
+            $despacho->guardarDatos($fila);
+            
+        }
+        return $despacho;
     }
 
     public function getRol() {
@@ -59,13 +75,34 @@ class Abogado extends EntidadBD {
         return $rol;
     }
 
+    public function verificaLogin(array $datos, $callback) {
+        $email = $datos['email'];
+        $pwd = $datos['contrasena'];
+        $data = array();
+        $query = "SELECT email FROM " . static::$tabla_static . " WHERE email = '$email' AND contrasena = '" . sha1($pwd) . "' LIMIT 1";
+        $resultado = $this->dbExecute($query);
+        if ($resultado != false) {
+            $row = $resultado->fetch_assoc();
+            $data[] = array("email" => $row['email']);
+        } else {
+            $data[] = array("email" => "NULL");
+        }
+        $finalData = array("Resultados" => $data);
+        if ($callback != "") {
+            $json = "$callback(" . json_encode($finalData) . ")";
+        } else {
+            $json = json_encode($finalData);
+        }
+        print_r($json);
+    }
+
     public function verificaUsuario() {
-        if (strlen($this->atributos['mail']) === 0 || strlen($this->atributos['mail']) > 30) {
+        if (strlen($this->atributos['email']) === 0 || strlen($this->atributos['email']) > 30) {
             echo 'Longitud de usuario no valida';
             return false;
         } else {
 
-            $query = "SELECT email FROM " . static::tabla_static . " WHERE email='" . $this->atributos['mail'] . "'";
+            $query = "SELECT email FROM " . static::tabla_static . " WHERE email='" . $this->atributos['email'] . "'";
 
             $resultado = $this->dbExecute($query);
 
@@ -104,7 +141,6 @@ class Abogado extends EntidadBD {
 
                 /* Actualizo el valor de name */
                 $name = $abo->atributos["nombre"];
-                Debug::getInstance()->alert($sel_desp);
                 $apellido_p = $abo->atributos["apellidoP"];
                 $apellido_m = $abo->atributos["apellidoM"];
                 $telefono = $abo->atributos["telefono"];
@@ -137,6 +173,8 @@ class Abogado extends EntidadBD {
         static::$smarty->assign('abog_email', $email);
         static::$smarty->assign('abog_rol', $abog_rol);
         static::$smarty->assign('abog_desp', $abog_desp);
+        static::$smarty->assign('sel_rol', $sel_rol);
+        static::$smarty->assign('sel_desp', $sel_desp);
 
         static::$smarty->assign('select_rol', $sel_rol);
         static::$smarty->assign('select_desp', $sel_desp);
@@ -157,7 +195,6 @@ class Abogado extends EntidadBD {
         static::$smarty->assign('nombre', "Nuevo Abogado");
         static::$smarty->assign('accion', "Registrar");
         static::$smarty->assign('header', "Alta de Abogados");
-
         static::$smarty->display($this->BASE_DIR . 'Vistas/Abogados/Altas_2.tpl');
     }
 
@@ -169,10 +206,14 @@ class Abogado extends EntidadBD {
 
                 foreach ($this->atributos as $campo => $valor) {
                     if (isset($_REQUEST[$campo])) {
-                        $this->atributos[$campo] = $_REQUEST[$campo];
+                        if ($campo === "contrasena") {
+                            $this->atributos[$campo] = sha1($_REQUEST[$campo]);
+                        } else {
+                            $this->atributos[$campo] = $_REQUEST[$campo];
+                        }
                     }
                 }
-              
+
                 if ($this->all_set()) {
                     if ($this->almacenarEnBD()) {
                         Debug::getInstance()->alert("Registro Exitoso.");
@@ -280,7 +321,7 @@ class Abogado extends EntidadBD {
                 }
             }
         }
-       
+
         if ($count === $att_count) {
 
             return true;

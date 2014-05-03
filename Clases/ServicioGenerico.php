@@ -1,7 +1,6 @@
 <?php
 
-include_once 'DatabaseManager.php';
-
+include_once './Clases/DatabaseManager.php';
 
 /**
  * Description of ServicioGenerico
@@ -13,7 +12,7 @@ class ServicioGenerico {
     protected $tabla, $discr, $discrValor;
     public $atributos = array();
 
-    public function service_selectTodos() {
+    public function service_selectTodos($callback) {
         $json = array();
         $query = "SELECT * FROM $this->tabla";
         $resultado = $this->dbExecute($query);
@@ -22,24 +21,52 @@ class ServicioGenerico {
             while ($fila = $resultado->fetch_assoc()) {
                 array_push($json, $fila);
             }
-            print_r(json_encode($json));
+            $finalData = array("Resultados" => $json);
+            if ($callback != "") {
+                $json = "$callback(" . json_encode($finalData) . ")";
+            } else {
+                $json = json_encode($finalData);
+            }
+            print_r($json);
         }
         return $json;
     }
 
-    public function service_selectIndividual() {
+    public function service_selectIndividual($callback) {
         $json = array();
         $query = "SELECT * FROM $this->tabla WHERE $this->discr = '$this->discrValor'";
-        Debug::getInstance()->alert($query);
         $resultado = $this->dbExecute($query);
         if ($resultado != false) {
             array_push($json, ($resultado->fetch_assoc()));
-            print_r(json_encode($json));
+            $finalData = array("Resultados" => $json);
+            if ($callback != "") {
+                $json = "$callback(" . json_encode($finalData) . ")";
+            } else {
+                $json = json_encode($finalData);
+            }
+            print_r($json);
         }
         return $resultado;
     }
 
-    public function service_insert() {
+    public function service_selectIndividualID($callback) {
+        $json = array();
+        $query = "SELECT * FROM $this->tabla WHERE id = ".$this->atributos['id'];
+        $resultado = $this->dbExecute($query);
+        if ($resultado != false) {
+            array_push($json, ($resultado->fetch_assoc()));
+            $finalData = array("Resultados" => $json);
+            if ($callback != "") {
+                $json = "$callback(" . json_encode($finalData) . ")";
+            } else {
+                $json = json_encode($finalData);
+            }
+            print_r($json);
+        }
+        return $resultado;
+    }
+
+    public function service_insert($callback) {
         foreach ($this->atributos as $campo => $campoValor) {
             if ($campo != "id") {
                 $subqueryCamps .= $campo . ",";
@@ -53,14 +80,20 @@ class ServicioGenerico {
         Debug::getInstance()->alert("Insert - $query");
         $resultado = $this->dbExecute($query);
         if ($resultado != false) {
-            print_r(json_encode($this->atributos));
+            $finalData = array("Resultados" => $this->atributos);
+            if ($callback != "") {
+                $json = "$callback(" . json_encode($finalData) . ")";
+            } else {
+                $json = json_encode($finalData);
+            }
+            print_r($json);
         } else {
             print "[null]";
         }
         return $resultado;
     }
 
-    public function service_update() {
+    public function service_update($callback) {
         $json = array();
         foreach ($this->atributos as $campo => $campoValor) {
             if ($campo != "id") {
@@ -74,14 +107,20 @@ class ServicioGenerico {
         $resultado = $this->dbExecute($query);
         if ($resultado === true) {
             array_push($json, $this->atributos);
-            print_r(json_encode($json));
+            $finalData = array("Resultados" => $json);
+            if ($callback != "") {
+                $json = "$callback(" . json_encode($finalData) . ")";
+            } else {
+                $json = json_encode($finalData);
+            }
+            print_r($json);
         } else {
             print "[null]";
         }
         return $resultado;
     }
 
-    public function service_delete() {
+    public function service_delete($callback) {
         $json = array();
         $query = "UPDATE $this->tabla SET visible = 0 WHERE $this->discr = '$this->discrValor'";
         Debug::getInstance()->alert("DELETE - $query");
@@ -89,7 +128,13 @@ class ServicioGenerico {
         if ($resultado === true) {
             array_push($json, $this->atributos);
         }
-        print_r(json_encode($json));
+        $finalData = array("Resultados" => $json);
+        if ($callback != "") {
+            $json = "$callback(" . json_encode($finalData) . ")";
+        } else {
+            $json = json_encode($finalData);
+        }
+        print_r($json);
         return $resultado;
     }
 

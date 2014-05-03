@@ -16,6 +16,9 @@
         <td><label for="despacho">Despacho</label>
             <input id = "despacho" type='text' name='despacho' value = "{$caso_desp}" readonly/>    
         </td>
+        <td><label for="cliente">Cliente</label>
+           <input id = "cliente" type='text' name='cliente' value = "{$caso_cliente}" readonly/>  
+        </td>
     </tr>
      <input type ='hidden' id="op" name='op' value='Caso' />
     <td>

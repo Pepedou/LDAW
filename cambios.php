@@ -25,8 +25,7 @@ switch ($op) {
 
     case 'Despacho':
         $objeto = new Despacho();
-        break;
-    
+        break;    
     case 'Abogado':
         $objeto = new Abogado();
         break;
@@ -39,6 +38,10 @@ switch ($op) {
     case 'Expediente':
         $objeto = new Expediente();
         break;
+    case 'Documento':
+        $objeto = new Documento();
+        break;
+        
     default :
         Debug::getInstance()->alert("Entidad no Encontrada");
         break;

@@ -14,16 +14,22 @@
             <select id="despachos" name ="id_Despacho">
             </select>
         </td>
-
+        
+        
         <td>
-            <select name="status">
-                <option value="1">Activo</option> 
-                <option value="0" selected>Inactivo</option>
+            <label for="clientes">Cliente</label>
+            <select id="clientes" name ="id_Cliente">
+            </select>
         </td>
 
-        </select>
+        <td>
+            <select id ="status" name="status">
+                <option value="1">Activo</option> 
+                <option value="0" selected>Inactivo</option>
+            </select>
+        </td>
     </tr>
-     <input type ='hidden' id="op" name='op' value='Caso' />
+    <input type ='hidden' id="op" name='op' value='Caso' />
     <td>
         <input type='submit' value='Aceptar' />
     </td>

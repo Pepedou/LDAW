@@ -12,7 +12,7 @@ $tabla = $_REQUEST['tabla'];
 switch ($op) {
 
     case 1:
-        // alert("sad");
+        
         $dbM = DatabaseManager::getInstance();
         $dbM->connectToDatabase();
         $query = "SELECT id, Estado  FROM Estados WHERE Paises_id=1"; //siempre es México

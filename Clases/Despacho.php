@@ -5,8 +5,8 @@
  *
  * @author José Luis Valencia Herrera     A01015544
  */
-include_once 'EntidadBD.php';
-include_once 'Direccion.php';
+include_once './Clases/EntidadBD.php';
+include_once './Clases/Direccion.php';
 
 class Despacho extends EntidadBD {
 
@@ -77,7 +77,7 @@ class Despacho extends EntidadBD {
                 $this->procesa_bajas();
                 break;
             case (3): //actualizacion
-                if ($_REQUEST['sel'] !== 0 ) {
+                if ($_REQUEST['sel'] !== 0) {
                     $dir = static::$direccion;
                     foreach ($this->atributos as $campo => $valor) {
 
@@ -114,8 +114,8 @@ class Despacho extends EntidadBD {
         $col = "Colonia";
         $cp = "cp";
         $cd = "Ciudad";
-        $mun = 0;
-        $edo = 0;
+        $sel_mun = 0;
+        $sel_edo = 0;
 
         /* Aqui cargamos el despacho */
         if ($nombre !== "Selecciona") {
@@ -135,8 +135,11 @@ class Despacho extends EntidadBD {
                     $no_ext = $dir->atributos["no_exterior"];
                     $no_int = $dir->atributos["no_interior"];
                     $cd = $dir->atributos["ciudad"];
-                    $mun = $dir->atributos["id_Municipio"];
-                    $edo = $dir->getIDEstadoDeMunicipio($mun);
+                    $sel_mun = $dir->atributos["id_Municipio"];
+                    /* Regreso nombre de municipio */
+                    $mun = $dir->getMunicipio($sel_mun);
+                    /* Uso el nombre para traer el id del edo */
+                    $sel_edo = $dir->getIDEstadoDeMunicipio($mun);
                 }
             }
         }
@@ -148,9 +151,9 @@ class Despacho extends EntidadBD {
         static::$smarty->assign('desp_cd', $cd);
         static::$smarty->assign('desp_int', $no_int);
         static::$smarty->assign('desp_ext', $no_ext);
-        static::$smarty->assign('select_mun', $mun);
-        static::$smarty->assign('select_edo', $edo);
-        
+        static::$smarty->assign('sel_mun', $sel_mun);
+        static::$smarty->assign('sel_edo', $sel_edo);
+
         static::$smarty->assign('sel', $seleccion);
         static::$smarty->assign('name', "despachos");
         static::$smarty->assign('tabla', "Despachos");

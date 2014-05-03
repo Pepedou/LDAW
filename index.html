@@ -4,26 +4,32 @@
         <meta charset="utf-8">
         <title>Gesti&oacute;n Abogados - Inicio de sesi&oacute;n</title>
         <link href="css/index.css" rel="stylesheet" type="text/css" media="all" />
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $("#userinput").focus();
+            });
+        </script>
     </head>
 
     <body>
         <form action="verificaLogin.php" method="post">
-                <table id="main-table">
-                    <tr>
-                        <td colspan="2">Sistema de Gestión de Bufete de Abogados</td>
-                    </tr>
-                    <tr>
-                        <td width="104" style="text-align:right;">Usuario</td>
-                        <td width="227"><input type="text" name="usuario" /></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:right;">Contraseña</td>
-                        <td><input type="password" name="pwd" /></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><input type="submit" value="Entrar" /><input type="reset" value="Borrar" /></td>
-                    </tr>
-                </table>
+            <table id="main-table">
+                <tr>
+                    <td colspan="2">Sistema de Gestión de Bufete de Abogados</td>
+                </tr>
+                <tr>
+                    <td id="userinput" width="104" style="text-align:right;">Usuario</td>
+                    <td width="227"><input type="text" name="usuario" /></td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;">Contraseña</td>
+                    <td><input type="password" name="pwd" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="submit" value="Entrar" /><input type="reset" value="Borrar" /></td>
+                </tr>
+            </table>
         </form>
     </body>
 </html>

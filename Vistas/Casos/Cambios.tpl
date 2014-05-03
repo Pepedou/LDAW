@@ -2,6 +2,7 @@
 {include file="../Despachos/Funciones_Llena.tpl"}
 {include file="../Despachos/Funciones_Ajax.tpl"}
 </head>
+<body onload="llenaDespachos(); llenaEntidad('clientes','Clientes','nombre');llenaEntidad('{$name}','{$tabla}','{$campo}');sel({$sel_desp},'despachos');sel({$sel},'{$name}');sel({$sel_status},'status');sel({$sel_cliente},'clientes');">
 {include file="../select_entidad.tpl"}
 
     <!-- Desplegar campos correspondientes a actualizar-->

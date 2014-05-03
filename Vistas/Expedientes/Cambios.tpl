@@ -2,7 +2,7 @@
 {include file="../Despachos/Funciones_Llena.tpl"}
 {include file="../Despachos/Funciones_Ajax.tpl"}
 </head>
-<body onload="llenaEntidad('casos','Casos','nombre');llenaEntidad('{$name}','{$tabla}','{$campo}');">
+<body onload="llenaEntidad('casos','Casos','nombre');llenaEntidad('{$name}','{$tabla}','{$campo}');sel({$sel_desp},'casos');">
     
     <h1>Actualiza {$tabla}</h1>        
 

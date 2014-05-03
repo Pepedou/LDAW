@@ -8,6 +8,15 @@
         <td>
             <input id = "nombre" type='text' name='nombre' value = "{$abog_nombre}" />    
         </td>
+        
+         <td>
+            <label for="contrasena">Contraseña</label>
+            <input id = "contrasena" type='password' name='contrasena' value = "{$cliente_contrasena}" />    
+        </td>
+        <td>
+            <label for="contrasena_conf">Confirmación de Contraseña</label>
+            <input id = "contrasena_conf" type='password' name='contrasena_conf' value = "{$cliente_contrasena2}" />    
+        </td>
     </tr>
     <tr>
 

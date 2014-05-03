@@ -5,16 +5,16 @@
  *
  * @author José Luis Valencia Herrera     A01015544
  */
-include_once './Cliente.php';
+include_once './Clases/Cliente.php';
 
-class Pago extends EntidadBD {
+class Pago extends EntidadBD {     
 
     static private $tabla_static = "Pagos";
 
     public function __construct() {
         parent::__construct();
         $this->tabla = static::$tabla_static;
-        $this->atributos = array(
+        $this->atributos = array(       //añadir fecha
             "id" => -1,
             "cantidad" => 0.0,
             "id_Cliente" => -1,

@@ -5,8 +5,9 @@
  *
  * @author José Luis Valencia Herrera A01015544
  */
-include_once 'EntidadBD.php';
-include_once 'Despacho.php';
+include_once './Clases/EntidadBD.php';
+include_once './Clases/Despacho.php';
+include_once './Expediente.php';
 
 class Caso extends EntidadBD {
 
@@ -20,6 +21,7 @@ class Caso extends EntidadBD {
             "nombre" => "",
             "status" => 0,
             "id_Despacho" => -1,
+            "id_Cliente" => -1,
             "visible" => 1);
         $this->discr = "nombre";
         $this->discrValor = $this->atributos[$this->discr];
@@ -29,8 +31,7 @@ class Caso extends EntidadBD {
         $despacho = new Despacho();
         $query = "SELECT * FROM " . Despacho::getNombreTabla() . " WHERE id=" . $this->atributos['id_Despacho'] . " LIMIT 1";
         $resultado = $this->dbExecute($query);
-        Debug::getInstance()->alert($query);
-
+       
         if ($resultado->num_rows) {
             $fila = $resultado->fetch_assoc();
             $despacho->guardarDatos($fila);
@@ -43,6 +44,7 @@ class Caso extends EntidadBD {
         $name = "Selecciona";
         $sel_status = 0;
         $sel_desp = 0;
+        $sel_cliente = 0;
 
         if ($nombre !== "Selecciona") {
             $caso = new Caso();
@@ -52,6 +54,7 @@ class Caso extends EntidadBD {
                 $name = $caso->atributos["nombre"];
                 $sel_status = $caso->atributos["status"];
                 $sel_desp = $caso->atributos["id_Despacho"];
+                $sel_cliente = $caso->atributos["id_Cliente"];
 
                 /* Status del Caso */
                 if ($sel_status === 1) {
@@ -59,7 +62,7 @@ class Caso extends EntidadBD {
                 } else {
                     $caso_status = "Inactivo";
                 }
-
+                /*Cargar despacho correspondiente*/
                 $desp = new Despacho();
                 $exito2 = $desp->cargarDeBD("id", $sel_desp);
                 if ($exito2) {
@@ -68,16 +71,28 @@ class Caso extends EntidadBD {
                 } else {
                     $caso_desp = "No encontrado";
                 }
+                
+                /*Cargar Cliente correspondiente*/
+                 $cliente = new Cliente();
+                $exito3 = $cliente->cargarDeBD("id", $sel_cliente);
+                if ($exito3) {
+                    $caso_cliente = $cliente->atributos["nombre"];
+                } else {
+                    $caso_cliente = "No encontrado";
+                }
             }
         }
 
         $caso_desp = $desp->atributos["nombre"];
         static::$smarty->assign('caso_nombre', $name);
         static::$smarty->assign('nombre', $accion . "Despachos");
-        static::$smarty->assign('select_status', $sel_status);
-        static::$smarty->assign('select_desp', $sel_desp);
+        static::$smarty->assign('sel_status', $sel_status);
+        static::$smarty->assign('sel_desp', $sel_desp);
+        static::$smarty->assign('sel_cliente', $sel_cliente);
+      
         static::$smarty->assign('caso_status', $caso_status);
         static::$smarty->assign('caso_desp', $caso_desp);
+        static::$smarty->assign('caso_cliente', $caso_cliente);
         static::$smarty->assign('sel', $seleccion);
         static::$smarty->assign('name', "casos");
         static::$smarty->assign('tabla', "Casos");
@@ -162,5 +177,23 @@ class Caso extends EntidadBD {
     public static function getNombreTabla() {
         return static::$tabla_static;
     }
+    
+    public function get_Expedientes(){
+        
+        $expedientes = array();
+        $query = "SELECT * FROM " . Expediente::getNombreTabla() . " WHERE " . Expediente::getNombreTabla() . ".id_Caso =" . $this->atributos['id'];
+        $resultado = $this->dbExecute($query);
+
+        if ($resultado->num_rows) {
+            while ($fila = $resultado->fetch_assoc()) {
+                $aux = new Expediente();
+                $aux->guardarDatos($fila);
+                array_push($expedientes, $aux);
+            }
+        }
+        return $expedientes;
+                
+    }
+    
 
 }

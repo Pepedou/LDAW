@@ -5,7 +5,7 @@
  *
  * @author José Luis Valencia Herrera     A01015544
  */
-include_once './Abogado.php';
+include_once './Clases/Abogado.php';
 
 class Log extends EntidadBD {
 

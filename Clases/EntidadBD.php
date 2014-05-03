@@ -122,8 +122,7 @@ abstract class EntidadBD extends ServicioGenerico {
         }
     }
 
-    public function almacenarEnBD() {
-        
+    public function almacenarEnBD() {       
         
         
         $this->actualizarValorDiscr(); //Me aseguro de que el discriminante tenga el valor correcto

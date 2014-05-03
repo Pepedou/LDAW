@@ -5,7 +5,7 @@
 <body onload="llenaEntidad('expedientes','Expedientes','nombre');
         llenaTipos();">
     <h1>{$header}</h1>    
-    <form action='altas.php' method='get'>
+    <form action='altas.php' method='post' enctype="multipart/form-data">
 
         {include file="./campos_input.tpl"}
         
