@@ -5,6 +5,14 @@
         <td>
             <label for="nombre">Nombre Cliente</label>
             <input id = "nombre" type='text' name='nombre' value = "{$cliente_nombre}" />    
+        </td>           
+        <td>
+            <label for="contrasena">Contraseña</label>
+            <input id = "contrasena" type='password' name='contrasena' value = "{$cliente_contrasena}" />    
+        </td>
+        <td>
+            <label for="contrasena_conf">Confirmación de Contraseña</label>
+            <input id = "contrasena_conf" type='password' name='contrasena_conf' value = "{$cliente_contrasena2}" />    
         </td>
     </tr>
     <tr>
@@ -62,12 +70,12 @@
     </td>   
     <td >
         <label for="estados">Estado</label>
-        <select id="estados" name="id_Estado" selected ="{$select_edo}" onChange="llenaMunicipios(this.value)">
+        <select id="estados" name="id_Estado" selected ="{$sel_edo}" onChange="llenaMunicipios(this.value)">
         </select>
     </td>
     <td >
         <label for="municipios">Municipio</label>
-        <select id="municipios" name ="id_Municipio" selected="{$select_mun}">
+        <select id="municipios" name ="id_Municipio" selected="{$sel_mun}">
         </select>
     </td>
 
