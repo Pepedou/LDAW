@@ -1,4 +1,4 @@
-<body onload="llenaDespachos(); llenaRoles(); llenaEstados();llenaEntidad('{$name}','{$tabla}','{$campo}');">
+
     
     <h1>Actualiza {$tabla}</h1>        
 
