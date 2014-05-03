@@ -5,8 +5,8 @@
  *
  * @author José Luis Valencia Herrera     A01015544
  */
-include_once './Abogado.php';
-include_once './Caso.php';
+include_once './Clases/Abogado.php';
+include_once './Clases/Caso.php';
 
 class Tarea extends EntidadBD {
 
@@ -19,7 +19,7 @@ class Tarea extends EntidadBD {
             "id" => -1,
             "nombre" => "",
             "descripcion" => "",
-            "inicio" => date("Y-m-d"),
+            "inicio" => date("Y-m-d"), //curdate() for mysql
             "fin" => date("Y-m-d"),
             "status" => 1,
             "id_Abogado" => -1,
@@ -70,11 +70,52 @@ class Tarea extends EntidadBD {
     }
 
     public function generarFormaInsercion() {
-        
+
+        setlocale(LC_TIME, 'es_ES'); //poner los datos de los meses en español
+        // esto es lo que trae StartDateMonth=01&StartDateDay=1&StartDateYear=2014
+        static::$smarty->assign('nombre', "Nueva Tarea");
+        static::$smarty->assign('accion', "Registrar");
+        static::$smarty->assign('header', "Alta de Tareas");
+        static::$smarty->display($this->BASE_DIR . 'Vistas/Tareas/Altas.tpl');
     }
 
-    public function procesarForma() {
-        
+    public function procesarForma($op) {
+        switch ($op) {
+
+            case 1: //alta           
+
+                foreach ($this->atributos as $campo => $valor) {
+                    if (isset($_REQUEST[$campo])) {
+
+                        $this->atributos[$campo] = $_REQUEST[$campo];
+                    }
+                }
+                $anio = $_REQUEST['StartDateYear'];
+                $dia = $_REQUEST['StartDateDay'];
+                $mes = $_REQUEST['StartDateMonth'];
+                $fecha = "$anio" . "-$mes" . "-$dia";
+                $date = date("Y-m-d", strtotime($fecha));
+                $this->atributos['fin'] = $date;
+                Debug::getInstance()->alert("Fecha:" . $fecha);
+
+                if ($this->all_set()) {
+                    if ($this->almacenarEnBD()) {
+                        Debug::getInstance()->alert("Registro Exitoso.");
+                    }
+                } else {
+                    (Debug::getInstance()->alert("Faltan Campos"));
+                }
+
+                break;
+            case 2:
+                $this->procesa_bajas();
+                break;
+            case 3:
+                $this->procesa_cambios();
+                break;
+            default :
+                break;
+        }
     }
 
     public function validarDatos() {
@@ -101,7 +142,8 @@ class Tarea extends EntidadBD {
 
     public static function getID_MultDiscr(array $arregloDiscrValor) {
         foreach ($arregloDiscrValor as $campo => $valor) {
-            if ($campo != 'id') {
+            if ($campo != 'id' && $campo != 'fin' && campo != 'inicio') {
+
                 $condicion .= "$campo = '$valor' AND ";
             }
         }
@@ -124,4 +166,27 @@ class Tarea extends EntidadBD {
         return static::$tabla_static;
     }
 
+    public function all_set() {
+        $count = 0;
+        $att_count = count($this->atributos) - 5; //menos id, inicio,fin y visible
+
+        foreach ($this->atributos as $campo => $valor) {
+            if ($campo != 'id' && $campo != 'inicio' && $campo != 'visible' && $campo != 'fin') {
+
+                if (isset($_REQUEST[$campo])) {
+
+                    $count = $count + 1;
+                }
+            }
+        }
+
+        if ($count === $att_count) {
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    
 }
