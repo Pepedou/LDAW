@@ -1,22 +1,23 @@
 {include file="../header.tpl" title="Despachos"}
-{include file="../Despachos/Funciones_Llena.tpl"}
-{include file="../Despachos/Funciones_Ajax.tpl"}
-</head>
-<body onload="llenaTipos();llenaEntidad('expedientes','Expedientes','expedientes');llenaEntidad('{$name}','{$tabla}','{$campo}');">
-    
-    <h1>Actualiza {$tabla}</h1>        
+{include file="./FuncionesDocumentos.tpl"}
 
-        <td >
-            <label for="{$name}">{$nombre_titulo}</label>
-            <select id="{$name}" name ="{$name}" selected="{$sel}" onchange="actualiza(this);">
-            </select>
-        </td>
+</head>
+<!--<body onload="llenaTipos();llenaEntidad('expedientes','Expedientes','expedientes');llenaEntidad('{$name}','{$tabla}','{$campo}');">-->
+<body >
+
+ <h1>Lista de {$tabla}</h1>        
+
+   <!--<td >
+        <label for="{$name}">{$nombre_titulo}</label>
+        <select id="{$name}" name ="{$name}" selected="{$sel}" onchange="actualiza(this);">
+        </select>
+    </td> -->
 
     <!-- Desplegar campos correspondientes a actualizar-->
-    <form id="campos" name="forma_campos" action='cambios.php'>
+    <!-- <form id="campos" name="forma_campos" action='cambios.php'>-->
 
-        {include file="./campos_input.tpl"}
-    </form>
+        {include file="./campos_input2.tpl"}
+    <!--</form>-->
 
 </body>
 </html>
