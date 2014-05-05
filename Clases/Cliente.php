@@ -7,7 +7,7 @@
  */
 include_once './Clases/EntidadBD.php';
 include_once './Clases/Direccion.php';
-include_once './Caso.php';
+include_once './Clases/Caso.php';
 
 class Cliente extends EntidadBD {
 
