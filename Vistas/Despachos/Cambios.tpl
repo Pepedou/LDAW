@@ -2,7 +2,7 @@
 {include file="./Funciones_Llena.tpl"}
 {include file="./Funciones_Ajax.tpl"}
 </head>
-<body onload="llenaDespachos(); llenaEstados();">
+<body onload="llenaDespachos(); llenaEstados(); llenaMunicipios({$sel_edo});selected_direccion({$sel_edo},{$sel_mun});select_entidad({$sel},'{$name}');">
     <h1>{$nombre}</h1>        
 
         <td >

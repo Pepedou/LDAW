@@ -42,11 +42,15 @@
         <label for="cp">cp</label>
         <input type='text' name='cp'value = "{$desp_cp}" readonly/>    
     </td>
+    <td>
+
+        <input type='hidden' id="op"  name='op' value = "Despacho" />
+    </td>
 </tr>
 <tr>
     <td>
-        <input type='submit' value='Borrar' />
-    </td>
+        <button onclick="eliminar();">{$accion}</button>  
+    </td
 </tr>
 </table>
 

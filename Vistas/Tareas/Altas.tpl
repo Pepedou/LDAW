@@ -3,7 +3,7 @@
 
 
 </head>
-<body onload="llenaDespachos();llenaEntidad('clientes','Clientes','nombre');">
+<body onload="llenaEntidad('abogados','Abogados','nombre');llenaEntidad('casos','Casos','nombre');">
      <h1>{$header}</h1> 
 
      <form action='altas.php' method='get'>
