@@ -7,6 +7,7 @@
 */
 include_once 'EntidadBD.php';
 include_once 'Despacho.php';
+include_once 'Expediente.php';
 
 class Caso extends EntidadBD {
 
@@ -20,6 +21,7 @@ class Caso extends EntidadBD {
             "nombre" => "",
             "status" => 0,
             "id_Despacho" => -1,
+            "id_Cliente" => -1,
             "visible" => 1);
         $this->discr = "nombre";
         $this->discrValor = $this->atributos[$this->discr];
@@ -29,7 +31,6 @@ class Caso extends EntidadBD {
         $despacho = new Despacho();
         $query = "SELECT * FROM " . Despacho::getNombreTabla() . " WHERE id=" . $this->atributos['id_Despacho'] . " LIMIT 1";
         $resultado = $this->dbExecute($query);
-        Debug::getInstance()->alert($query);
 
         if ($resultado->num_rows) {
             $fila = $resultado->fetch_assoc();
@@ -39,31 +40,95 @@ class Caso extends EntidadBD {
         return $despacho;
     }
 
-    public function generarFormaActualizacion() {
+    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
+        $name = "Selecciona";
+        $sel_status = 0;
+        $sel_desp = 0;
+        $sel_cliente = 0;
         
-    }
+        if ($nombre !== "Selecciona") {
+            $caso = new Caso();
+            $exito = $caso->cargarDeBD("nombre", $nombre);
+            if ($exito) {
+                /* Actualizo el valor de name */
+                $name = $caso->atributos["nombre"];
+                $sel_status = $caso->atributos["status"];
+                $sel_desp = $caso->atributos["id_Despacho"];
+                $sel_cliente = $caso->atributos["id_Cliente"];
 
-    public function generarFormaBorrado($seleccion,$nombre) {
+                /* Status del Caso */
+                if ($sel_status === 1) {
+                    $caso_status = "Activo";
+                } else {
+                    $caso_status = "Inactivo";
+    }
+                /*Cargar despacho correspondiente*/
+                $desp = new Despacho();
+                $exito2 = $desp->cargarDeBD("id", $sel_desp);
+                if ($exito2) {
+
+                    $caso_desp = $desp->atributos["nombre"];
+                } else {
+                    $caso_desp = "No encontrado";
+                }
         
+                /*Cargar Cliente correspondiente*/
+                 $cliente = new Cliente();
+                $exito3 = $cliente->cargarDeBD("id", $sel_cliente);
+                if ($exito3) {
+                    $caso_cliente = $cliente->atributos["nombre"];
+                } else {
+                    $caso_cliente = "No encontrado";
     }
+            }
+        }
 
-    public function generarFormaInsercion() {
-        static::$smarty->assign('nombre', "Nuevo Caso");
-        $data = array();
+        $caso_desp = $desp->atributos["nombre"];
+        static::$smarty->assign('caso_nombre', $name);
+        static::$smarty->assign('nombre', $accion . "Despachos");
+        static::$smarty->assign('sel_status', $sel_status);
+        static::$smarty->assign('sel_desp', $sel_desp);
+        static::$smarty->assign('sel_cliente', $sel_cliente);
 
-        foreach ($this->atributos as $campo => $valor) {
-            if($campo !== "id" && $campo !== "visible" && $campo !== "id_Despacho" && $campo !==status){
+        static::$smarty->assign('caso_status', $caso_status);
+        static::$smarty->assign('caso_desp', $caso_desp);
+        static::$smarty->assign('caso_cliente', $caso_cliente);
+        static::$smarty->assign('sel', $seleccion);
+        static::$smarty->assign('name', "casos");
+        static::$smarty->assign('tabla', "Casos");
+        static::$smarty->assign('campo', "nombre");
+        static::$smarty->assign('accion', $accion);
+        /* Imprimir documento */
+        static::$smarty->display($this->BASE_DIR . 'Vistas/Casos/' . $carpeta . '.tpl');
+    }
                 
-                $data[$campo] = $campo[$valor];
+    public function generarFormaBorrado($seleccion, $nombre) {
+        
             }
                        
-        }
-        static::$smarty->assign('data', $data);
+    public function generarFormaInsercion() {
+
+        static::$smarty->assign('accion', "Registrar");
+        static::$smarty->assign('header', "Nuevo Caso");
         static::$smarty->display($this->BASE_DIR . 'Vistas/Casos/Altas.tpl');
     }
 
     public function procesarForma($op) {
+        switch ($op) {
         
+            case 1: //alta           
+
+                $this->procesa_insert();
+                break;
+            case 2:
+                $this->procesa_bajas();
+                break;
+            case 3:
+                $this->procesa_cambios();
+                break;
+            default :
+                break;
+    }
     }
 
     public function validarDatos() {
@@ -73,7 +138,7 @@ class Caso extends EntidadBD {
     public static function getID($discriminante, $valor) {
         $dbManager = DatabaseManager::getInstance();
         $dbManager->connectToDatabase();
-        $query = "SELECT id FROM " . static::$tabla_static . " WHERE $discriminante = '$valor' LIMIT 1";
+        $query = "SELECT id FROM " . static::$tabla_static . " WHERE ".$discriminante ." = '$valor' LIMIT 1";
         $resultado = $dbManager->executeQuery($query);
         $dbManager->closeConnection();
         if ($resultado != false) {
@@ -113,5 +178,22 @@ class Caso extends EntidadBD {
         return static::$tabla_static;
     }
 
-}
+    public function get_Expedientes(){
+        
+        $expedientes = array();
+        $query = "SELECT * FROM " . Expediente::getNombreTabla() . " WHERE " . Expediente::getNombreTabla() . ".id_Caso =" . $this->atributos['id'];
+        $resultado = $this->dbExecute($query);
 
+        if ($resultado->num_rows) {
+            while ($fila = $resultado->fetch_assoc()) {
+                $aux = new Expediente();
+                $aux->guardarDatos($fila);
+                array_push($expedientes, $aux);
+}
+        }
+        return $expedientes;
+
+    }
+    
+
+}

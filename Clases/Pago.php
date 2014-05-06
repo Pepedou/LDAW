@@ -5,6 +5,7 @@
  *
  * @author José Luis Valencia Herrera     A01015544
  */
+
 include_once 'Cliente.php';
 
 class Pago extends EntidadBD {
@@ -14,7 +15,7 @@ class Pago extends EntidadBD {
     public function __construct() {
         parent::__construct();
         $this->tabla = static::$tabla_static;
-        $this->atributos = array(
+        $this->atributos = array(       //añadir fecha
             "id" => -1,
             "cantidad" => 0.0,
             "id_Cliente" => -1,
@@ -36,21 +37,22 @@ class Pago extends EntidadBD {
         return $cliente;
     }
 
-    public function generarFormaActualizacion() {
+    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
         
     }
 
-    public function generarFormaBorrado() {
+    public function generarFormaBorrado($seleccion, $nombre) {
         
     }
 
     public function generarFormaInsercion() {
         
+        static::$smarty->assign('accion', "Registrar");
+        static::$smarty->assign('header', "Registrar Pago");
+        static::$smarty->display($this->BASE_DIR . 'Vistas/Pagos/Altas.tpl');
     }
 
-    public function procesarForma() {
         
-    }
 
     public function validarDatos() {
         

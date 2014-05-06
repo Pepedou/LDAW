@@ -27,11 +27,11 @@ class Direccion extends EntidadBD {
         $this->discrValor = $this->atributos[$this->discr];
     }
 
-    public function generarFormaActualizacion() {
+    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
         
     }
 
-    public function generarFormaBorrado() {
+    public function generarFormaBorrado($seleccion, $nombre) {
         
     }
 
@@ -39,7 +39,7 @@ class Direccion extends EntidadBD {
         
     }
 
-    public function procesarForma() {
+    public function procesarForma($op) {
         
     }
 
@@ -115,11 +115,13 @@ class Direccion extends EntidadBD {
         $query = "SELECT id FROM " . static::$tabla_static . " WHERE $condicion LIMIT 1";
         $resultado = $dbManager->executeQuery($query);
         $dbManager->closeConnection();
-        if ($resultado != false && $resultado->num_rows) {
-            $row = $resultado->fetch_assoc();
-            return $row['id'];
-        } else {
-            return -1;
+        if ($resultado != false) {
+            if ($resultado->num_rows > 0) {
+                $row = $resultado->fetch_assoc();
+                return $row['id'];
+            } else {
+                return -1;
+            }
         }
     }
 
@@ -155,6 +157,16 @@ class Direccion extends EntidadBD {
         $dbM->closeConnection();
         $fila = $resultado->fetch_assoc();
         return $fila['Estados_id'];
+    }
+
+    static public function getMunicipio($id_municipio) {
+        $query = "SELECT Municipio FROM Municipios WHERE id = '$id_municipio'";
+        $dbM = DatabaseManager::getInstance();
+        $dbM->connectToDatabase();
+        $resultado = $dbM->executeQuery($query);
+        $dbM->closeConnection();
+        $fila = $resultado->fetch_assoc();
+        return $fila['id'];
     }
 
 }

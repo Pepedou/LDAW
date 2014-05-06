@@ -10,17 +10,17 @@ include_once 'Caso.php';
 
 class Expediente extends EntidadBD {
 
-    static private $tabla_static = "Complejidades";
+    static private $tabla_static = "Expedientes";
 
     public function __construct() {
         parent::__construct();
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
             "id" => -1,
-            "id_Caso" => -1, 
             "nombre" => "",
+            "id_Caso" => -1, 
             "visible" => 1);
-        $this->discr = "nombre";
+        $this->discr = "id";
         $this->discrValor = $this->atributos[$this->discr];
     }
 
@@ -38,20 +38,69 @@ class Expediente extends EntidadBD {
         return $caso;
     }
 
-    public function generarFormaActualizacion() {
+    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
         
+        $name = "Selecciona";
+        $sel_caso = 0;
+
+        if ($nombre !== "Selecciona") {
+            $exp = new Expediente();
+            $exito = $exp->cargarDeBD("nombre", $nombre);
+            if ($exito) {
+                /* Actualizo el valor de name */
+                $name = $exp->atributos["nombre"];
+                $sel_caso = $exp->atributos["id_Caso"];
+                /* Cargo la direccion */
+                $case = new Caso();
+                $exito2 = $case->cargarDeBD("id", $exp->atributos['id_Caso']);
+                if ($exito2) {
+
+                    $exp_caso = $case->atributos["nombre"];
+    }
+            }
+        }
+        static::$smarty->assign('nombre', $accion . "Expedientes");
+        static::$smarty->assign('exp_nombre', $name);
+        static::$smarty->assign('exp_caso', $exp_caso);
+        static::$smarty->assign('sel_desp', $sel_caso);
+        static::$smarty->assign('sel', $seleccion);
+        static::$smarty->assign('name', "expedientes");
+        static::$smarty->assign('tabla', "Expedientes");
+        static::$smarty->assign('campo', "nombre");
+        static::$smarty->assign('accion', $accion);
+        /* Imprimir documento */
+        static::$smarty->display($this->BASE_DIR . 'Vistas/Expedientes/' . $carpeta . '.tpl');
     }
 
-    public function generarFormaBorrado() {
+    public function generarFormaBorrado($seleccion, $nombre) {
         
     }
 
     public function generarFormaInsercion() {
+        static::$smarty->assign('nombre', "Nuevo Abogado");
+        static::$smarty->assign('accion', "Registrar");
+        static::$smarty->assign('header', "Alta de Expedientes");
         
+        static::$smarty->display($this->BASE_DIR . 'Vistas/Expedientes/Altas.tpl');
     }
 
-    public function procesarForma() {
+    public function procesarForma($op) {
         
+        switch ($op) {
+
+            case 1: //alta           
+
+                $this->procesa_insert();
+                break;
+            case 2:
+                $this->procesa_bajas();
+                break;
+            case 3:
+                $this->procesa_cambios();
+                break;
+            default :
+                break;
+    }
     }
 
     public function validarDatos() {

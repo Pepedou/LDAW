@@ -68,17 +68,13 @@ class Despacho extends EntidadBD {
                     $dir->almacenarEnBD();
                     $id = $dir->getID("calle", $dir->atributos["calle"]);
                     $this->atributos["id_Direccion"] = $id;
+                    $this->atributos["visible"] = 1;
                     if ($this->almacenarEnBD())
                         Debug::getInstance()->alert("Registro Exitoso.");
                 }
                 break;
             case (2): //borrado
-                if (isset($_REQUEST['nombre'])) {
-                    $this->atributos["id"] = $this->getID("nombre", $_REQUEST['nombre']);
-
-                    if ($this->eliminarDeBD())
-                        Debug::getInstance()->alert("Registro Eliminado.");
-                }
+                $this->procesa_bajas();
                 break;
             case (3): //actualizacion
                 if ($_REQUEST['sel'] !== 0) {
@@ -96,6 +92,7 @@ class Despacho extends EntidadBD {
                         $dir->almacenarEnBD();
                         $id = $dir->getID("calle", $dir->atributos["calle"]);
                         $this->atributos["id_Direccion"] = $id;
+                        $this->atributos["visible"] = 1;
                         if ($this->almacenarEnBD())
                             Debug::getInstance()->alert("Actualización Exitosa.");
                     }
@@ -110,7 +107,7 @@ class Despacho extends EntidadBD {
         static::$smarty->display($this->BASE_DIR . 'Vistas/Despachos/Altas.tpl');
     }
 
-    public function generarFormaActualizacion($seleccion, $nombre) {
+    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
         $name = "Selecciona";
         $calle = "Calle";
         $no_ext = "No.";
@@ -118,8 +115,8 @@ class Despacho extends EntidadBD {
         $col = "Colonia";
         $cp = "cp";
         $cd = "Ciudad";
-        $mun = 0;
-        $edo = 0;
+        $sel_mun = 0;
+        $sel_edo = 0;
 
         /* Aqui cargamos el despacho */
         if ($nombre !== "Selecciona") {
@@ -139,12 +136,15 @@ class Despacho extends EntidadBD {
                     $no_ext = $dir->atributos["no_exterior"];
                     $no_int = $dir->atributos["no_interior"];
                     $cd = $dir->atributos["ciudad"];
-                    $mun = $dir->atributos["id_Municipio"];
-                    $edo = $dir->getIDEstadoDeMunicipio($mun);
+                    $sel_mun = $dir->atributos["id_Municipio"];
+                    /* Regreso nombre de municipio */
+                    $mun = $dir->getMunicipio($sel_mun);
+                    /* Uso el nombre para traer el id del edo */
+                    $sel_edo = $dir->getIDEstadoDeMunicipio($mun);
                 }
             }
         }
-        static::$smarty->assign('nombre', "Actualizar Despachos");
+        static::$smarty->assign('nombre', $accion . "Despachos");
         static::$smarty->assign('desp_nombre', $name);
         static::$smarty->assign('desp_calle', $calle);
         static::$smarty->assign('desp_col', $col);
@@ -152,84 +152,21 @@ class Despacho extends EntidadBD {
         static::$smarty->assign('desp_cd', $cd);
         static::$smarty->assign('desp_int', $no_int);
         static::$smarty->assign('desp_ext', $no_ext);
-        static::$smarty->assign('select_mun', $mun);
-        static::$smarty->assign('select_edo', $edo);
+        static::$smarty->assign('sel_mun', $sel_mun);
+        static::$smarty->assign('sel_edo', $sel_edo);
+
         static::$smarty->assign('sel', $seleccion);
+        static::$smarty->assign('name', "despachos");
+        static::$smarty->assign('tabla', "Despachos");
+        static::$smarty->assign('campo', "nombre");
+        static::$smarty->assign('accion', $accion);
         /* Imprimir documento */
-        static::$smarty->display($this->BASE_DIR . 'Vistas/Despachos/Cambios.tpl');
+        static::$smarty->display($this->BASE_DIR . 'Vistas/Despachos/' . $carpeta . '.tpl');
     }
 
     public function generarFormaBorrado($seleccion, $nombre) {
 
-        $name = "Selecciona";
-        $calle = "Calle";
-        $no_ext = "No.";
-        $no_int = "No";
-        $col = "Colonia";
-        $cp = "cp";
-        $cd = "Ciudad";
-
-        $dbM = $this->dbManager;
-        $dbM->connectToDatabase();
-        $query = "Select id,nombre FROM " . static::$tabla_static . " WHERE visible = 1";
-        $resultado = $dbM->executeQuery($query);
-
-        $arreglo_valor = Array();
-        $arreglo_valor[0] = "Selecciona";
-
-        /* Aqui cargamos el despacho */
-        if ($nombre !== "Selecciona") {
-            $desp = new Despacho();
-            $exito = $desp->cargarDeBD("nombre", $nombre);
-            if ($exito) {
-                /* Actualizo el valor de name */
-                $name = $desp->atributos["nombre"];
-                /* Si el despacho existe, cargas su direccion */
-                $dir = new Direccion();
-                $exito2 = $dir->cargarDeBD("id", $desp->atributos['id_Direccion']);
-                if ($exito2) {
-
-                    $calle = $dir->atributos["calle"];
-                    $cp = $dir->atributos["cp"];
-                    $col = $dir->atributos["colonia"];
-                    $no_ext = $dir->atributos["no_exterior"];
-                    $no_int = $dir->atributos["no_interior"];
-                    $cd = $dir->atributos["ciudad"];
                 }
-            }
-        }
-        /* Agregamos los resultados a un arreglo */
-        if ($resultado != false) {
-            if ($resultado->num_rows > 0) {
-                while ($row = $resultado->fetch_assoc()) {
-
-                    $arreglo_valor[$row['id']] = $row['nombre'];
-                }
-                /* Mandamos el arreglo a la forma */
-                static::$smarty->assign('opciones', $arreglo_valor);
-                static::$smarty->assign('select', $seleccion);
-                static::$smarty->assign('nombre', "Borrar Despachos");
-                static::$smarty->assign('desp_nombre', $name);
-                static::$smarty->assign('desp_calle', $calle);
-                static::$smarty->assign('desp_col', $col);
-                static::$smarty->assign('desp_cp', $cp);
-                static::$smarty->assign('desp_cd', $cd);
-                static::$smarty->assign('desp_int', $no_int);
-                static::$smarty->assign('desp_ext', $no_ext);
-                /* Imprimir documento */
-                static::$smarty->display($this->BASE_DIR . 'Vistas/Despachos/Bajas.tpl');
-            } else {
-                static::$smarty->assign('opciones', $arreglo_valor);
-                static::$smarty->assign('select', $seleccion);
-                static::$smarty->assign('nombre', "Borrar Despachos");
-                Debug::getInstance()->alert("No existen registros");
-                static::$smarty->display($this->BASE_DIR . 'Vistas/Despachos/Bajas.tpl');
-            }
-        } else {
-            Debug::getInstance()->alert("Error de sintaxis");
-        }
-        $dbM->closeConnection();
-    }
 
     public static function getID($discriminante, $valor) {
         $dbManager = DatabaseManager::getInstance();

@@ -1,6 +1,7 @@
 <?php
 
 include_once 'ServicioGenerico.php';
+include_once '/home/ldaw-1018566/html_container/content/Proyecto/Smarty/libs/SmartyBC.class.php';
 
 /**
  * Description of EntidadBD
@@ -10,11 +11,17 @@ include_once 'ServicioGenerico.php';
 abstract class EntidadBD extends ServicioGenerico {
 
     protected $debug, $dbManager, $existente;
+    static public $BASE_DIR;
+    static public $smarty;
 
     public function __construct() {
         $this->debug = Debug::getInstance();
         $this->dbManager = DatabaseManager::getInstance();
         $this->existente = false;
+        $this->BASE_DIR = '/home/ldaw-1018566/html_container/content/Proyecto/';
+        static::$smarty = new SmartyBC;
+        static::$smarty->template_dir = static::$BASE_DIR . 'Smarty/demo/templates/';
+        static::$smarty->compile_dir = static::$BASE_DIR . 'Smarty/demo/templates_c/';
     }
 
     abstract static public function getID($discriminante, $valor);
@@ -165,7 +172,8 @@ abstract class EntidadBD extends ServicioGenerico {
     }
 
     public function eliminarDeBD() {
-        $query = "UPDATE $this->tabla SET visible = 0 WHERE id = '" . $this->atributos['id'] . "'";
+
+        $query = "UPDATE $this->tabla SET visible = 0 WHERE id =" . $this->atributos['id'];
         $resultado = $this->dbExecute($query);
         if ($resultado === true) {
             return true;
@@ -183,19 +191,35 @@ abstract class EntidadBD extends ServicioGenerico {
 
     abstract public function generarFormaActualizacion($seleccion, $nombre);
 
-    abstract public function generarFormaBorrado($seleccion, $nombre);
+    abstract public function generarFormaBorrado($seleccion, $nombre, $accion, $carpeta);
 
-    abstract public function procesarForma();
+    public function procesarForma($op) {
+        switch ($op) {
+
+            case 1: //alta           
+
+                $this->procesa_insert();
+                break;
+            case 2:
+                $this->procesa_bajas();
+                break;
+            case 3:
+                $this->procesa_cambios();
+                break;
+            default :
+                break;
+        }
+    }
 
     public function guardarDatos(array $misDatos) {
         foreach ($misDatos as $campo => $valor) {
-            $this->atributos[$campo] = $misDatos[$campo];            
+            $this->atributos[$campo] = $misDatos[$campo];
         }
         $this->actualizarValorDiscr();
     }
 
     protected function actualizarValorDiscr() {
-        /*Si el discriminante es ID, tengo que ver si necesito cargar el id de la base de datos.
+        /* Si el discriminante es ID, tengo que ver si necesito cargar el id de la base de datos.
          * Esto lo determino si tanto el valor del discriminante como el atributo id son los default.
          */
         if ($this->discr === 'id' && $this->discrValor === -1 && $this->atributos['id'] == -1) {
@@ -205,4 +229,69 @@ abstract class EntidadBD extends ServicioGenerico {
     }
 
     abstract public function validarDatos();
+
+    public function all_set() {
+        $count = 0;
+        $att_count = count($this->atributos) - 2; //menos id y visible
+
+        foreach ($this->atributos as $campo => $valor) {
+            if ($campo != 'id' && $campo != 'visible') {
+
+                if (isset($_REQUEST[$campo])) {
+
+                    $count = $count + 1;
+                }
+            }
+        }
+        if ($count === $att_count) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function procesa_insert() {
+
+        foreach ($this->atributos as $campo => $valor) {
+            if (isset($_REQUEST[$campo])) {
+                $this->atributos[$campo] = $_REQUEST[$campo];
+            }
+        }
+        if ($this->all_set()) {
+            if ($this->almacenarEnBD()) {
+                Debug::getInstance()->alert("Registro Exitoso.");
+            }
+        }
+    }
+
+    public function procesa_bajas() {
+
+        if (isset($_REQUEST['nombre']) && isset($_REQUEST['elim'])) {
+            $this->atributos["id"] = $this->getID("nombre", $_REQUEST['nombre']);
+
+            if ($this->eliminarDeBD())
+                Debug::getInstance()->alert("Registro Eliminado.");
+        }
+    }
+
+    public function procesa_cambios() {
+
+        if ($_REQUEST['sel'] !== 0) {
+
+            $this->atributos['id'] = $this->getID($this->discr, $_REQUEST[$this->discr]);
+            foreach ($this->atributos as $campo => $valor) {
+                if (isset($_REQUEST[$campo])) {
+                    $this->atributos[$campo] = $_REQUEST[$campo];
+                }
+            }
+            if ($this->all_set()) {
+                if ($this->almacenarEnBD()) {
+                    Debug::getInstance()->alert("Actualización Exitosa.");
+                } else {
+                    Debug::getInstance()->alert("Actualización Errónea.");
+                }
+            }
+        }
+    }
+
 }

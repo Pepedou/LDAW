@@ -2,5 +2,5 @@
 session_start();
 session_destroy();
 setcookie("usuario", time() - 3600);
-header("Location: index.html");
+header("Location: ../index.html");
 ?>

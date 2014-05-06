@@ -5,7 +5,6 @@
  *
  * @author estef
  */
-
 include 'Debug.php';
 
 class DatabaseManager {

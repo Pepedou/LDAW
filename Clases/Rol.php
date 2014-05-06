@@ -45,7 +45,7 @@ class Rol extends EntidadBD {
         
     }
 
-    public function procesarForma() {
+    public function procesarForma($op) {
         
     }
 
