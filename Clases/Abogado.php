@@ -104,7 +104,6 @@ class Abogado extends EntidadBD {
     }
 
     public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
-
         $name = "Selecciona";
         $apellido_p = "Apellido Paterno";
         $apellido_m = "Apellido Materno";
@@ -176,7 +175,6 @@ class Abogado extends EntidadBD {
     public function procesarForma($op) {
         switch ($op) {
             case 1: //alta                
-
                 foreach ($this->atributos as $campo => $valor) {
                     if (isset($_REQUEST[$campo])) {
                         if ($campo === "contrasena") {
@@ -194,8 +192,6 @@ class Abogado extends EntidadBD {
                 } else {
                     (Debug::getInstance()->alert("Faltan Campos"));
                 }
-
-
                 break;
             case 2: //bajas
                 if (isset($_REQUEST['nombre']) && isset($_REQUEST['elim'])) {
@@ -229,8 +225,6 @@ class Abogado extends EntidadBD {
                 break;
         }
     }
-
-
 
     public static function getID($discriminante, $valor) {
         $dbManager = DatabaseManager::getInstance();
