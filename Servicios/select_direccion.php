@@ -22,7 +22,6 @@ switch ($op) {
             echo"<option value =" . $row['id'] . " >" . $row['Estado'] . "</option>";
         }
 
-
         echo "</select>";
 
         $dbM->closeConnection();

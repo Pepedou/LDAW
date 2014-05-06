@@ -29,7 +29,7 @@ CREATE TABLE Tipos(id int PRIMARY KEY AUTO_INCREMENT, tipo varchar(10) NOT NULL)
 
 CREATE TABLE Documentos (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, documento blob NOT NULL, id_Expediente int NOT NULL, id_Tipo int NOT NULL, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY(id_Expediente) REFERENCES Expedientes(id) ON DELETE CASCADE);
 
-CREATE TABLE Clientes(id int PRIMARY KEY AUTO_INCREMENT, nombre varchar(100) NOT NULL, id_Direccion int NOT NULL, telefono int, email varchar(50) NOT NULL, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY(id_Direccion) REFERENCES Direcciones(id) ON DELETE CASCADE);
+CREATE TABLE Clientes(id int PRIMARY KEY AUTO_INCREMENT, nombre varchar(100) NOT NULL, id_Direccion int NOT NULL, telefono int, email varchar(50) NOT NULL, contrasena varchar(128) NOT NULL, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY(id_Direccion) REFERENCES Direcciones(id) ON DELETE CASCADE);
 
 CREATE TABLE Abogados_Clientes (id int NOT NULL PRIMARY KEY AUTO_INCREMENT, id_Abogado int NOT NULL, id_Cliente int NOT NULL, FOREIGN KEY(id_Abogado) REFERENCES Abogados(id) ON DELETE CASCADE, FOREIGN KEY(id_Cliente) REFERENCES Clientes(id) ON DELETE CASCADE);
 
@@ -76,7 +76,7 @@ INSERT INTO Roles (rol) VALUES ("Administrador");
 
 INSERT INTO Abogados (nombre, apellidoP, apellidoM, telefono, email, contrasena, id_Rol, id_Despacho) VALUES ("José Luis", "Valencia", "Herrera", 55851891, "pepedou@gmail.com", SHA1("asdf"), 1, 1);
 
-INSERT INTO Clientes (nombre, apellidoP, apellidoM, id_Direccion, telefono, email) VALUES ("Juan Abrupto", "Carrazco", "Solís", 1, 22101465, "jabrc@gmail.com");
+INSERT INTO Clientes (nombre, apellidoP, apellidoM, id_Direccion, telefono, email, contrasena) VALUES ("Juan Abrupto", "Carrazco", "Solís", 1, 22101465, "jabrc@gmail.com", SHA1("asdf"));
 
 INSERT INTO Tipos (tipo) VALUES ("PDF");
 

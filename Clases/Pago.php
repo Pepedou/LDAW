@@ -5,7 +5,7 @@
  *
  * @author José Luis Valencia Herrera     A01015544
  */
-include_once './Cliente.php';
+include_once 'Cliente.php';
 
 class Pago extends EntidadBD {
 

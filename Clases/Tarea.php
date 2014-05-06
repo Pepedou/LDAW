@@ -5,8 +5,8 @@
  *
  * @author José Luis Valencia Herrera     A01015544
  */
-include_once './Abogado.php';
-include_once './Caso.php';
+include_once 'Abogado.php';
+include_once 'Caso.php';
 
 class Tarea extends EntidadBD {
 
@@ -17,6 +17,7 @@ class Tarea extends EntidadBD {
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
             "id" => -1,
+            "nombre" => "",
             "descripcion" => "",
             "inicio" => date("Y-m-d"),
             "fin" => date("Y-m-d"),

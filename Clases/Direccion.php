@@ -27,11 +27,11 @@ class Direccion extends EntidadBD {
         $this->discrValor = $this->atributos[$this->discr];
     }
 
-    public function generarFormaActualizacion($seleccion,$nombre) {
+    public function generarFormaActualizacion() {
         
     }
 
-    public function generarFormaBorrado($seleccion,$nombre) {
+    public function generarFormaBorrado() {
         
     }
 
@@ -39,12 +39,49 @@ class Direccion extends EntidadBD {
         
     }
 
-    public function procesarForma($op) {
+    public function procesarForma() {
         
     }
 
     public function validarDatos() {
         
+    }
+
+    public function service_selectTodos($callback) {
+        $json = array();
+        $query = "SELECT  " . static::$tabla_static . ".id, calle, no_exterior, no_interior, colonia, Municipios.Municipio, ciudad, Estados.Estado, cp from " . static::$tabla_static . " JOIN Municipios ON " . static::$tabla_static . ".id_Municipio = Municipios.id JOIN Estados ON Estados.id = Municipios.Estados_id";
+        $resultado = $this->dbExecute($query);
+        /* Genero el JSON con los resultados */
+        if ($resultado != false) {
+            while ($fila = $resultado->fetch_assoc()) {
+                array_push($json, $fila);
+            }
+            $finalData = array("Resultados" => $json);
+            if ($callback != "") {
+                $json = "$callback(" . json_encode($finalData) . ")";
+            } else {
+                $json = json_encode($finalData);
+            }
+            print_r($json);
+        }
+        return $json;
+    }
+
+    public function service_selectIndividual($callback) {
+        $json = array();
+        $query = "SELECT  " . static::$tabla_static . ".id, calle, no_exterior, no_interior, colonia, Municipios.Municipio, ciudad, Estados.Estado, cp from " . static::$tabla_static . " JOIN Municipios ON " . static::$tabla_static . ".id_Municipio = Municipios.id JOIN Estados ON Estados.id = Municipios.Estados_id WHERE " . static::$tabla_static . ".id = " . $this->atributos['id'];
+        $resultado = $this->dbExecute($query);
+        if ($resultado != false) {
+            array_push($json, ($resultado->fetch_assoc()));
+            $finalData = array("Resultados" => $json);
+            if ($callback != "") {
+                $json = "$callback(" . json_encode($finalData) . ")";
+            } else {
+                $json = json_encode($finalData);
+            }
+            print_r($json);
+        }
+        return $resultado;
     }
 
     public static function getID($discriminante, $valor) {
@@ -78,16 +115,12 @@ class Direccion extends EntidadBD {
         $query = "SELECT id FROM " . static::$tabla_static . " WHERE $condicion LIMIT 1";
         $resultado = $dbManager->executeQuery($query);
         $dbManager->closeConnection();
-        if ($resultado != false) {
-            if ($resultado->num_rows > 0) {
-                $row = $resultado->fetch_assoc();
-                return $row['id'];
-            } else {
-                return -1;
-            }
+        if ($resultado != false && $resultado->num_rows) {
+            $row = $resultado->fetch_assoc();
+            return $row['id'];
+        } else {
+            return -1;
         }
-        Debug::getInstance()->alert("EntidadBD::getID => No se encontró el ID");
-        return -1;
     }
 
     public static function getNombreTabla() {
@@ -121,19 +154,7 @@ class Direccion extends EntidadBD {
         $resultado = $dbM->executeQuery($query);
         $dbM->closeConnection();
         $fila = $resultado->fetch_assoc();
-       
         return $fila['Estados_id'];
     }
-    
-      static public function getMunicipio($id_municipio) {
-        $query = "SELECT Municipio FROM Municipios WHERE id = '$id_municipio'";
-        $dbM = DatabaseManager::getInstance();
-        $dbM->connectToDatabase();
-        $resultado = $dbM->executeQuery($query);
-        $dbM->closeConnection();
-        $fila = $resultado->fetch_assoc();
-        return $fila['id'];
-    }
-
 
 }
