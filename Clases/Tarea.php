@@ -61,14 +61,6 @@ class Tarea extends EntidadBD {
         return $caso;
     }
 
-    public function generarFormaActualizacion() {
-        
-    }
-
-    public function generarFormaBorrado() {
-        
-    }
-
     public function generarFormaInsercion() {
         
         setlocale(LC_TIME, 'es_ES'); //poner los datos de los meses en español
@@ -116,10 +108,6 @@ class Tarea extends EntidadBD {
             default :
                 break;
         }
-    }
-
-    public function validarDatos() {
-        
     }
 
     public static function getID($discriminante, $valor) {
@@ -188,5 +176,16 @@ class Tarea extends EntidadBD {
         }
     }
 
-    
+    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
+        
+    }
+
+    public function generarFormaBorrado($seleccion, $nombre) {
+        
+    }
+
+    public function validarDatos() {
+        
+    }
+
 }

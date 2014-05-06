@@ -33,26 +33,6 @@ class Tipo extends EntidadBD {
         }
     }
 
-    public function generarFormaActualizacion() {
-        
-    }
-
-    public function generarFormaBorrado() {
-        
-    }
-
-    public function generarFormaInsercion() {
-        
-    }
-
-    public function procesarForma() {
-        
-    }
-
-    public function validarDatos() {
-        
-    }
-
     public static function getID($discriminante, $valor) {
         $dbManager = DatabaseManager::getInstance();
         $dbManager->connectToDatabase();
@@ -94,6 +74,22 @@ class Tipo extends EntidadBD {
 
     public static function getNombreTabla() {
         return static::$tabla_static;
+    }
+
+    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
+        
+    }
+
+    public function generarFormaBorrado($seleccion, $nombre) {
+        
+    }
+
+    public function generarFormaInsercion() {
+        
+    }
+
+    public function validarDatos() {
+        
     }
 
 }

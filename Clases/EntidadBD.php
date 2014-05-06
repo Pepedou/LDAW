@@ -189,9 +189,9 @@ abstract class EntidadBD extends ServicioGenerico {
 
     abstract public function generarFormaInsercion();
 
-    abstract public function generarFormaActualizacion($seleccion, $nombre);
+    abstract public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta);
 
-    abstract public function generarFormaBorrado($seleccion, $nombre, $accion, $carpeta);
+    abstract public function generarFormaBorrado($seleccion, $nombre);
 
     public function procesarForma($op) {
         switch ($op) {

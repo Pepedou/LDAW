@@ -21,13 +21,6 @@ class Complejidad extends EntidadBD {
         $this->discrValor = $this->atributos[$this->discr];
     }
 
-    public function generarFormaActualizacion() {
-        
-    }
-
-    public function generarFormaBorrado($selecciona,$nombre) {
-        
-    }
 
     public function generarFormaInsercion() {
         
@@ -43,14 +36,6 @@ class Complejidad extends EntidadBD {
         }
         static::$smarty->assign('data', $data);
         static::$smarty->display($this->BASE_DIR . 'Vistas/Complejidades/Altas.tpl');
-        
-    }
-
-    public function procesarForma($op) {
-        
-    }
-
-    public function validarDatos() {
         
     }
 
@@ -95,6 +80,18 @@ class Complejidad extends EntidadBD {
 
     public static function getNombreTabla() {
         return static::$tabla_static;
+    }
+
+    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
+        
+    }
+
+    public function generarFormaBorrado($seleccion, $nombre) {
+        
+    }
+
+    public function validarDatos() {
+        
     }
 
 //put your code here

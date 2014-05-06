@@ -6,8 +6,6 @@
  * @author José Luis Valencia Herrera     A01015544
  */
 
-include_once '../config.ink.php';
-
 class Debug {
 
     static private $instancia = NULL;

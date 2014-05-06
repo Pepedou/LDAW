@@ -1,12 +1,6 @@
 <?php
 
-//include_once './Clases/Despacho.php';
-//include_once './Clases/Direccion.php';
-include_once './Clases/Abogado.php';
-include_once './Clases/Caso.php';
-include_once './Clases/Cliente.php';
-include_once './Clases/Expediente.php';
-include_once './Clases/Documento.php';
+include_once 'Clases/EntidadFactory.php';
 
 $op = $_REQUEST['op'];
 
@@ -21,27 +15,7 @@ function html(EntidadBD $entidad) {
     }
 }
 
-switch ($op) {
+$factory = new EntidadFactory();
+$objeto = $factory->create($op);
 
-    case 'Despacho':
-        $objeto = new Despacho();
-        break;
-
-    case 'Abogado':
-        $objeto = new Abogado();
-        break;
-    case 'Cliente':
-        $objeto = new Cliente();
-        break;
-    case 'Caso':
-        $objeto = new Caso();
-        break;
-    case 'Expediente':
-        $objeto = new Expediente();
-        break;
-    default :
-        Debug::getInstance()->alert("Entidad no Encontrada");
-        break;
-}
-?>
-<?php html($objeto); ?>
+html($objeto); ?>

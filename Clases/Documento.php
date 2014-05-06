@@ -138,10 +138,6 @@ class Documento extends EntidadBD {
         }
     }
 
-    public function generarFormaBorrado($seleccion, $nombre) {
-        
-    }
-
     public function generarFormaInsercion() {
 
         static::$smarty->assign('accion', "Registrar");
@@ -198,10 +194,6 @@ class Documento extends EntidadBD {
             default :
                 break;
         }
-    }
-
-    public function validarDatos() {
-        
     }
 
     public static function getID($discriminante, $valor) {
@@ -267,6 +259,14 @@ class Documento extends EntidadBD {
         } else {
             return false;
         }
+    }
+
+    public function generarFormaBorrado($seleccion, $nombre) {
+        
+    }
+
+    public function validarDatos() {
+        
     }
 
 }

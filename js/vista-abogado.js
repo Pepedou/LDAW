@@ -152,7 +152,7 @@ function successFuncTarea(data) {
 }
 
 function servicio(params, successFunc) {
-    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/servicio.php";
+    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/Servicios/servicio.php";
     $.ajax({
         url: myurl,
         dataType: 'jsonp',

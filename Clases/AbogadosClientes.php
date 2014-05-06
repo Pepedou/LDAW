@@ -55,26 +55,6 @@ class AbogadosClientes extends RelacionMaM {
         return $abogados;
     }
 
-    public function generarFormaActualizacion() {
-        
-    }
-
-    public function generarFormaBorrado() {
-        
-    }
-
-    public function generarFormaInsercion() {
-        
-    }
-
-    public function procesarForma() {
-        
-    }
-
-    public function validarDatos() {
-        
-    }
-
     public static function getNombreTabla() {
         return static::$tabla_static;
     }
@@ -102,6 +82,22 @@ class AbogadosClientes extends RelacionMaM {
             $json = json_encode($finalData);
         }
         print_r($json);
+    }
+
+    public function generarFormaActualizacion() {
+        
+    }
+
+    public function generarFormaBorrado() {
+        
+    }
+
+    public function generarFormaInsercion() {
+        
+    }
+
+    public function procesarForma() {
+        
     }
 
 }

@@ -165,8 +165,8 @@ class Despacho extends EntidadBD {
     }
 
     public function generarFormaBorrado($seleccion, $nombre) {
-
-                }
+        
+    }
 
     public static function getID($discriminante, $valor) {
         $dbManager = DatabaseManager::getInstance();

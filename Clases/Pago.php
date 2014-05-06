@@ -37,25 +37,11 @@ class Pago extends EntidadBD {
         return $cliente;
     }
 
-    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
-        
-    }
-
-    public function generarFormaBorrado($seleccion, $nombre) {
-        
-    }
-
     public function generarFormaInsercion() {
         
         static::$smarty->assign('accion', "Registrar");
         static::$smarty->assign('header', "Registrar Pago");
         static::$smarty->display($this->BASE_DIR . 'Vistas/Pagos/Altas.tpl');
-    }
-
-        
-
-    public function validarDatos() {
-        
     }
 
     public static function getID($discriminante, $valor) {
@@ -99,6 +85,18 @@ class Pago extends EntidadBD {
 
     public static function getNombreTabla() {
         return static::$tabla_static;
+    }
+
+    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
+        
+    }
+
+    public function generarFormaBorrado($seleccion, $nombre) {
+        
+    }
+
+    public function validarDatos() {
+        
     }
 
 }

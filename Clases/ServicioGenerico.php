@@ -1,5 +1,4 @@
 <?php
-include_once '../config.ink.php';
 include_once 'DatabaseManager.php';
 
 /**

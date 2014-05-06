@@ -166,10 +166,6 @@ class Abogado extends EntidadBD {
         static::$smarty->display($this->BASE_DIR . 'Vistas/Abogados/' . $carpeta . '.tpl');
     }
 
-    public function generarFormaBorrado($seleccion, $nombre) {
-        
-    }
-
     public function generarFormaInsercion() {
         static::$smarty->assign('nombre', "Nuevo Abogado");
         static::$smarty->assign('accion', "Registrar");
@@ -178,9 +174,7 @@ class Abogado extends EntidadBD {
     }
 
     public function procesarForma($op) {
-
         switch ($op) {
-
             case 1: //alta                
 
                 foreach ($this->atributos as $campo => $valor) {
@@ -236,9 +230,7 @@ class Abogado extends EntidadBD {
         }
     }
 
-    public function validarDatos() {
-        
-    }
+
 
     public static function getID($discriminante, $valor) {
         $dbManager = DatabaseManager::getInstance();
@@ -307,6 +299,14 @@ class Abogado extends EntidadBD {
         } else {
             return false;
         }
+    }
+
+    public function generarFormaBorrado($seleccion, $nombre) {
+        
+    }
+
+    public function validarDatos() {
+        
     }
 
 }

@@ -27,26 +27,6 @@ class Direccion extends EntidadBD {
         $this->discrValor = $this->atributos[$this->discr];
     }
 
-    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
-        
-    }
-
-    public function generarFormaBorrado($seleccion, $nombre) {
-        
-    }
-
-    public function generarFormaInsercion() {
-        
-    }
-
-    public function procesarForma($op) {
-        
-    }
-
-    public function validarDatos() {
-        
-    }
-
     public function service_selectTodos($callback) {
         $json = array();
         $query = "SELECT  " . static::$tabla_static . ".id, calle, no_exterior, no_interior, colonia, Municipios.Municipio, ciudad, Estados.Estado, cp from " . static::$tabla_static . " JOIN Municipios ON " . static::$tabla_static . ".id_Municipio = Municipios.id JOIN Estados ON Estados.id = Municipios.Estados_id";
@@ -167,6 +147,22 @@ class Direccion extends EntidadBD {
         $dbM->closeConnection();
         $fila = $resultado->fetch_assoc();
         return $fila['id'];
+    }
+
+    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
+        
+    }
+
+    public function generarFormaBorrado($seleccion, $nombre) {
+        
+    }
+
+    public function generarFormaInsercion() {
+        
+    }
+
+    public function validarDatos() {
+        
     }
 
 }

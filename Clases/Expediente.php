@@ -71,11 +71,7 @@ class Expediente extends EntidadBD {
         /* Imprimir documento */
         static::$smarty->display($this->BASE_DIR . 'Vistas/Expedientes/' . $carpeta . '.tpl');
     }
-
-    public function generarFormaBorrado($seleccion, $nombre) {
-        
-    }
-
+    
     public function generarFormaInsercion() {
         static::$smarty->assign('nombre', "Nuevo Abogado");
         static::$smarty->assign('accion', "Registrar");
@@ -102,11 +98,6 @@ class Expediente extends EntidadBD {
                 break;
     }
     }
-
-    public function validarDatos() {
-        
-    }
-
     public static function getID($discriminante, $valor) {
         $dbManager = DatabaseManager::getInstance();
         $dbManager->connectToDatabase();
@@ -148,6 +139,14 @@ class Expediente extends EntidadBD {
 
     public static function getNombreTabla() {
         return static::$tabla_static;
+    }
+
+    public function generarFormaBorrado($seleccion, $nombre) {
+        
+    }
+
+    public function validarDatos() {
+        
     }
 
 }

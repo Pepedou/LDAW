@@ -1,6 +1,6 @@
 <?php
 
-include_once 'EntidadFactory.php';
+include_once '../Clases/EntidadFactory.php';
 
 function procesa(EntidadBD $entidad, $operacion, $params, $callback) {
     if ($params != null) {

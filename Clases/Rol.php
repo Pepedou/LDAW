@@ -32,26 +32,6 @@ class Rol extends EntidadBD {
             return false;
         }
     }
-    
-    public function generarFormaActualizacion() {
-        
-    }
-
-    public function generarFormaBorrado() {
-        
-    }
-
-    public function generarFormaInsercion() {
-        
-    }
-
-    public function procesarForma($op) {
-        
-    }
-
-    public function validarDatos() {
-        
-    }
 
     public static function getID($discriminante, $valor) {
         $dbManager = DatabaseManager::getInstance();
@@ -94,6 +74,22 @@ class Rol extends EntidadBD {
 
     public static function getNombreTabla() {
         return static::$tabla_static;
+    }
+
+    public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
+        
+    }
+
+    public function generarFormaBorrado($seleccion, $nombre) {
+        
+    }
+
+    public function generarFormaInsercion() {
+        
+    }
+
+    public function validarDatos() {
+        
     }
 
 }

@@ -5,8 +5,8 @@
  *
  * @author José Luis Valencia Herrera     A01015544
  */
-include_once './EntidadBD.php';
-include_once './Direccion.php';
+include_once 'EntidadBD.php';
+include_once 'Direccion.php';
 
 class Cliente extends EntidadBD {
 
@@ -51,7 +51,7 @@ class Cliente extends EntidadBD {
             }
         }
     }
-        
+
     /* Funcion para generar servicio con los pagos correspondientes al cliente */
 
     public function cargarPagos(array $datos, $callback) {
@@ -63,7 +63,7 @@ class Cliente extends EntidadBD {
         if ($resultado != false) {
             while ($fila = $resultado->fetch_assoc()) {
                 array_push($json, $fila);
-    }
+            }
             $finalData = array("Resultados" => $json);
             if ($callback != "") {
                 $json = "$callback(" . json_encode($finalData) . ")";
@@ -75,8 +75,8 @@ class Cliente extends EntidadBD {
         return $json;
     }
 
-      /* Funcion para generar servicio con los pagos correspondientes al cliente */
-        
+    /* Funcion para generar servicio con los pagos correspondientes al cliente */
+
     public function servicioCasos(array $datos, $callback) {
         $id = $datos['id'];
         $json = array();
@@ -86,7 +86,7 @@ class Cliente extends EntidadBD {
         if ($resultado != false) {
             while ($fila = $resultado->fetch_assoc()) {
                 array_push($json, $fila);
-    }
+            }
             $finalData = array("Resultados" => $json);
             if ($callback != "") {
                 $json = "$callback(" . json_encode($finalData) . ")";
@@ -186,12 +186,8 @@ class Cliente extends EntidadBD {
         static::$smarty->display($this->BASE_DIR . 'Vistas/Clientes/' . $carpeta . '.tpl');
     }
 
-    public function generarFormaBorrado($seleccion, $nombre) {
-        
-    }
-
     public function generarFormaInsercion() {
-        
+
         static::$smarty->assign('nombre', "Nuevo Cliente");
         static::$smarty->assign('accion', "Registrar");
         static::$smarty->assign('header', "Alta de Clientes");
@@ -204,13 +200,13 @@ class Cliente extends EntidadBD {
             case 1:
                 $dir = new Direccion();
                 foreach ($this->atributos as $campo => $valor) {
-        
+
                     if (isset($_REQUEST[$campo])) {
                         if ($campo === "contrasena") {
                             $this->atributos[$campo] = sha1($_REQUEST[$campo]);
                         } else {
                             $this->atributos[$campo] = $_REQUEST[$campo];
-    }
+                        }
                     }
                 }
 
@@ -252,10 +248,6 @@ class Cliente extends EntidadBD {
             default :
                 break;
         }
-    }
-
-    public function validarDatos() {
-        
     }
 
     public static function getID($discriminante, $valor) {
@@ -317,6 +309,14 @@ class Cliente extends EntidadBD {
 
     public static function getNombreTabla() {
         return static::$tabla_static;
+    }
+
+    public function generarFormaBorrado($seleccion, $nombre) {
+        
+    }
+
+    public function validarDatos() {
+        
     }
 
 }

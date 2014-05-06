@@ -1,10 +1,10 @@
 <?php
 
 /**
-* Clase para la creación, actualización y borrado de Casos
-*
-* @author José Luis Valencia Herrera A01015544
-*/
+ * Clase para la creación, actualización y borrado de Casos
+ *
+ * @author José Luis Valencia Herrera A01015544
+ */
 include_once 'EntidadBD.php';
 include_once 'Despacho.php';
 include_once 'Expediente.php';
@@ -45,7 +45,7 @@ class Caso extends EntidadBD {
         $sel_status = 0;
         $sel_desp = 0;
         $sel_cliente = 0;
-        
+
         if ($nombre !== "Selecciona") {
             $caso = new Caso();
             $exito = $caso->cargarDeBD("nombre", $nombre);
@@ -61,8 +61,8 @@ class Caso extends EntidadBD {
                     $caso_status = "Activo";
                 } else {
                     $caso_status = "Inactivo";
-    }
-                /*Cargar despacho correspondiente*/
+                }
+                /* Cargar despacho correspondiente */
                 $desp = new Despacho();
                 $exito2 = $desp->cargarDeBD("id", $sel_desp);
                 if ($exito2) {
@@ -71,15 +71,15 @@ class Caso extends EntidadBD {
                 } else {
                     $caso_desp = "No encontrado";
                 }
-        
-                /*Cargar Cliente correspondiente*/
-                 $cliente = new Cliente();
+
+                /* Cargar Cliente correspondiente */
+                $cliente = new Cliente();
                 $exito3 = $cliente->cargarDeBD("id", $sel_cliente);
                 if ($exito3) {
                     $caso_cliente = $cliente->atributos["nombre"];
                 } else {
                     $caso_cliente = "No encontrado";
-    }
+                }
             }
         }
 
@@ -101,11 +101,7 @@ class Caso extends EntidadBD {
         /* Imprimir documento */
         static::$smarty->display($this->BASE_DIR . 'Vistas/Casos/' . $carpeta . '.tpl');
     }
-                
-    public function generarFormaBorrado($seleccion, $nombre) {
-        
-            }
-                       
+
     public function generarFormaInsercion() {
 
         static::$smarty->assign('accion', "Registrar");
@@ -115,7 +111,7 @@ class Caso extends EntidadBD {
 
     public function procesarForma($op) {
         switch ($op) {
-        
+
             case 1: //alta           
 
                 $this->procesa_insert();
@@ -128,17 +124,13 @@ class Caso extends EntidadBD {
                 break;
             default :
                 break;
-    }
-    }
-
-    public function validarDatos() {
-        
+        }
     }
 
     public static function getID($discriminante, $valor) {
         $dbManager = DatabaseManager::getInstance();
         $dbManager->connectToDatabase();
-        $query = "SELECT id FROM " . static::$tabla_static . " WHERE ".$discriminante ." = '$valor' LIMIT 1";
+        $query = "SELECT id FROM " . static::$tabla_static . " WHERE " . $discriminante . " = '$valor' LIMIT 1";
         $resultado = $dbManager->executeQuery($query);
         $dbManager->closeConnection();
         if ($resultado != false) {
@@ -178,8 +170,8 @@ class Caso extends EntidadBD {
         return static::$tabla_static;
     }
 
-    public function get_Expedientes(){
-        
+    public function get_Expedientes() {
+
         $expedientes = array();
         $query = "SELECT * FROM " . Expediente::getNombreTabla() . " WHERE " . Expediente::getNombreTabla() . ".id_Caso =" . $this->atributos['id'];
         $resultado = $this->dbExecute($query);
@@ -189,11 +181,17 @@ class Caso extends EntidadBD {
                 $aux = new Expediente();
                 $aux->guardarDatos($fila);
                 array_push($expedientes, $aux);
-}
+            }
         }
         return $expedientes;
-
     }
-    
+
+    public function generarFormaBorrado($seleccion, $nombre) {
+        
+    }
+
+    public function validarDatos() {
+        
+    }
 
 }
