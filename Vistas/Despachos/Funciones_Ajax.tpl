@@ -1,7 +1,4 @@
 <script>
-
-
-
     function getXMLHTTP() { //funcion que regresa el objeto xml http
         var xmlhttp = false;
         try {
@@ -20,7 +17,6 @@
                 }
             }
         }
-
         return xmlhttp;
     }
 
@@ -143,9 +139,6 @@
             req.open("GET", strURL, true);
             req.send(null);
         }
-
-
-
     }
 
 
