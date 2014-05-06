@@ -131,6 +131,7 @@
                     // only if "OK"
                     if (req.status == 200) {
                         document.getElementById('tipos').innerHTML = req.responseText;
+                         
                     } else {
                         alert("Hay un problema al utilizar  XMLHTTP:\n" + req.statusText);
                     }
@@ -155,7 +156,7 @@
                     // only if "OK"
                     if (req.status == 200) {
                         document.getElementById(name).innerHTML = req.responseText;
-                        
+                      
                     } else {
                         alert("Hay un problema al utilizar  XMLHTTP:\n" + req.statusText);
                     }

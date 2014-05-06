@@ -5,11 +5,14 @@ include_once '../Clases/DatabaseManager.php';
 
 $op = $_REQUEST['op'];
 $edo = $_REQUEST['edo'];
+$campo = $_REQUEST['campo'];
+$name = $_REQUEST['name'];
+$tabla = $_REQUEST['tabla'];
 
 switch ($op) {
 
     case 1:
-        // alert("sad");
+        
         $dbM = DatabaseManager::getInstance();
         $dbM->connectToDatabase();
         $query = "SELECT id, Estado  FROM Estados WHERE Paises_id=1"; //siempre es México
@@ -21,6 +24,7 @@ switch ($op) {
 
             echo"<option value =" . $row['id'] . " >" . $row['Estado'] . "</option>";
         }
+
 
         echo "</select>";
 
@@ -74,6 +78,38 @@ switch ($op) {
         echo "</select>";
         $dbM->closeConnection();
         break;
+    case 5:
+        $dbM = DatabaseManager::getInstance();
+        $dbM->connectToDatabase();
+        $query = "SELECT id, " . $campo . " FROM " . $tabla . " WHERE visible=1";
+        $resultado = $dbM->executeQuery($query);
+        echo "<select name=" . $name . ">
+          <option>Seleccione </option>";
+
+        while ($row = $resultado->fetch_assoc()) {
+
+            echo"<option value =" . $row['id'] . " >" . $row[$campo] . "</option>";
+        }
+        echo "</select>";
+        $dbM->closeConnection();
+        break;
+
+    case 6:
+        $dbM = DatabaseManager::getInstance();
+        $dbM->connectToDatabase();
+        $query = "SELECT id, tipo FROM Tipos";
+        $resultado = $dbM->executeQuery($query);
+        echo "<select name=tipos >
+          <option>Seleccione </option>";
+
+        while ($row = $resultado->fetch_assoc()) {
+
+            echo"<option value =" . $row['id'] . " >" . $row['tipo'] . "</option>";
+        }
+        echo "</select>";
+        $dbM->closeConnection();
+        break;
+
     default:
         echo"Necesito la opcion";
         break;

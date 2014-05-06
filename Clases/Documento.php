@@ -26,59 +26,6 @@ class Documento extends EntidadBD {
         $this->discrValor = $this->atributos[$this->discr];
     }
 
-    public function generarFormaActualizacion1($seleccion, $nombre, $accion, $carpeta) {
-        $name = "Selecciona";
-        $sel_exp = 0;
-        $sel_tipo = 0;
-
-        if ($nombre !== "Selecciona") {
-            $doc = new Documento();
-            $exito = $doc->cargarDeBD("nombre", $nombre);
-            if ($exito) {
-                /* Actualizo el valor de name */
-                $name = $doc->atributos["nombre"];
-                $sel_exp = $doc->atributos["id_Expediente"];
-                $sel_tipo = $doc->atributos["id_Tipo"];
-
-                $exp = new Expediente();
-                $exito2 = $exp->cargarDeBD("id", $sel_exp);
-                /* Cargar Expediente */
-                if ($exito2) {
-
-                    $doc_exp = $exp->atributos["nombre"];
-                } else {
-                    $doc_exp = "No encontrado";
-                }
-
-                /* Cargar Tipo */
-                $tipo = new Tipo();
-                $exito3 = $tipo->cargarDeBD("id", $sel_tipo);
-
-                if ($exito3) {
-
-                    $doc_tipo = $exp->atributos["tipo"];
-                } else {
-                    $doc_tipo = "No encontrado";
-                }
-            }
-        }
-
-
-        static::$smarty->assign('doc_nombre', $name);
-        static::$smarty->assign('nombre', $accion . "Documentos");
-        static::$smarty->assign('select_exp', $sel_exp);
-        static::$smarty->assign('select_tipo', $sel_tipo);
-        static::$smarty->assign('doc_exp', $doc_exp);
-        static::$smarty->assign('doc_tipo', $doc_tipo);
-        static::$smarty->assign('sel', $seleccion);
-        static::$smarty->assign('name', "documentos");
-        static::$smarty->assign('tabla', "Documentos");
-        static::$smarty->assign('campo', "nombre");
-        static::$smarty->assign('accion', $accion);
-        /* Imprimir documento */
-        static::$smarty->display($this->BASE_DIR . 'Vistas/Documentos/' . $carpeta . '.tpl');
-    }
-
     public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
         /* Traer expediente en nombre???? */
 
@@ -86,7 +33,7 @@ class Documento extends EntidadBD {
             /* Recuperar todos los registros de la base de datos */
             $dbManager = DatabaseManager::getInstance();
             $dbManager->connectToDatabase();
-            $query = "SELECT id,nombre FROM " . static::$tabla_static;
+            $query = "SELECT nombre,documento FROM " . static::$tabla_static;
             $resultado = $dbManager->executeQuery($query);
             $dbManager->closeConnection();
             /* Arreglos de nombres y ids */
@@ -94,10 +41,9 @@ class Documento extends EntidadBD {
 
             if ($resultado->num_rows) {
                 while ($fila = $resultado->fetch_assoc()) {
-                    $ids[$fila['nombre']] = $fila['id'];
+                    $ids[$fila['nombre']] = $fila['documento'];
                 }
             }
-
 
             static::$smarty->assign('nombre', $accion . "Documentos");
             static::$smarty->assign('name', "documentos");
@@ -107,34 +53,7 @@ class Documento extends EntidadBD {
             static::$smarty->assign('ids', $ids);
 
             static::$smarty->display($this->BASE_DIR . 'Vistas/Documentos/' . $carpeta . '.tpl');
-        } else { //traer el archivo seleccionado
-            $dbManager = DatabaseManager::getInstance();
-            $dbManager->connectToDatabase();
-            $query = "SELECT documento,nombre,id_Tipo,tamano FROM " . static::$tabla_static . " WHERE id =" . $seleccion . " AND visible = 1";
-            $resultado = $dbManager->executeQuery($query);
-            $dbManager->closeConnection();
-
-            if ($resultado != false) {
-                if ($resultado->num_rows > 0) {
-                    $row = $resultado->fetch_assoc();
-                    if ($row['id_Tipo'] === 1) { //si es pdf
-                        $tipo = "application/pdf";
-                    } else {
-                        $tipo = "application/pdf";  //solo de prueba, cambiar esto
-                    }
-                    $content = $row['documento'];
-                    $nombre = $row['nombre'];
-                    $tamano = $row['tamano'];
-                } else {
-                    Debug::getInstance()->alert("El archivo no se encuentra disponible.");
-                }
-            }
-
-            header("Content-type: $tipo");
-            header("Content-length: $tamano");
-            while (@ob_end_clean());
-            //header("Content-Disposition: attachment; filename=\"$nombre\"");
-            echo $content;
+        } else {//Desplegar archivo
         }
     }
 
@@ -149,47 +68,65 @@ class Documento extends EntidadBD {
         switch ($op) {
 
             case 1: //alta 
+                $copiarArchivo = false;
+                $extensiones = array("image/gif", "image/jpeg", "image/jpg",
+                    "image/png,", "application/pdf", "doc", "docx", "application/msword",
+                    "application/vnd.ms-excel", "application/vnd.ms-powerpoint");
                 /* Procesa el archivo */
                 if (isset($_FILES['documento']) && $_FILES['documento']['size'] > 0) {
-                    //almacenamos la imagen en directorio temporal
 
+                    $nombreDirectorio = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Documentos/";
+                    $idUnico = time();
+                    $nombreArchivo = $idUnico . "-" . $_FILES['documento']['name'];
+                    $this->atributos['documento'] = $nombreDirectorio . $nombreArchivo;
+                    $this->atributos['tamano'] = $_FILES['documento']['size'];
                     $tmpName = $_FILES ['documento']['tmp_name'];
-                    //Leemos el archivo
-                    $fileSize = $_FILES['documento']['size'];
-                    $fp = fopen($tmpName, 'r');
-                    $data = fread($fp, filesize($tmpName));
-                    $data = addslashes($data);
-                    $this->atributos['documento'] = $data;
-                    $this->atributos['tamano'] = $fileSize;
-                    fclose($fp);
+                    $copiarArchivo = true;
                 } else {
-                    Debug::getInstance()->alert("Falta documento");
+                    $nombreArchivo = '';
+                    // Debug::getInstance()->alert("Falta documento");
                 }
                 /* Guarda el resto de los datos */
                 foreach ($this->atributos as $campo => $valor) {
                     if (isset($_REQUEST[$campo])) {
                         if ($campo === "documento") {
-                            $this->atributos['documento'] = $data;
+                            $this->atributos['documento'] = $nombreDirectorio . $nombreArchivo;
                         } else {
                             $this->atributos[$campo] = $_REQUEST[$campo];
                         }
                     }
                 }
-                /* Corrobora que los demás atributos estén puestos */
-                if ($this->all_set()) {
-                    if ($this->almacenarEnBD()) {
-                        Debug::getInstance()->alert("Registro Exitoso.");
+
+                /* Mover archivo de imagen a su ubicación definitiva */
+                if ($copiarArchivo) {
+
+                    $tipo = $_FILES['documento']['type'];
+                    if (in_array($tipo, $extensiones)) { //si la extensión es permitida
+
+                        /* Corrobora que los demás atributos estén puestos */
+                        if ($this->all_set()) {
+                            if ($this->almacenarEnBD()) { //si el registro es exitoso, muevo el archivo
+                                $tmpName = $_FILES ['documento']['tmp_name'];
+                                if (move_uploaded_file($tmpName, "Documentos/" . $nombreArchivo)) {
+                                    //  Debug::getInstance()->alert("Archivo Movido");
+                                } else {
+                                    // Debug::getInstance()->alert("Archivo No Movido");
+                                }
+                                Debug::getInstance()->alert("Registro Exitoso.");
+                            }
+                        } else {
+                            Debug::getInstance()->alert("Error en el Registro.");
+                        }
+                    } else {
+                        Debug::getInstance()->alert("Tipo de Archivo no permitido");
                     }
-                } else {
-                    
                 }
                 break;
             case 2:
                 $this->procesa_bajas();
                 break;
             case 3: //sera el show de documentos
-                //http://www.php-mysql-tutorial.com/wikis/mysql-tutorials/uploading-files-to-mysql-database.aspx
-                // $this->procesa_cambios();
+
                 break;
             default :
                 break;

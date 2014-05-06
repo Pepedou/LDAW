@@ -146,7 +146,7 @@ class Direccion extends EntidadBD {
         $resultado = $dbM->executeQuery($query);
         $dbM->closeConnection();
         $fila = $resultado->fetch_assoc();
-        return $fila['id'];
+        return $fila['Municipio'];
     }
 
     public function generarFormaActualizacion($seleccion, $nombre, $accion, $carpeta) {
