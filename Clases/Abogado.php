@@ -354,10 +354,9 @@ class Abogado extends EntidadBD {
     public function service_getcalificacion(array $datos, $callback) {
         $id = $datos['id'];
         $this->atributos['id'] = $id;
-        $data = array();
-        $avg = $this->get_calificacion();
-        $data[] = array("promedio" => $avg);
-        $finalData = array("Resultados" => $data);
+        
+        $avg = $this->get_calificacion();       
+        $finalData = array("Resultados" => $avg);
         if ($callback != "") {
             $json = "$callback(" . json_encode($finalData) . ")";
         } else {
@@ -370,10 +369,9 @@ class Abogado extends EntidadBD {
         $id = $datos['id'];
         $puntos = $datos['puntos'];
         $this->atributos['id'] = $id;
-        $data = array();
-        $res = $this->set_calificacion($puntos);
-        $data[] = array("puntos" => $res);
-        $finalData = array("Resultados" => $data);
+      
+        $res = $this->set_calificacion($puntos);        
+        $finalData = array("Resultados" => $res);
         if ($callback != "") {
             $json = "$callback(" . json_encode($finalData) . ")";
         } else {
