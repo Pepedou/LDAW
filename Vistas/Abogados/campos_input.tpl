@@ -8,8 +8,8 @@
         <td>
             <input id = "nombre" type='text' name='nombre' value = "{$abog_nombre}" />    
         </td>
-        
-         <td>
+
+        <td>
             <label for="contrasena">Contraseña</label>
             <input id = "contrasena" type='password' name='contrasena' value = "{$cliente_contrasena}" />    
         </td>
@@ -35,10 +35,12 @@
         </td>
     <br>
     <td>
+
         <label for="email">Email</label>
         <input type='text' name='email' value = "{$abog_email}" />    
     </td>
-
+</tr>
+<tr>
     <td >
         <label for="roles">Rol</label>
         <select id="roles" name="id_Rol" selected ="{$select_tol}" >
@@ -49,7 +51,14 @@
         <select id="despachos" name ="id_Despacho" selected="{$select_desp}">
         </select>
     </td>
-    <input type ='hidden' id="op" name='op' value='Abogado' />
+    <td >
+        <label for="fotografia"> Adjuntar Fotograf&iacute;a: </label>
+        <input type="hidden" name="max_file_size" value="1024000">
+        <input type="file"  size="44" name ="fotografia" id="fotografia"/> 
+        <img src="{$foto}" style="width: 150px; height: 100px; border-width: 2px; border-style: solid;"/>
+    </td>
+
+<input type ='hidden' id="op" name='op' value='Abogado' />
 </tr>
 <tr>
     <td>

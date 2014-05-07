@@ -5,7 +5,7 @@
 <body onload="llenaDespachos();
         llenaRoles();">
     <h1>{$header}</h1>    
-    <form action='#' method='get'>
+    <form action='#' method='post' enctype="multipart/form-data">
 
         {include file="./campos_input.tpl"}
         

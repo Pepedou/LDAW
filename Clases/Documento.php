@@ -6,7 +6,7 @@
  * @author José Luis Valencia Herrera     A01015544
  */
 include_once 'EntidadBD.php';
-
+http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Imagenes/default-mr.png
 class Documento extends EntidadBD {
 
     static private $tabla_static = "Documentos";
@@ -70,7 +70,7 @@ class Documento extends EntidadBD {
             case 1: //alta 
                 $copiarArchivo = false;
                 $extensiones = array("image/gif", "image/jpeg", "image/jpg",
-                    "image/png,", "application/pdf", "doc", "docx", "application/msword",
+                    "image/png", "application/pdf", "doc", "docx", "application/msword",
                     "application/vnd.ms-excel", "application/vnd.ms-powerpoint");
                 /* Procesa el archivo */
                 if (isset($_FILES['documento']) && $_FILES['documento']['size'] > 0) {

@@ -15,13 +15,15 @@ class Abogado extends EntidadBD {
             "id" => -1,
             "nombre" => "",
             "apellidoP" => "",
-            "apellidoM" => "",
+            "apellidoM" => "",            
             "telefono" => 0,
             "email" => "",
             "contrasena" => "",
             "id_Rol" => -1,
             "id_Despacho" => -1,
-            "visible" => 1);
+            "visible" => 1,
+            "fotografia" => "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Imagenes/default-mr.png"
+            );
         $this->discr = "email";
         $this->discrValor = $this->atributos[$this->discr];
     }
@@ -109,6 +111,7 @@ class Abogado extends EntidadBD {
         $apellido_m = "Apellido Materno";
         $telefono = "Tel.";
         $email = "Email";
+        $foto = $this->atributos['fotografia'];
         $sel_rol = 0;
         $sel_desp = 0;
 
@@ -117,7 +120,7 @@ class Abogado extends EntidadBD {
             $exito = $abo->cargarDeBD("nombre", $nombre);
             if ($exito) {
 
-                /* Actualizo el valor de name */
+                /* Actualizo valores*/
                 $name = $abo->atributos["nombre"];
                 $apellido_p = $abo->atributos["apellidoP"];
                 $apellido_m = $abo->atributos["apellidoM"];
@@ -125,6 +128,7 @@ class Abogado extends EntidadBD {
                 $email = $abo->atributos["email"];
                 $sel_rol = $abo->atributos["id_Rol"];
                 $sel_desp = $abo->atributos["id_Despacho"];
+                $foto = $abo->atributos['fotografia'];
                 /* Cargamos Despacho */
                 $desp = new Despacho();
                 $exito2 = $desp->cargarDeBD("id", $sel_desp);
@@ -153,6 +157,7 @@ class Abogado extends EntidadBD {
         static::$smarty->assign('abog_desp', $abog_desp);
         static::$smarty->assign('sel_rol', $sel_rol);
         static::$smarty->assign('sel_desp', $sel_desp);
+        static::$smarty->assign('foto', $foto);
 
         static::$smarty->assign('select_rol', $sel_rol);
         static::$smarty->assign('select_desp', $sel_desp);
@@ -169,12 +174,30 @@ class Abogado extends EntidadBD {
         static::$smarty->assign('nombre', "Nuevo Abogado");
         static::$smarty->assign('accion', "Registrar");
         static::$smarty->assign('header', "Alta de Abogados");
+        static::$smarty->assign('foto', $this->atributos['fotografia']);
         static::$smarty->display($this->BASE_DIR . 'Vistas/Abogados/Altas_2.tpl');
     }
 
     public function procesarForma($op) {
         switch ($op) {
-            case 1: //alta                
+            case 1: //alta    
+
+                $copiarArchivo = false;
+                $extensiones = array("image/gif", "image/jpeg", "image/jpg",
+                    "image/png");
+                /* Procesa el archivo */
+                if (isset($_FILES['fotografia']) && $_FILES['fotografia']['size'] > 0) {
+
+                    $nombreDirectorio = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Imagenes/";
+                    $idUnico = time();
+                    $nombreArchivo = $idUnico . "-" . $_FILES['fotografia']['name'];
+                    $this->atributos['fotografia'] = $nombreDirectorio . $nombreArchivo;
+                    $tmpName = $_FILES ['fotografia']['tmp_name'];
+                    $copiarArchivo = true;
+                } else {
+                    $nombreArchivo = '';
+                }
+
                 foreach ($this->atributos as $campo => $valor) {
                     if (isset($_REQUEST[$campo])) {
                         if ($campo === "contrasena") {
@@ -185,13 +208,30 @@ class Abogado extends EntidadBD {
                     }
                 }
 
-                if ($this->all_set()) {
-                    if ($this->almacenarEnBD()) {
-                        Debug::getInstance()->alert("Registro Exitoso.");
+                /* Mover archivo de imagen a su ubicación definitiva */
+                if ($copiarArchivo) {
+
+                    $tipo = $_FILES['fotografia']['type'];
+                    if (in_array($tipo, $extensiones)) { //si la extensión es permitida
+                        $tmpName = $_FILES ['fotografia']['tmp_name'];
+                        if (move_uploaded_file($tmpName, "Imagenes/" . $nombreArchivo)) {
+                            //  Debug::getInstance()->alert("Archivo Movido");
+                        } else {
+                            // Debug::getInstance()->alert("Archivo No Movido");
+                        }
+                    } else {
+                        Debug::getInstance()->alert("Tipo de Archivo no permitido");
                     }
-                } else {
-                    (Debug::getInstance()->alert("Faltan Campos"));
                 }
+                /* Corrobora que los demás atributos estén puestos */
+                if ($this->all_set()) {
+                    if ($this->almacenarEnBD()) { //si el registro es exitoso, muevo el archivo
+                        Debug::getInstance()->alert("Registro Exitoso.");
+                    } else {
+                        Debug::getInstance()->alert("Error en el Registro.");
+                    }
+                }
+
                 break;
             case 2: //bajas
                 if (isset($_REQUEST['nombre']) && isset($_REQUEST['elim'])) {
@@ -221,6 +261,7 @@ class Abogado extends EntidadBD {
                 }
 
                 break;
+                http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Imagenes/default-mr.png
             default :
                 break;
         }
@@ -238,6 +279,7 @@ class Abogado extends EntidadBD {
                 return $row['id'];
             } else {
                 return -1;
+                http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Imagenes/default-mr.png
             }
         }
         Debug::getInstance()->alert("EntidadBD::getID => No se encontró el ID");
@@ -275,7 +317,7 @@ class Abogado extends EntidadBD {
 
     public function all_set() {
         $count = 0;
-        $att_count = count($this->atributos) - 3; //menos id, constraseña y visible
+        $att_count = count($this->atributos) - 4; //menos id, constraseña , foto y visible
 
         foreach ($this->atributos as $campo => $valor) {
             if ($campo != 'id' && $campo != 'contrasena' && $campo != 'visible') {
