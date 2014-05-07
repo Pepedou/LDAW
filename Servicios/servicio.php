@@ -11,7 +11,12 @@ function procesa(EntidadBD $entidad, $operacion, $params, $callback) {
             $abogado = new Abogado();
             $abogado->verificaLogin($params, $callback);
             break;
+         case 'lgc':
+            $cliente = new Cliente();
+            $cliente->verificaLogin($params, $callback);
+            break;
         case 'st':
+            $entidad->guardarDatos($params);     
             $entidad->service_selectTodos($callback);
             break;
         case 'si':

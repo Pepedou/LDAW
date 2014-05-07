@@ -34,6 +34,7 @@ class ServicioGenerico {
     public function service_selectIndividual($callback) {
         $json = array();
         $query = "SELECT * FROM $this->tabla WHERE $this->discr = '$this->discrValor'";
+        
         $resultado = $this->dbExecute($query);
         if ($resultado != false) {
             array_push($json, ($resultado->fetch_assoc()));

@@ -50,6 +50,7 @@ class Cliente extends EntidadBD {
                 $this->atributos[$campo] = $misDatos[$campo];
             }
         }
+        $this->actualizarValorDiscr();
     }
 
     /* Funcion para generar servicio con los pagos correspondientes al cliente */

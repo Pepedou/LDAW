@@ -1,6 +1,7 @@
 <?php
 
-include_once './Clases/EntidadFactory.php';
+include_once '../Clases/EntidadFactory.php';
+include_once '../Clases/Cliente.php';
 
 $tipo = $_GET['entidad'];
 $operacion = $_GET['op'];
@@ -21,7 +22,7 @@ function procesa(EntidadBD $entidad, $operacion, $params, $callback) {
             $cliente->cargarPagos($params,$callback);            
             break;
         case 'casos':
-            $cliente = New Cliente();
+            $cliente = new Cliente();
             $cliente->servicioCasos($params, $callback);
             break;
     }

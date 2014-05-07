@@ -47,11 +47,12 @@ class AbogadosClientes extends RelacionMaM {
         $resultado = $this->dbExecute($query);
 
         if ($resultado->num_rows) {
-            $fila = $resultado->fetch_assoc();
-            $aux->guardarDatos($fila);
-            array_push($abogados, $aux);
+            while ($fila = $resultado->fetch_assoc()) {
+                $aux = new Abogado();
+                $aux->guardarDatos($fila);
+                array_push($abogados, $aux);
+            }
         }
-
         return $abogados;
     }
 
@@ -59,7 +60,7 @@ class AbogadosClientes extends RelacionMaM {
         return static::$tabla_static;
     }
 
-    public function service_selectTodosID($misDatos, $callback) {
+     public function service_selectTodosID($misDatos, $callback) {
         $resultados = array();
         $atributos = array();
         switch ($misDatos['campo']) {
@@ -83,7 +84,7 @@ class AbogadosClientes extends RelacionMaM {
         }
         print_r($json);
     }
-
+    
     public function generarFormaActualizacion() {
         
     }
