@@ -15,15 +15,17 @@ class Abogado extends EntidadBD {
             "id" => -1,
             "nombre" => "",
             "apellidoP" => "",
-            "apellidoM" => "",            
+            "apellidoM" => "",
             "telefono" => 0,
             "email" => "",
             "contrasena" => "",
             "id_Rol" => -1,
             "id_Despacho" => -1,
             "visible" => 1,
-            "fotografia" => "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Imagenes/default-mr.png"
-            );
+            "fotografia" => "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Imagenes/default-mr.png",
+            "puntos"=> 1,
+            "votos" => 1
+        );
         $this->discr = "email";
         $this->discrValor = $this->atributos[$this->discr];
     }
@@ -120,7 +122,7 @@ class Abogado extends EntidadBD {
             $exito = $abo->cargarDeBD("nombre", $nombre);
             if ($exito) {
 
-                /* Actualizo valores*/
+                /* Actualizo valores */
                 $name = $abo->atributos["nombre"];
                 $apellido_p = $abo->atributos["apellidoP"];
                 $apellido_m = $abo->atributos["apellidoM"];
@@ -315,9 +317,74 @@ class Abogado extends EntidadBD {
         return static::$tabla_static;
     }
 
+    public function get_calificacion() {
+
+        $dbManager = DatabaseManager::getInstance();
+        $dbManager->connectToDatabase();
+        $query = "SELECT puntos,votos FROM " . static::$tabla_static . " WHERE id = " . $this->atributos['id'] . " LIMIT 1";
+        $resultado = $this->dbExecute($query);
+        if (($resultado->num_rows)) {
+            $fila = $resultado->fetch_assoc();
+            $puntos = floatval($fila['puntos']);
+            $votos = floatval($fila['votos']);            
+            $avg = $puntos / $votos;            
+            return $avg;
+        } else {
+            return -1;
+        }
+    }
+
+    public function set_calificacion($puntos) {
+        $dbManager = DatabaseManager::getInstance();
+        $dbManager->connectToDatabase();
+        $query = "UPDATE " . static::$tabla_static . " SET puntos = puntos + " . $puntos . "  WHERE id = " . $this->atributos['id'] . "";
+        $resultado = $this->dbExecute($query);
+        $query = "UPDATE " . static::$tabla_static . " SET votos = votos + 1   WHERE id = " . $this->atributos['id'] . "";
+        $resultado = $this->dbExecute($query);
+        $query = "SELECT puntos FROM " . static::$tabla_static . " WHERE id = " . $this->atributos['id'] . " LIMIT 1";
+        $resultado = $this->dbExecute($query);
+        if (($resultado->num_rows)) {
+            $fila = $resultado->fetch_assoc();
+            return $fila['puntos'];
+        } else {
+            return false;
+        }
+    }
+
+    public function service_getcalificacion(array $datos, $callback) {
+        $id = $datos['id'];
+        $this->atributos['id'] = $id;
+        $data = array();
+        $avg = $this->get_calificacion();
+        $data[] = array("promedio" => $avg);
+        $finalData = array("Resultados" => $data);
+        if ($callback != "") {
+            $json = "$callback(" . json_encode($finalData) . ")";
+        } else {
+            $json = json_encode($finalData);
+        }
+        print_r($json);
+    }
+
+    public function service_setcalificacion(array $datos, $callback) {
+        $id = $datos['id'];
+        $puntos = $datos['puntos'];
+        $this->atributos['id'] = $id;
+        $data = array();
+        $res = $this->set_calificacion($puntos);
+        $data[] = array("puntos" => $res);
+        $finalData = array("Resultados" => $data);
+        if ($callback != "") {
+            $json = "$callback(" . json_encode($finalData) . ")";
+        } else {
+            $json = json_encode($finalData);
+        }
+        print_r($json);
+    }
+
     public function all_set() {
         $count = 0;
-        $att_count = count($this->atributos) - 4; //menos id, constraseña , foto y visible
+        $att_count = count($this->atributos) - 6; //menos id, constraseña , foto , puntos, votos y visible
 
         foreach ($this->atributos as $campo => $valor) {
             if ($campo != 'id' && $campo != 'contrasena' && $campo != 'visible') {

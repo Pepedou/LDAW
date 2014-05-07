@@ -4,19 +4,27 @@ include_once '../Clases/EntidadFactory.php';
 
 function procesa(EntidadBD $entidad, $operacion, $params, $callback) {
     if ($params != null) {
-        $entidad->guardarDatos($params);        
+        $entidad->guardarDatos($params);
     }
     switch ($operacion) {
         case 'lg':
             $abogado = new Abogado();
             $abogado->verificaLogin($params, $callback);
             break;
-         case 'lgc':
+        case 'lgc':
             $cliente = new Cliente();
             $cliente->verificaLogin($params, $callback);
             break;
+        case 'gcal':
+            $abogado = new Abogado();
+            $abogado->service_getcalificacion($params, $callback);
+            break;
+        case 'scal':
+            $abogado = new Abogado();
+            $abogado->service_setcalificacion($params, $callback);
+            break;
         case 'st':
-            $entidad->guardarDatos($params);     
+            $entidad->guardarDatos($params);
             $entidad->service_selectTodos($callback);
             break;
         case 'si':

@@ -15,7 +15,7 @@ CREATE TABLE Despachos (id int PRIMARY KEY AUTO_INCREMENT, nombre varchar(50) NO
 
 CREATE TABLE Roles (id int PRIMARY KEY AUTO_INCREMENT, rol varchar(15) NOT NULL DEFAULT 'Sin rol');
 
-CREATE TABLE Abogados (id int PRIMARY KEY AUTO_INCREMENT, nombre varchar(30) NOT NULL, apellidoP varchar(30) NOT NULL, apellidoM varchar(30) NOT NULL, telefono int, email varchar(30), contrasena varchar(128) NOT NULL, fotografia varchar(200),id_Rol int, id_Despacho int NOT NULL, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY (id_Rol) REFERENCES Roles(id) ON DELETE SET NULL, FOREIGN KEY (id_Despacho) REFERENCES Despachos(id) ON DELETE CASCADE);
+CREATE TABLE Abogados (id int PRIMARY KEY AUTO_INCREMENT, nombre varchar(30) NOT NULL, apellidoP varchar(30) NOT NULL, apellidoM varchar(30) NOT NULL, telefono int, email varchar(30), contrasena varchar(128) NOT NULL, fotografia varchar(200),id_Rol int, id_Despacho int NOT NULL, visible bool NOT NULL DEFAULT TRUE, puntos int NOT NULL DEFAULT 0, votos int NOT NULL DEFAULT 0, FOREIGN KEY (id_Rol) REFERENCES Roles(id) ON DELETE SET NULL, FOREIGN KEY (id_Despacho) REFERENCES Despachos(id) ON DELETE CASCADE);
 
 CREATE TABLE Casos (id int PRIMARY KEY AUTO_INCREMENT, nombre varchar(100), status int, id_Despacho int, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY (id_Despacho) REFERENCES Despachos(id) ON DELETE CASCADE);
 
