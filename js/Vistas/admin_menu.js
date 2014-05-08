@@ -1,72 +1,4 @@
 
-function mostrarCasos(id) {//mostrarCaso
-//Carga la pagina mediante AJAX y despues le añade los datos de cada campo
-    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/Vistas/vista-caso.html";
-    $.ajax({
-        url: myurl,
-        success: function(data) {
-            $("#maint").empty().append(data); //cambiar por main_content y ajustar
-        },
-        timeout: 3000, //3 second timeout, 
-        error: function(jqXHR, status, errorThrown) {   //the status returned will be "timeout" 
-            alert(status + " " + errorThrown + ": No se pudo conectar con el servidor. Intente de nuevo.");
-        }
-    });
-
-    var params = {
-        op: "sii",
-        entidad: "Caso",
-        "params[id]": id
-    };
-
-    servicio(params, function(data) {
-        var string = '<table id="main_table" class="tablesorter"><thead><tr><th>Nombre</th><th>Estado</th></tr></thead> <tbody>';
-        $.each(data.Resultados, function(i, resultado) {
-            var nombre = resultado.nombre;
-            var estado = resultado.status;
-            var clienteID = resultado.id_Cliente;
-            var despachoID = resultado.id_Despacho;
-            $("#nombreCaso span").append(nombre);
-            $("#estado span").append(estado ? "Activo" : "Cerrado");
-
-            var iParams = {
-                op: "sii",
-                entidad: "Cliente",
-                "params[id]": clienteID
-            };
-            servicio(iParams, function(data) {
-                $.each(data.Resultados, function(i, resultado) {
-                    $("#nombreCliente span").append(resultado.nombre + " " + resultado.apellidoP + " " + resultado.apellidoM);
-                });
-            });
-
-            var iParams2 = {
-                op: "sii",
-                entidad: "Despacho",
-                "params[id]": despachoID
-            };
-            servicio(iParams2, function(data) {
-                $.each(data.Resultados, function(i, resultado) {
-                    $("#despacho span").append(resultado.nombre);
-                });
-            });
-
-            var iParams3 = {
-                op: "st",
-                entidad: "Expediente",
-                "params[id_Caso]": id
-            };
-            servicio(iParams3, function(data) {
-                $("#main-table tbody").append("<tr><th>Expediente</th></tr>");
-                $.each(data.Resultados, function(i, resultado) {
-                    $("#main-table tbody").append("<tr><td>" + resultado.nombre + "</td></tr>");
-                });
-            });
-        });
-    });
-}
-
-
 function servicio(params, successFunc) {
     var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/Servicios/servicio.php";
     $.ajax({
@@ -77,7 +9,7 @@ function servicio(params, successFunc) {
         success: successFunc,
         timeout: 3000, //3 second timeout, 
         error: function(jqXHR, status, errorThrown) {
-            alert(errorThrown + ": No se pudo conectar con el servidor ["+status +"]. Intente de nuevo.");
+            alert(errorThrown + ": No se pudo conectar con el servidor [" + status + "]. Intente de nuevo.");
         }
     });
 }
@@ -96,7 +28,65 @@ function successFuncCaso(data) {
     });
     string += "</table>";
     $("#main_content").empty().append(string);
-    cambiaTabla();	
+    cambiaTabla();
+}
+
+function successFuncAbogados(data) {
+    var string = '<div id=\"leyenda\"><a href=\"../altas.php?op=Abogado\"><img src="../css/images/add_abogado.jpg"\n\
+    style=\"width: 36px; height: 36px;\"></a></div>\n\
+    <table id="main_table" class="display"><thead><tr><th>Nombre</th><th>Email</th><th>Telefono</th><th>Opciones</th></tr></thead>';
+    $.each(data.Resultados, function(i, resultado) {
+        var id = resultado.id;
+        var nombre = resultado.nombre+" "+resultado.apellidoP+" "+resultado.apellidoM;
+        var telefono = resultado.telefono;
+        var email = resultado.email;
+        string += "<tr><td>" + nombre + "</td><td>" + email + "</td><td>" + telefono + "</td><td><a href=\"#\"\n\
+        onclick=\"mostrarAbogado(" + id + ");\">Mostrar</a><a href=\"../cambios.php?nombre=" + resultado.nombre + "&sel=" + id + "&op=Abogado\" \n\
+       onclick=\"mostrarAbogado(" + id + ");\">Editar</a><a href=\"../bajas.php?nombre=" + resultado.nombre + "&sel=" + id + "&op=Abogado\" onclick=\"mostrarAbogado(" + id + ");\">   Eliminar   </a></td></tr>";
+    });
+    string += "</table>";
+    $("#main_content").empty().append(string);
+    cambiaTabla();
+}
+
+function successFuncDireccion(data) {
+    var head = '<th>Calle</th><th>Colonia</th><th>Ciudad</th><th>CP</th><th>Mapa</th>';
+    var string = "";
+    $("#main_table tr:first").append(head);
+    $.each(data.Resultados, function(i, resultado) {
+        var calle = resultado.calle;
+        var ext = resultado.no_exterior;
+        var int = resultado.no_interior;
+        var colonia = resultado.colonia;
+        var ciudad = resultado.ciudad;
+        var cp = resultado.cp;
+        string += "<td>" + calle + " #" + ext + " - " + int + "  "+"</td><td>  "+ colonia + "  "+"</td><td>" + ciudad + "</td><td>" + cp + "</td>\n\
+        <td><button type=\"button\" "+
+                "onclick=\"window.open('http://maps.google.com/?q="+calle + "," + ext + "," + colonia + "," + ciudad + "," + cp+"')\">Mapa</button></td>";
+    });
+    $("#main_table tbody tr:first").append(string);
+}
+
+function successFuncDespacho(data) {
+
+    var string = '<table id="main_table" class="display"><thead><tr><th>Opciones</th><th>Nombre</th></tr></thead>';
+    $.each(data.Resultados, function(i, resultado) {
+        var id = resultado.id;
+        var nombre = resultado.nombre;
+        var dirID = resultado.id_Direccion;
+        string += "<tr><td><a href=\"#\"\n\
+        onclick=\"mostrarAbogado(" + id + ");\">Mostrar</a><a href=\"../cambios.php?nombre=" + nombre + "&sel=" + id + "&op=Despacho\" \n\
+       onclick=\"mostrarAbogado(" + id + ");\">Editar</a><a href=\"../bajas.php?nombre=" + nombre + "&sel=" + id + "&op=Despacho\" onclick=\"mostrarAbogado(" + id + ");\">   Eliminar   </a></td><td>" + nombre + " "+"</td></tr>";
+        var params = {
+            op: "sii",
+            entidad: "Direccion",
+            "params[id]": dirID
+        };
+        servicio(params, successFuncDireccion);
+    });
+    string += "</table>";
+    $("#main_content").empty().append(string);
+   // cambiaTabla();
 }
 
 function loadMain(clase) {
@@ -109,6 +99,14 @@ function loadMain(clase) {
             };
             servicio(params, successFuncCaso);
             break;
+        case "Abogado":
+            var params = {
+                op: "st",
+                entidad: "Abogado",
+                "params[id]": 1
+            };
+            servicio(params, successFuncAbogados);
+            break;
         case "Cliente":
             var params = {
                 op: "st",
@@ -119,7 +117,7 @@ function loadMain(clase) {
             break;
         case "Despacho":
             var params = {
-                op: "sii",
+                op: "st",
                 entidad: "Despacho",
                 "params[id]": 1
             };
@@ -137,11 +135,10 @@ function loadMain(clase) {
 }
 
 /*Conversión de la tabla a tabla dinámica*/
-function cambiaTabla(){
-	
-	$('#main_table').dataTable({
-		
-        "scrollY":        "200px",
+function cambiaTabla() {
+
+    $('#main_table').dataTable({
+        "scrollY": "200px",
         "scrollCollapse": true,
         "language": {
             "lengthMenu": "Mostrar _MENU_ resultados",
@@ -150,43 +147,50 @@ function cambiaTabla(){
             "infoEmpty": "No hay resultados disponibles",
             "sSearch": "Buscar: ",
             "oPaginate": {
-            	"sNext": "Siguiente",
+                "sNext": "Siguiente",
                 "sPrevious": "Anterior"
-              }            
+            }
         }
-	});
-	 
+    });
+
 }
 
 $(document).ready(function() {
-  
-   $("#refpagos").click(function() {
-	   mandaDireccion(myUser.id,1);
-   });
-   $("#pagosref").click(function() {
-	   mandaDireccion(myUser.id,1);
-   });
-   $("#refabogados").click(function() {
-	   mandaDireccion(myUser.id,2);
-   });
-   $("#abogadosref").click(function() {
-	   mandaDireccion(myUser.id,2);
-   });
-   $("#refcasos").click(function() {
-	   mandaDireccion(myUser.id,3);
-   });
-   $("#casosref").click(function() {
-	   mandaDireccion(myUser.id,3);
-   });
+
+    $("#refpagos").click(function() {
+        mandaDireccion(myUser.id, 1);
+    });
+    $("#pagosref").click(function() {
+        mandaDireccion(myUser.id, 1);
+    });
+    $("#refabogados").click(function() {
+       loadMain("Abogado");
+    });
+    $("#abogadosref").click(function() {
+        loadMain("Abogado");
+    });
+    $("#refcasos").click(function() {
+        mandaDireccion(myUser.id, 3);
+    });
+    $("#casosref").click(function() {
+        mandaDireccion(myUser.id, 3);
+    });
 
     $("#navAbogados").click(function() {
-	   
-   });
+        loadMain("Abogado");
+    });
     $("#navCasos").click(function() {
-	    loadMain("Caso");
-   });
- 
-   $("#navDespachos").click(function() {
-	   
-   });
+        loadMain("Caso");
+    });
+
+    $("#navDespachos").click(function() {
+
+        loadMain("Despacho");
+    });
+
+    $("#home").click(function() {
+
+        location.reload(true);
+    });
+    
 });

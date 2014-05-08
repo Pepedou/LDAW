@@ -40,7 +40,7 @@ print"
 
 <div id=\"shell\">
   <div id=\"header\">
-    <h1 id=\"logo\"><a href=\"#\">GESTION DE DESPACHOS</a></h1>
+    <h1 id=\"logo\"><a href=\"../Vistas/vista-admin.php\">GESTION DE DESPACHOS</a></h1>
     <div id=\"navigation\">
       <ul>
       <li><a href=\"#\">BIENVENIDO  " . $miUsuario->atributos['nombre'] . "</a></li>
@@ -49,7 +49,7 @@ print"
     <div id=\"sub-navigation\">
      <div id =\"bienvenida\" class=\"head\">
       <ul>        
-      <li><a class=\"active\" href=\"#\">HOME</a></li>
+      <li><a id=\"home\" class=\"active\" href=\"#\">HOME</a></li>
       <li><a id=\"navAbogados\" href=\"#\">ABOGADOS</a></li>
       <li><a id=\"navCasos\" href=\"#\">CASOS</a></li>
       <li><a id=\"navDespachos\" href=\"#\">DESPACHOS</a></li>
@@ -80,14 +80,16 @@ print"
         <div class=\"movie\">
           <div class=\"movie-image\"><a id=\"refabogados\" href=\"#\"><img src=\"../css/images/abogados.jpg\" alt=\"\" /></a> </div>
           <div id=\"abogadosref\" class=\"rating\">
-           <a href=\"#\"> ABOGADOS</a>      
-            <span class=\"comments\"></span> </div>
+           <a href=\"#\"> ABOGADOS</a> 
+          <span class=\"comments\"></span> </div>
         </div>
         
         <div class=\"movie\">
           <div class=\"movie-image\"> <span class=\"play\"><span class=\"name\">MIS PAGOS</span></span><a id=\"refpagos\" href=\"#\"><img src=\"../css/images/pagos.jpg\" alt=\"\"/></a></div>
           <div id=\"pagosref\" class=\"rating\">  
-          	 <a href=\"#\"> PAGOS </a>            
+          	 <a href=\"#\"> PAGOS </a>     
+                 <a href=\"../altas.php?op=Pago\">Registar</a>
+                 
             <span class=\"comments\"></span> </div>
         </div>
         <div class=\"cl\">&nbsp;</div>
@@ -98,7 +100,7 @@ print"
     <div id=\"news\">
       <div class=\"head\">
         <h3>CANALES</h3>
-        <p class=\"text-right\"><a href=\"#\">See all</a></p>
+        <p class=\"text-right\"><a href=\"#\"></a></p>
       </div>
       <div class=\"content\">
        
