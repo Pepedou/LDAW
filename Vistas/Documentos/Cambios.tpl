@@ -4,7 +4,7 @@
 </head>
 <!--<body onload="llenaTipos();llenaEntidad('expedientes','Expedientes','expedientes');llenaEntidad('{$name}','{$tabla}','{$campo}');">-->
 <body >
-
+ {include file="../body_css.tpl"}
  <h1>Lista de {$tabla}</h1>        
 
    <!--<td >
@@ -18,6 +18,6 @@
 
         {include file="./campos_input2.tpl"}
     <!--</form>-->
-
+{include file="../body_footer.tpl"}
 </body>
 </html>

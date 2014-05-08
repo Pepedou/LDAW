@@ -123,6 +123,7 @@ class Despacho extends EntidadBD {
             $desp = new Despacho();
             $exito = $desp->cargarDeBD("nombre", $nombre);
             if ($exito) {
+
                 /* Actualizo el valor de name */
                 $name = $desp->atributos["nombre"];
                 /* Si el despacho existe, cargas su direccion */
@@ -213,6 +214,41 @@ class Despacho extends EntidadBD {
 
     public static function getNombreTabla() {
         return static::$tabla_static;
+    }
+
+    public function get_Abogados() {
+        $abogados = array();
+        $dbManager = DatabaseManager::getInstance();
+        $dbManager->connectToDatabase();
+        $query = "SELECT * FROM Abogados WHERE id_Despacho=" . $this->atributos['id'];
+        $resultado = $dbManager->executeQuery($query);
+        $dbManager->closeConnection();
+        if ($resultado->num_rows) {
+            while ($fila = $resultado->fetch_assoc()) {
+                $aux = new Abogado();
+                $aux->guardarDatos($fila);
+                array_push($abogados, $aux);
+            }
+        }
+        return $abogados;
+    }
+
+    public function service_getAbogados($misDatos, $callback) {
+        $id = $misDatos['id'];
+        $atributos = array();
+        $this->atributos['id'] = $id;
+        $resultados = $this->get_Abogados();
+        
+        foreach ($resultados as $objeto){
+            array_push($atributos, $objeto->atributos);
+        }
+        $finalData = array("Resultados" => $atributos);
+        if ($callback != "") {
+            $json = "$callback(" . json_encode($finalData) . ")";
+        } else {
+            $json = json_encode($finalData);
+        }
+        print_r($json);
     }
 
 }

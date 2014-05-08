@@ -323,6 +323,7 @@ class Abogado extends EntidadBD {
         $dbManager->connectToDatabase();
         $query = "SELECT puntos,votos FROM " . static::$tabla_static . " WHERE id = " . $this->atributos['id'] . " LIMIT 1";
         $resultado = $this->dbExecute($query);
+        $dbManager->closeConnection();
         if (($resultado->num_rows)) {
             $fila = $resultado->fetch_assoc();
             $puntos = floatval($fila['puntos']);
@@ -343,6 +344,7 @@ class Abogado extends EntidadBD {
         $resultado = $this->dbExecute($query);
         $query = "SELECT puntos FROM " . static::$tabla_static . " WHERE id = " . $this->atributos['id'] . " LIMIT 1";
         $resultado = $this->dbExecute($query);
+        $dbManager->closeConnection();
         if (($resultado->num_rows)) {
             $fila = $resultado->fetch_assoc();
             return $fila['puntos'];
