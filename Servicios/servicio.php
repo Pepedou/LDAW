@@ -37,10 +37,16 @@ function procesa(EntidadBD $entidad, $operacion, $params, $callback) {
             $entidad->service_insert($callback);
             break;
         case 'up':
+            $entidad->cargarDeBD($entidad->getDiscriminante(), $params[$entidad->getDiscriminante()]);
+            $entidad->guardarDatos($params);
             $entidad->service_update($callback);
             break;
         case 'del':
             $entidad->service_delete($callback);
+            break;
+        case 'stu'://Select tareas urgentes
+            $tarea = new Tarea();
+            $tarea->service_tareasUrgentes($params, $callback);
             break;
     }
 }

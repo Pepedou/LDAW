@@ -61,8 +61,29 @@ class Tarea extends EntidadBD {
         return $caso;
     }
 
+    public function service_tareasUrgentes(array $datos, $callback) {
+        $id = $datos['id'];
+        $json = array();
+        $query = "SELECT * FROM " . Tarea::getNombreTabla() . " WHERE fin BETWEEN NOW() AND NOW() + INTERVAL 1 WEEK AND id_Abogado = '" . $datos['id_Abogado'] ."' AND status = 1";
+        $resultado = $this->dbExecute($query);
+        /* Genero el JSON con los resultados */
+        if ($resultado != false) {
+            while ($fila = $resultado->fetch_assoc()) {
+                array_push($json, $fila);
+            }
+            $finalData = array("Resultados" => $json);
+            if ($callback != "") {
+                $json = "$callback(" . json_encode($finalData) . ")";
+            } else {
+                $json = json_encode($finalData);
+            }
+            print_r($json);
+        }
+        return $json;
+    }
+
     public function generarFormaInsercion() {
-        
+
         setlocale(LC_TIME, 'es_ES'); //poner los datos de los meses en español
         // esto es lo que trae StartDateMonth=01&StartDateDay=1&StartDateYear=2014
         static::$smarty->assign('nombre', "Nueva Tarea");
@@ -73,14 +94,14 @@ class Tarea extends EntidadBD {
 
     public function procesarForma($op) {
         switch ($op) {
-        
+
             case 1: //alta           
 
                 foreach ($this->atributos as $campo => $valor) {
                     if (isset($_REQUEST[$campo])) {
 
                         $this->atributos[$campo] = $_REQUEST[$campo];
-    }
+                    }
                 }
                 $anio = $_REQUEST['StartDateYear'];
                 $dia = $_REQUEST['StartDateDay'];
@@ -164,7 +185,7 @@ class Tarea extends EntidadBD {
                 if (isset($_REQUEST[$campo])) {
 
                     $count = $count + 1;
-}
+                }
             }
         }
 
