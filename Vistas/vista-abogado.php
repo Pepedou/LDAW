@@ -238,10 +238,10 @@ body {
     <div class=\"gwd-div-2osj\"></div>
     <div class=\"gwd-div-mxuu\" id=\"div_logo\">
     <img class=\"gwd-img-zvzd\" id=\"img_logo\" src=\"../img/logo.png\"></div>
-    <div class=\"gwd-div-ub98\"><a href=\"logout.php\"><span class=\"gwd-span-e7ga\">Cerrar sesión</span></a>
+    <div class=\"gwd-div-ub98\"><a href=\"logout.php\"><span class=\"gwd-span-e7ga\">Cerrar sesión</span></a></div>
     
   
-
+<userTag uid=\"" . $miUsuario->atributos['id'] . "\" nombre=\"" . $miUsuario->atributos['nombre'] . "\" apellidoP=\"" . $miUsuario->atributos['apellidoP'] . "\" apellidoM=\"" . $miUsuario->atributos['apellidoM'] . "\" id_Despacho=\"".$miUsuario->atributos['id_Despacho'] . "\"/>
 </body>
 <script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js\"></script>
 <script src=\"../js/vista-abogado.js\"></script>
