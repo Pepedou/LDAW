@@ -7,27 +7,30 @@ function procesa(EntidadBD $entidad, $operacion, $params, $callback) {
         $entidad->guardarDatos($params);
     }
     switch ($operacion) {
-        case 'lg':
+        case 'lg'://Login abogado
             $abogado = new Abogado();
             $abogado->verificaLogin($params, $callback);
             break;
-        case 'lgc':
+        case 'lgc'://Login clientes
             $cliente = new Cliente();
             $cliente->verificaLogin($params, $callback);
             break;
-        case 'gcal':
+        case 'gcal'://Get callificaciones abogados
             $abogado = new Abogado();
             $abogado->service_getcalificacion($params, $callback);
             break;
-        case 'scal':
+        case 'scal'://Set calificaciones abogados
             $abogado = new Abogado();
             $abogado->service_setcalificacion($params, $callback);
             break;
-        case 'st':
+        case 'st'://Select todos
             $entidad->guardarDatos($params);
             $entidad->service_selectTodos($callback);
             break;
-        case 'si':
+        case 'stw'://Select todos where
+            $entidad->service_selectTodosWhere($params, $callback);
+            break;
+        case 'si'://Select individual
             $entidad->service_selectIndividual($callback);
             break;
         case 'sii':

@@ -40,6 +40,38 @@ class ServicioGenerico {
         return $json;
     }
 
+    public function service_selectTodosWhere($misDatos, $callback) {
+        $json = array();
+        foreach ($misDatos as $campo => $valor) {
+            $condicion .= "$campo = '$valor' AND ";
+        }
+        $condicion = preg_replace('/\W\w+\s*(\W*)$/', '$1', $condicion); //Elimina el último AND
+
+        $dbManager = DatabaseManager::getInstance();
+        $dbManager->connectToDatabase();
+
+        if (array_key_exists('visible', $this->atributos)) {
+            $query = "SELECT * FROM " . $this->tabla . " WHERE $condicion AND visible = 1";
+        } else {
+            $query = "SELECT * FROM " . $this->tabla . " WHERE $condicion";
+        }
+        $resultado = $this->dbExecute($query);
+        /* Genero el JSON con los resultados */
+        if ($resultado != false) {
+            while ($fila = $resultado->fetch_assoc()) {
+                array_push($json, $fila);
+            }
+            $finalData = array("Resultados" => $json);
+            if ($callback != "") {
+                $json = "$callback(" . json_encode($finalData) . ")";
+            } else {
+                $json = json_encode($finalData);
+            }
+            print_r($json);
+        }
+        return $json;
+    }
+
     public function service_selectIndividual($callback) {
         $json = array();
         if (array_key_exists('visible', $this->atributos)) {//Verifico si la tabla tiene el campo visible

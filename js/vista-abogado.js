@@ -1,3 +1,11 @@
+var usuario = {
+    id : -1,
+    nombre : "",
+    apellidoP : "",
+    apellidoM : "",
+    id_Despacho : -1
+};
+
 function borrarDocumento(id) {
     var params = {
         op: "del",
@@ -21,19 +29,16 @@ function mostrarExpediente(id) {
             alert(status + " " + errorThrown + ": No se pudo conectar con el servidor. Intente de nuevo.");
         }
     });
-
 //Carga el expediente
     var params = {
         op: "sii",
         entidad: "Expediente",
         "params[id]": id
     };
-
     servicio(params, function(data) {
         $.each(data.Resultados, function(i, resultado) {
             var nombre = resultado.nombre;
             $("#nombreExpediente span").append(nombre);
-
             var documentos = {
                 op: "st",
                 entidad: "Documento",
@@ -64,13 +69,11 @@ function mostrarCaso(id) {
             alert(status + " " + errorThrown + ": No se pudo conectar con el servidor. Intente de nuevo.");
         }
     });
-
     var params = {
         op: "sii",
         entidad: "Caso",
         "params[id]": id
     };
-
     servicio(params, function(data) {
         $.each(data.Resultados, function(i, resultado) {
             var nombre = resultado.nombre;
@@ -79,7 +82,6 @@ function mostrarCaso(id) {
             var despachoID = resultado.id_Despacho;
             $("#nombreCaso span").append(nombre);
             $("#estado span").append(estado === "1" ? "Activo" : "Cerrado");
-
             var cliente = {
                 op: "sii",
                 entidad: "Cliente",
@@ -90,7 +92,6 @@ function mostrarCaso(id) {
                     $("#nombreCliente span").append(resultado.nombre + " " + resultado.apellidoP + " " + resultado.apellidoM);
                 });
             });
-
             var despacho = {
                 op: "sii",
                 entidad: "Despacho",
@@ -101,7 +102,6 @@ function mostrarCaso(id) {
                     $("#despacho span").append(resultado.nombre);
                 });
             });
-
             var expedientes = {
                 op: "st",
                 entidad: "Expediente",
@@ -166,8 +166,8 @@ function successFuncDireccion(data) {
         var colonia = resultado.colonia;
         var ciudad = resultado.ciudad;
         var cp = resultado.cp;
-        string += "<td>" + calle + " #" + ext + "-" + int + "</td><td>" + colonia + "</td><td>" + ciudad + "</td><td>" + cp + "</td><td><button type=\"button\" "+
-                "onclick=\"window.open('http://maps.google.com/?q="+calle + "," + ext + "," + colonia + "," + ciudad + "," + cp+"')\">Mapa</button></td>";
+        string += "<td>" + calle + " #" + ext + "-" + int + "</td><td>" + colonia + "</td><td>" + ciudad + "</td><td>" + cp + "</td><td><button type=\"button\" " +
+                "onclick=\"window.open('http://maps.google.com/?q=" + calle + "," + ext + "," + colonia + "," + ciudad + "," + cp + "')\">Mapa</button></td>";
     });
     $("#main_table tbody tr:first").append(string);
 }
@@ -222,15 +222,14 @@ function successFuncTarea(data) {
                 + inicio + "</td><td>" + fin + "</td><td>" + ((estado === "1") ? "Activa" : "Finalizada") + "</td><td><button type=\"button\" onclick=\"toggleTarea(" + id + "," + estado + ");\">" + ((estado === "1") ? "Completa" : "Reactivar") + "</button></td></tr>";
     });
     string += "</tbody></table>";
-    $("#main").empty().append(string);//Agrego las tareas
+    $("#main").empty().append(string); //Agrego las tareas
 
-    //Ahora agregamos las tareas urgentes
+    //Ahora agregamos todas las tareas
     var params = {
-        op: "st",
+        op: "stw",
         entidad: "Tarea",
-        "params[id_Abogado]": 1//Cambiar por el id correcto
+        "params[id_Abogado]": usuario.id
     };
-
     servicio(params, function(data) {
         var string2 = '<h4>Todas mis tareas</h4><table id="main_table" class="tablesorter"><thead><tr><th>Nombre</th><th>Descripcion</th><th>Inicio</th><th>Fin</th><th>Estado</th><th></th></tr></thead> <tbody>';
         $.each(data.Resultados, function(i, resultado) {
@@ -240,12 +239,11 @@ function successFuncTarea(data) {
             var inicio = resultado.inicio;
             var fin = resultado.fin;
             var estado = resultado.status;
-
             string2 += "<tr class=\"tarea" + id + "\"><td>" + nombre + "</td><td>" + desc + "</td><td>"
                     + inicio + "</td><td>" + fin + "</td><td>" + (estado === "1" ? "Activa" : "Finalizada") + "</td><td><button type=\"button\" onclick=\"toggleTarea(" + id + "," + estado + ");\">" + (estado === "1" ? "Completa" : "Reactivar") + "</button></td></tr>";
         });
         string2 += "</tbody></table>";
-        $("#main").append(string2);//Agrego las tareas
+        $("#main").append(string2); //Agrego las tareas
     });
 }
 
@@ -267,36 +265,36 @@ function servicio(params, successFunc) {
 function loadMain(clase) {
     switch (clase) {
         case "Caso":
-            var params = {
+            var params1 = {
                 op: "st",
                 entidad: "Caso",
-                "params[id_Abogado]": 1//Cambiar este 1 por variable
+                "params[id_Abogado]": usuario.id
             };
-            servicio(params, successFuncCaso);
+            servicio(params1, successFuncCaso);
             break;
         case "Cliente":
-            var params = {
+            var params2 = {
                 op: "st",
                 entidad: "AbogadosClientes",
-                "params[id_Abogado]": 1//Cambiar este 1 por variable
+                "params[id_Abogado]": usuario.id
             };
-            servicio(params, successFuncAbogadosClientes);
+            servicio(params2, successFuncAbogadosClientes);
             break;
         case "Despacho":
-            var params = {
+            var params3 = {
                 op: "sii",
                 entidad: "Despacho",
-                "params[id]": 1
+                "params[id]": usuario.id_Despacho
             };
-            servicio(params, successFuncDespacho);
+            servicio(params3, successFuncDespacho);
             break;
         case "Tarea":
-            var params = {
+            var params4 = {
                 op: "stu",
                 entidad: "Tarea",
-                "params[id_Abogado]": 1
+                "params[id_Abogado]": usuario.id
             };
-            servicio(params, successFuncTarea);
+            servicio(params4, successFuncTarea);
             break;
     }
 }
@@ -312,6 +310,12 @@ function initMenuEntries(entryNumber) {
 }
 
 $(document).ready(function() {
+    usuario.id = $("userTag").attr("uid");
+    usuario.nombre = $("userTag").attr("nombre");
+    usuario.apellidoP = $("userTag").attr("apellidoP");
+    usuario.apellidoM = $("userTag").attr("apellidoM");
+    usuario.id_Despacho = $("userTag").attr("id_Despacho");
+    
     $(".menuEntry").each(function(index) {
         initMenuEntries(index);
     });
@@ -326,5 +330,11 @@ $(document).ready(function() {
     });
     $("#menu_entry4").click(function() {
         loadMain("Tarea");
+    });
+    $("#menu_entry5").click(function() {
+        alert("¡No tiene honorarios aún!");
+    });
+    $("#menu_entry6").click(function() {
+        alert("Nada que reportar.");
     });
 });
