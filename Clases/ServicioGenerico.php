@@ -1,4 +1,5 @@
 <?php
+
 include_once 'DatabaseManager.php';
 
 /**
@@ -11,9 +12,17 @@ class ServicioGenerico {
     protected $tabla, $discr, $discrValor;
     public $atributos = array();
 
+    public function getDiscriminante() {
+        return $this->discr;
+    }
+
     public function service_selectTodos($callback) {
         $json = array();
-        $query = "SELECT * FROM $this->tabla";
+        if (array_key_exists('visible', $this->atributos)) {//Verifico si la tabla tiene el campo visible
+            $query = "SELECT * FROM $this->tabla WHERE visible = 1";
+        } else {
+            $query = "SELECT * FROM $this->tabla";
+        }
         $resultado = $this->dbExecute($query);
         /* Genero el JSON con los resultados */
         if ($resultado != false) {
@@ -25,7 +34,7 @@ class ServicioGenerico {
                 $json = "$callback(" . json_encode($finalData) . ")";
             } else {
                 $json = json_encode($finalData);
-        }
+            }
             print_r($json);
         }
         return $json;
@@ -33,8 +42,11 @@ class ServicioGenerico {
 
     public function service_selectIndividual($callback) {
         $json = array();
-        $query = "SELECT * FROM $this->tabla WHERE $this->discr = '$this->discrValor'";
-        
+        if (array_key_exists('visible', $this->atributos)) {//Verifico si la tabla tiene el campo visible
+            $query = "SELECT * FROM $this->tabla WHERE $this->discr = '$this->discrValor' AND visible = 1";
+        } else {
+            $query = "SELECT * FROM $this->tabla WHERE $this->discr = '$this->discrValor'";
+        }
         $resultado = $this->dbExecute($query);
         if ($resultado != false) {
             array_push($json, ($resultado->fetch_assoc()));
@@ -43,7 +55,7 @@ class ServicioGenerico {
                 $json = "$callback(" . json_encode($finalData) . ")";
             } else {
                 $json = json_encode($finalData);
-        }
+            }
             print_r($json);
         }
         return $resultado;
@@ -51,7 +63,11 @@ class ServicioGenerico {
 
     public function service_selectIndividualID($callback) {
         $json = array();
-        $query = "SELECT * FROM $this->tabla WHERE id = ".$this->atributos['id'];
+        if (array_key_exists('visible', $this->atributos)) {//Verifico si la tabla tiene el campo visible
+            $query = "SELECT * FROM $this->tabla WHERE id = " . $this->atributos['id'] . " AND visible = 1";
+        } else {
+            $query = "SELECT * FROM $this->tabla WHERE id = " . $this->atributos['id'];
+        }
         $resultado = $this->dbExecute($query);
         if ($resultado != false) {
             array_push($json, ($resultado->fetch_assoc()));
@@ -77,13 +93,12 @@ class ServicioGenerico {
         $subqueryVals = rtrim($subqueryVals, ","); //Elimina la última coma
 
         $query = "INSERT INTO $this->tabla ($subqueryCamps) VALUES ($subqueryVals)";
-        Debug::getInstance()->alert("Insert - $query");
         $resultado = $this->dbExecute($query);
         if ($resultado != false) {
             $finalData = array("Resultados" => $this->atributos);
             if ($callback != "") {
                 $json = "$callback(" . json_encode($finalData) . ")";
-        } else {
+            } else {
                 $json = json_encode($finalData);
             }
             print_r($json);
@@ -103,14 +118,13 @@ class ServicioGenerico {
         $subquerySets = rtrim($subquerySets, ","); //Elimina la última coma
 
         $query = "UPDATE $this->tabla SET $subquerySets WHERE $this->discr = '$this->discrValor'";
-        Debug::getInstance()->alert("Update - $query");
         $resultado = $this->dbExecute($query);
         if ($resultado === true) {
             array_push($json, $this->atributos);
             $finalData = array("Resultados" => $json);
             if ($callback != "") {
                 $json = "$callback(" . json_encode($finalData) . ")";
-        } else {
+            } else {
                 $json = json_encode($finalData);
             }
             print_r($json);
@@ -122,8 +136,11 @@ class ServicioGenerico {
 
     public function service_delete($callback) {
         $json = array();
-        $query = "UPDATE $this->tabla SET visible = 0 WHERE $this->discr = '$this->discrValor'";
-        Debug::getInstance()->alert("DELETE - $query");
+        if (array_key_exists('visible', $this->atributos)) {//Verifico si la tabla tiene el campo visible
+            $query = "UPDATE $this->tabla SET visible = 0 WHERE $this->discr = '$this->discrValor'";
+        } else {
+            $query = "DELETE FROM $this->tabla WHERE $this->discr = '$this->discrValor'";
+        }
         $resultado = $this->dbExecute($query);
         if ($resultado === true) {
             array_push($json, $this->atributos);

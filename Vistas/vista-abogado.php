@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 if (!session_is_registered(myusername)) {
     header("Location: index.html");
@@ -18,7 +19,7 @@ print "
 <html><head data-gwd-animation-mode=\"proMode\"><meta name=\"GCD\" content=\"YTk3ODQ3ZWZhN2I4NzZmMzBkNTEwYjJl2346eb3881df112d22a38bdd2be9226e\"/>
     <title>Vistas</title>
     <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">
-    <meta name=\"generator\" content=\"Google Web Designer 1.0.5.0416\">
+    <meta name=\"generator\" content=\"Google Web Designer 1.0.5.0416\">    
     <style type=\"text/css\">html, body {
   width: 100%;
   height: 100%;

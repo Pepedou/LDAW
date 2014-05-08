@@ -213,7 +213,7 @@ abstract class EntidadBD extends ServicioGenerico {
 
     public function guardarDatos(array $misDatos) {
         foreach ($misDatos as $campo => $valor) {
-            $this->atributos[$campo] = $misDatos[$campo];
+            $this->atributos[$campo] = $valor;
         }
         $this->actualizarValorDiscr();
     }
