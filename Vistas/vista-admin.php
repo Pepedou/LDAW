@@ -44,6 +44,10 @@ print"
     <div id=\"navigation\">
       <ul>
       <li><a href=\"#\">BIENVENIDO  " . $miUsuario->atributos['nombre'] . "</a></li>
+       
+     </ul>
+     <ul>
+     <li><a href=\"logout.php\">Cerrar sesión</span></a></li>
      </ul>
     </div>
     <div id=\"sub-navigation\">
@@ -99,7 +103,7 @@ print"
     </div>
     <div id=\"news\">
       <div class=\"head\">
-        <h3>CANALES</h3>
+        <h3></h3>
         <p class=\"text-right\"><a href=\"#\"></a></p>
       </div>
       <div class=\"content\">
@@ -113,8 +117,8 @@ print"
     <div class=\"cl\">&nbsp;</div>
   </div>
   <div id=\"footer\">
-    <p class=\"lf\">Copyright &copy; 2010 <a href=\"#\">SiteName</a> - All Rights Reserved</p>
-    <p class=\"rf\"><a href=\"http://www.free-css.com/\">Free CSS Templates</a> by <a href=\"http://chocotemplates.com/\">ChocoTemplates.com</a></p>
+    <p class=\"lf\">Copyright &copy; 2010 <a href=\"#\"></a> - All Rights Reserved</p>
+    <p class=\"rf\"><a href=\"http://www.free-css.com/\"></a> by <a href=\"http://chocotemplates.com/\">ChocoTemplates.com</a></p>
     <div style=\"clear:both;\"></div>
   </div>
 </div>
