@@ -17,6 +17,7 @@ class AbogadosClientes extends RelacionMaM {
         parent::__construct();
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
+            "id" => -1,
             "id_Abogado" => -1,
             "id_Cliente" => -1
         );
@@ -60,7 +61,7 @@ class AbogadosClientes extends RelacionMaM {
         return static::$tabla_static;
     }
 
-     public function service_selectTodosID($misDatos, $callback) {
+    public function service_selectTodosID($misDatos, $callback) {
         $resultados = array();
         $atributos = array();
         switch ($misDatos['campo']) {
@@ -84,7 +85,7 @@ class AbogadosClientes extends RelacionMaM {
         }
         print_r($json);
     }
-    
+
     public function generarFormaActualizacion() {
         
     }
@@ -99,6 +100,45 @@ class AbogadosClientes extends RelacionMaM {
 
     public function procesarForma() {
         
+    }
+
+    public static function getID($discriminante, $valor) {
+        $dbManager = DatabaseManager::getInstance();
+        $dbManager->connectToDatabase();
+        $query = "SELECT id FROM " . static::$tabla_static . " WHERE $discriminante = '$valor' LIMIT 1";
+        $resultado = $dbManager->executeQuery($query);
+        $dbManager->closeConnection();
+        if ($resultado != false) {
+            if ($resultado->num_rows > 0) {
+                $row = $resultado->fetch_assoc();
+                return $row['id'];
+            } else {
+                return -1;
+            }
+        }
+        Debug::getInstance()->alert("EntidadBD::getID => No se encontró el ID");
+        return -1;
+    }
+
+    public static function getID_MultDiscr(array $arregloDiscrValor) {
+        foreach ($arregloDiscrValor as $campo => $valor) {
+            if ($campo != 'id') {
+                $condicion .= "$campo = '$valor' AND ";
+            }
+        }
+        $condicion = preg_replace('/\W\w+\s*(\W*)$/', '$1', $condicion); //Elimina el último AND
+
+        $dbManager = DatabaseManager::getInstance();
+        $dbManager->connectToDatabase();
+        $query = "SELECT id FROM " . static::$tabla_static . " WHERE $condicion LIMIT 1";
+        $resultado = $dbManager->executeQuery($query);
+        $dbManager->closeConnection();
+        if ($resultado != false && $resultado->num_rows) {
+            $row = $resultado->fetch_assoc();
+            return $row['id'];
+        } else {
+            return -1;
+        }
     }
 
 }

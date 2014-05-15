@@ -2,11 +2,11 @@
 
 require '../Clases/DatabaseManager.php';
 
+
 $tabla = "Abogados";
+$tabla2 = "Clientes";
 $campos = "id";
 $db = DatabaseManager::getInstance();
-
-$tabla2 = "Clientes";
 
 // Obtenemos usuario y password y filtramos para eliminar posibles inyecciones a MySQL
 $myusername = mysql_escape_string($_POST['usuario']);
@@ -22,12 +22,16 @@ $result = $db->executeQuery($sql);
 if ($result->num_rows === 1) {
     $fila = $result->fetch_assoc();
     $usuario = $fila['email'];
-
     // Registramos $myusername, $mypassword y redireccionamos a "login_exitoso.php"
     session_register("myusername");
     session_register("mypassword");
     setcookie("usuario", $usuario, time() + (3600 * 24)); //Cookie por 1 día
-    header("location:vista-abogado.php");
+    $rol = ($fila['id_Rol']);
+    if ($rol == 1) { //Si es administrador
+        header("location:vista-admin.php"); 
+    } else {
+        header("location:vista-abogado.php");
+    }
 } else {
     /* Si no está dentro de Abogados, checamos que no esté en Clientes */
     $sql = "SELECT * FROM $tabla2 WHERE email ='$myusername' AND contrasena=sha1('$mypassword')";
@@ -39,7 +43,7 @@ if ($result->num_rows === 1) {
         session_register("myusername");
         session_register("mypassword");
         setcookie("usuario", $usuario, time() + (3600 * 24)); //Cookie por 1 día
-        header("location:main_cliente.php");
+        header("location:vista_cliente.php");
     } else {
         echo "Usuario o password incorrecto";
         header("Refresh: 3; url=../index.html");

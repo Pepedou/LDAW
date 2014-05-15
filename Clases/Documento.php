@@ -19,7 +19,7 @@ class Documento extends EntidadBD {
             "nombre" => "",
             "documento" => "",
             "id_Expediente" => -1,
-            "id_Tipo" => -1,
+            "tipo" => "",
             "tamano" => 0,
             "visible" => 1);
         $this->discr = "id";
@@ -81,6 +81,7 @@ class Documento extends EntidadBD {
                     $this->atributos['documento'] = $nombreDirectorio . $nombreArchivo;
                     $this->atributos['tamano'] = $_FILES['documento']['size'];
                     $tmpName = $_FILES ['documento']['tmp_name'];
+                    $this->atributos['tipo'] = $_FILES['documento']['type'];
                     $copiarArchivo = true;
                 } else {
                     $nombreArchivo = '';
@@ -108,9 +109,9 @@ class Documento extends EntidadBD {
                             if ($this->almacenarEnBD()) { //si el registro es exitoso, muevo el archivo
                                 $tmpName = $_FILES ['documento']['tmp_name'];
                                 if (move_uploaded_file($tmpName, "Documentos/" . $nombreArchivo)) {
-                                    //  Debug::getInstance()->alert("Archivo Movido");
+                                      Debug::getInstance()->alert("Archivo Movido");
                                 } else {
-                                    // Debug::getInstance()->alert("Archivo No Movido");
+                                     Debug::getInstance()->alert("Archivo No Movido");
                                 }
                                 Debug::getInstance()->alert("Registro Exitoso.");
                             }
@@ -178,7 +179,7 @@ class Documento extends EntidadBD {
 
     public function all_set() {
         $count = 0;
-        $att_count = count($this->atributos) - 4; //menos id, tamano,documento y visible
+        $att_count = count($this->atributos) - 5; //menos id, tamano,documento y visible
 
         foreach ($this->atributos as $campo => $valor) {
             if ($campo != 'id' && $campo != 'documento' && $campo != 'visible') {

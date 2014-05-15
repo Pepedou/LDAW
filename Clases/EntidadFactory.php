@@ -8,7 +8,6 @@
 include_once 'Abogado.php';
 include_once 'Despacho.php';
 include_once 'Direccion.php';
-include_once 'Complejidad.php';
 include_once 'Expediente.php';
 include_once 'Documento.php';
 include_once 'Caso.php';
@@ -17,9 +16,10 @@ include_once 'Log.php';
 include_once 'Pago.php';
 include_once 'Rol.php';
 include_once 'Tarea.php';
-include_once 'Tipo.php';
 include_once 'AbogadosCasos.php';
 include_once 'AbogadosClientes.php';
+include_once 'ComentarioCaso.php';
+include_once 'ComentarioTarea.php';
 
 class EntidadFactory {
 
@@ -31,8 +31,6 @@ class EntidadFactory {
                 return new Despacho();
             case 'Direccion':
                 return new Direccion();
-            case 'Complejidad':
-                return new Complejidad();
             case 'Expediente':
                 return new Expediente();
             case 'Documento':
@@ -49,12 +47,14 @@ class EntidadFactory {
                 return new Rol();
             case 'Tarea':
                 return new Tarea();
-            case 'Tipo':
-                return new Tipo();
             case 'AbogadosCasos':
                 return new AbogadosCasos();
             case 'AbogadosClientes':
                 return new AbogadosClientes();
+            case 'ComentarioCaso':
+                return new ComentarioCaso();
+            case 'ComentarioTarea':
+                return new ComentarioTarea();
         }
     }
 

@@ -19,12 +19,6 @@
             <select id="expedientes" name ="id_Expediente">
             </select>
         </td>
-
-        <td >
-            <label for="tipos">Indique el Tipo</label>
-            <select id="tipos" name ="id_Tipo">
-            </select>
-        </td>
         </tr> <input type ='hidden' id="op" name='op' value='Documento' />
         <td>
             <input type='submit' value='Aceptar' />

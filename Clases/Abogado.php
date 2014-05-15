@@ -23,7 +23,7 @@ class Abogado extends EntidadBD {
             "id_Despacho" => -1,
             "visible" => 1,
             "fotografia" => "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Imagenes/default-mr.png",
-            "puntos"=> 1,
+            "puntos" => 1,
             "votos" => 1
         );
         $this->discr = "email";
@@ -263,7 +263,6 @@ class Abogado extends EntidadBD {
                 }
 
                 break;
-                http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Imagenes/default-mr.png
             default :
                 break;
         }
@@ -326,8 +325,8 @@ class Abogado extends EntidadBD {
         if (($resultado->num_rows)) {
             $fila = $resultado->fetch_assoc();
             $puntos = floatval($fila['puntos']);
-            $votos = floatval($fila['votos']);            
-            $avg = $puntos / $votos;            
+            $votos = floatval($fila['votos']);
+            $avg = $puntos / $votos;
             return $avg;
         } else {
             return -1;

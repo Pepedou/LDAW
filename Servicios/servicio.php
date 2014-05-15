@@ -24,7 +24,6 @@ function procesa(EntidadBD $entidad, $operacion, $params, $callback) {
             $abogado->service_setcalificacion($params, $callback);
             break;
         case 'st'://Select todos
-            $entidad->guardarDatos($params);
             $entidad->service_selectTodos($callback);
             break;
         case 'stw'://Select todos where
