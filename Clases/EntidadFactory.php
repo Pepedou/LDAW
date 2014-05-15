@@ -12,7 +12,7 @@ include_once 'Expediente.php';
 include_once 'Documento.php';
 include_once 'Caso.php';
 include_once 'Cliente.php';
-include_once 'Log.php';
+include_once 'Bitacora.php';
 include_once 'Pago.php';
 include_once 'Rol.php';
 include_once 'Tarea.php';
@@ -39,8 +39,8 @@ class EntidadFactory {
                 return new Caso();
             case 'Cliente':
                 return new Cliente();
-            case 'Log':
-                return new Log();
+            case 'Bitacora':
+                return new Bitacora();
             case 'Pago':
                 return new Pago();
             case 'Rol':

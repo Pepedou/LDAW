@@ -2,9 +2,15 @@ drop database `ldaw@1018566`;
 create database `ldaw@1018566`;
 use ldaw@1018566;
 
+/*PARÁMETROS DEL ESQUEMA*/
+
 SET storage_engine=INNODB;
 
 SOURCE Ajax_Estados.sql;
+
+/*CREACIÓN DE LAS TABLAS*/
+
+CREATE TABLE Bitacora (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, entrada varchar(500) NOT NULL, hora TIMESTAMP NOT NULL DEFAULT NOW());
 
 CREATE TABLE Direcciones (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, calle varchar(30) NOT NULL DEFAULT 'N/D', no_exterior varchar(10) DEFAULT "-", no_interior varchar(10) DEFAULT "-", colonia varchar(30) NOT NULL DEFAULT 'N/D', id_Municipio int NOT NULL, ciudad varchar(30) NOT NULL, cp varchar(10) NOT NULL DEFAULT "0", FOREIGN KEY(id_Municipio) REFERENCES Municipios(id) ON DELETE RESTRICT);
 
@@ -28,14 +34,29 @@ CREATE TABLE Documentos (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre varc
 
 CREATE TABLE Abogados_Clientes (id int NOT NULL PRIMARY KEY AUTO_INCREMENT, id_Abogado int NOT NULL, id_Cliente int NOT NULL, FOREIGN KEY(id_Abogado) REFERENCES Abogados(id) ON DELETE CASCADE, FOREIGN KEY(id_Cliente) REFERENCES Clientes(id) ON DELETE CASCADE);
 
-CREATE TABLE Logs (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, id_Documento int NOT NULL, fecha date NOT NULL, visible bool NOT NULL DEFAULT TRUE, id_Abogado int NOT NULL, FOREIGN KEY(id_Documento) REFERENCES Documentos(id) ON DELETE CASCADE, FOREIGN KEY(id_Abogado) REFERENCES Abogados(id) ON DELETE CASCADE);
-
-CREATE TABLE Pagos (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, cantidad decimal(30,5) NOT NULL, id_Cliente int NOT NULL, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY(id_Cliente) REFERENCES Clientes(id) ON DELETE CASCADE);
+CREATE TABLE Pagos (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, cantidad decimal(30,2) NOT NULL, id_Cliente int NOT NULL, visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY(id_Cliente) REFERENCES Clientes(id) ON DELETE CASCADE);
 
 CREATE TABLE ComentariosCaso (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, comentario varchar(200) NOT NULL, id_Abogado int NOT NULL, id_Caso int NOT NULL, creado TIMESTAMP NOT NULL DEFAULT NOW(), visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY(Id_Abogado) REFERENCES Abogados(id) ON DELETE CASCADE, FOREIGN KEY(id_Caso) REFERENCES Casos(id));
 
 CREATE TABLE ComentariosTarea (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, comentario varchar(200) NOT NULL, id_Abogado int NOT NULL, id_Tarea int NOT NULL,creado TIMESTAMP NOT NULL DEFAULT NOW(),  visible bool NOT NULL DEFAULT TRUE, FOREIGN KEY(Id_Abogado) REFERENCES Abogados(id) ON DELETE CASCADE, FOREIGN KEY(id_Tarea) REFERENCES Tareas(id));
 
+
+/*PROCEDIMIENTO ALMACENADO PARA CALCULAR LOS HONORARIOS DEL ABOGADO*/
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS calcularHonorarios //
+CREATE PROCEDURE calcularHonorarios(IN idAbogado int)
+BEGIN
+DECLARE diasTrabajados INT DEFAULT 0;
+DECLARE desempeno NUMERIC(15,2) DEFAULT 0.0;--Desempeño del abogado basado en sus calificaciones
+DECLARE factor NUMERIC(15,2) DEFAULT 1.0;--Factor multiplicador de ganancias, lo determina el administrador
+SELECT SUM(fin-inicio)  INTO diasTrabajados FROM Tareas WHERE status = 0 AND id_Abogado = idAbogado AND fin BETWEEN NOW() - INTERVAL 1 MONTH AND NOW();--Tareas terminadas el último mes
+SELECT puntos/votos INTO desempeno FROM Abogados WHERE id = idAbogado LIMIT 1;
+SELECT diasTrabajados * desempeno * factor AS honorarios;
+END //
+DELIMITER ;
+
+/*POBLACIÓN DE LAS TABLAS*/
 
 INSERT INTO Direcciones (calle, no_exterior, no_interior, colonia,id_Municipio, ciudad, cp) VALUES ("Av. Vasco de Quiroga", "1000", "A", "Santa Fe", 1, "Ciudad de México", "01780");
 

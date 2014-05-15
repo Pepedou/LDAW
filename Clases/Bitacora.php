@@ -1,42 +1,26 @@
 <?php
 
 /**
- * Description of Log
+ * Description of Bitacora
  *
  * @author José Luis Valencia Herrera     A01015544
  */
-include_once 'Abogado.php';
 
-class Log extends EntidadBD {
+class Bitacora extends EntidadBD {
 
-    static private $tabla_static = "Logs";
+    static private $tabla_static = "Bitacora";
 
     public function __construct() {
         parent::__construct();
         $this->tabla = static::$tabla_static;
         $this->atributos = array(
             "id" => -1,
-            "id_Documento" => -1,
-            "fecha" => date("Y-m-d"),
-            "id_Abogado" => -1,
-            "visible" => 1);
+            "entrada" => ""
+            );
         $this->discr = "id";
         $this->discrValor = $this->atributos[$this->discr];
     }
 
-    public function cargarAbogado() {
-        $abogado = new Abogado();
-        $query = "SELECT * FROM " . Abogado::getNombreTabla() . " WHERE id=" . $this->atributos['id_Abogado'] . " LIMIT 1";
-        $resultado = $this->dbExecute($query);
-
-        if ($resultado->num_rows) {
-            $fila = $resultado->fetch_assoc();
-            $abogado->guardarDatos($fila);
-        }
-
-        return $abogado;
-    }
-    
     public static function getID($discriminante, $valor) {
         $dbManager = DatabaseManager::getInstance();
         $dbManager->connectToDatabase();

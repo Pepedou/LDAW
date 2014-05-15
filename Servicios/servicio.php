@@ -50,6 +50,11 @@ function procesa(EntidadBD $entidad, $operacion, $params, $callback) {
             $tarea = new Tarea();
             $tarea->service_tareasUrgentes($params, $callback);
             break;
+        case 'hon':
+            $abogado = new Abogado();
+            $abogado->guardarDatos($params);
+            $abogado->service_calcularHonorarios($callback);
+            break;
     }
 }
 

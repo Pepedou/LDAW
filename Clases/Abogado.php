@@ -355,8 +355,8 @@ class Abogado extends EntidadBD {
     public function service_getcalificacion(array $datos, $callback) {
         $id = $datos['id'];
         $this->atributos['id'] = $id;
-        
-        $avg = $this->get_calificacion();       
+
+        $avg = $this->get_calificacion();
         $finalData = array("Resultados" => $avg);
         if ($callback != "") {
             $json = "$callback(" . json_encode($finalData) . ")";
@@ -370,8 +370,8 @@ class Abogado extends EntidadBD {
         $id = $datos['id'];
         $puntos = $datos['puntos'];
         $this->atributos['id'] = $id;
-      
-        $res = $this->set_calificacion($puntos);        
+
+        $res = $this->set_calificacion($puntos);
         $finalData = array("Resultados" => $res);
         if ($callback != "") {
             $json = "$callback(" . json_encode($finalData) . ")";
@@ -409,6 +409,25 @@ class Abogado extends EntidadBD {
 
     public function validarDatos() {
         
+    }
+
+    public function service_calcularHonorarios($callback) {
+        $data = array();
+        $query = "CALL calcularHonorarios(" . $this->atributos['id'] . ")";
+        $resultado = $this->dbExecute($query);
+        if ($resultado != false) {
+            $row = $resultado->fetch_assoc();
+            $data[] = array("honorarios" => $row['honorarios']);
+        } else {
+            $data[] = array("honorarios" => "NULL");
+        }
+        $finalData = array("Resultados" => $data);
+        if ($callback != "") {
+            $json = "$callback(" . json_encode($finalData) . ")";
+        } else {
+            $json = json_encode($finalData);
+        }
+        print_r($json);
     }
 
 }
