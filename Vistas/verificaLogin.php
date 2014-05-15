@@ -43,7 +43,7 @@ if ($result->num_rows === 1) {
         session_register("myusername");
         session_register("mypassword");
         setcookie("usuario", $usuario, time() + (3600 * 24)); //Cookie por 1 día
-        header("location:vista_cliente.php");
+        header("location:Clientes_CMS/vista_cliente.php");
     } else {
         echo "Usuario o password incorrecto";
         header("Refresh: 3; url=../index.html");

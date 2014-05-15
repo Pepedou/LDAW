@@ -97,18 +97,42 @@
     height:     32px;
 }
 .ratings_stars {
-    background: url('../stylesheets/images/Rating/star_empty.png') no-repeat;
+    background: url('images/Rating/star_empty.png') no-repeat;
     float:      left;
     height:     28px;
     padding:    2px;
     width:      32px;
 }
 .ratings_vote {
-    background: url('../stylesheets/images/Rating/star_full.png') no-repeat;
+    background: url('images/Rating/star_full.png') no-repeat;
 }
 .ratings_over {
-    background: url('../stylesheets/images/Rating/star_highlight.png') no-repeat;
+    background: url('images/Rating/star_highlight.png') no-repeat;
 }
 
+/*Diseño de la tabla*/
+.registros{
+    
+    text-align:center;
+    color: black;
+    
+}
 
+.busca {
+   color: white;
+   left:5%;
+   
+}
+.mostrar{
+    color: white;    
+}
 
+.dataTables_info{
+    
+    color: white;
+}
+
+#abogados_previous{
+    
+    color: white;
+}

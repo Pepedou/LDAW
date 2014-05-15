@@ -1,3 +1,4 @@
+cont = 0;
 function mostrarExpediente(id) {
 //Carga la pagina mediante AJAX y despues le añade los datos de cada campo
     var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Vistas/vista-admin-expediente.html";
@@ -155,20 +156,21 @@ function servicio(params, successFunc) {
         error: function(jqXHR, status, errorThrown) {
             alert(errorThrown + ": No se pudo conectar con el servidor [" + status + "]. Intente de nuevo.");
         }
-    });
+    }); 
 }
 
 function successFuncCaso(data) {
     var string = '<div id=\"leyenda\"><a href=\"../altas.php?op=Caso\"><img src="../css/images/add_general.png"\n\
     style=\"width: 36px; height: 36px;\"></a></div>\n\
-    <table id="main_table" class="display"><thead><tr><th>Nombre</th><th>Estado</th><th>Opciones</th></tr></thead>';
+    <table id="main_table" class="display"><thead><tr><th>Nombre</th><th>Descripcion</th><th>Estado</th><th>Opciones</th></tr></thead>';
     $.each(data.Resultados, function(i, resultado) {
         var id = resultado.id;
         var caso = resultado.nombre;
         var estado = resultado.status;
-        string += "<tr><td>" + caso + "</td><td>" + (estado ? "Activo" : "Inactivo") + "</td><td><a href=\"#\"\n\
-        onclick=\"mostrarCaso(" + id + ");\">Mostrar</a><a href=\"../cambios.php?nombre=" + caso + "&sel=" + id + "&op=Caso\" \n\
-       onclick=\"mostrarCaso(" + id + ");\">Editar</a><a href=\"../bajas.php?nombre=" + caso + "&sel=" + id + "&op=Caso\" onclick=\"mostrarCaso(" + id + ");\">   Eliminar   </a></td></tr>";
+        var desc = resultado.descripcion;
+        string += "<tr><td>" + caso + "</td><td>" + desc + "</td><td>" + (estado ? "Activo" : "Inactivo") + "</td><td><a href=\"#\"\n\
+        onclick=\"mostrarCaso(" + id + ");\">Mostrar</a>&nbsp;&nbsp;<a href=\"../cambios.php?nombre=" + caso + "&sel=" + id + "&op=Caso\" \n\
+        onclick=\"mostrarCaso(" + id + ");\">Editar</a>&nbsp<a href=\"../bajas.php?nombre=" + caso + "&sel=" + id + "&op=Caso\" onclick=\"mostrarCaso(" + id + ");\">   Eliminar   </a></td></tr>";
     });
     string += "</table>";
     $("#main_content").empty().append(string);
@@ -185,8 +187,8 @@ function successFuncAbogados(data) {
         var telefono = resultado.telefono;
         var email = resultado.email;
         string += "<tr><td>" + nombre + "</td><td>" + email + "</td><td>" + telefono + "</td><td><a href=\"#\"\n\
-        onclick=\"mostrarAbogado(" + id + ");\">Mostrar</a><a href=\"../cambios.php?nombre=" + resultado.nombre + "&sel=" + id + "&op=Abogado\" \n\
-       onclick=\"mostrarAbogado(" + id + ");\">Editar</a><a href=\"../bajas.php?nombre=" + resultado.nombre + "&sel=" + id + "&op=Abogado\" onclick=\"mostrarAbogado(" + id + ");\">   Eliminar   </a></td></tr>";
+        onclick=\"mostrarAbogado(" + id + ");\">Mostrar</a>&nbsp;&nbsp;<a href=\"../cambios.php?nombre=" + resultado.nombre + "&sel=" + id + "&op=Abogado\" \n\
+       onclick=\"mostrarAbogado(" + id + ");\">Editar</a>&nbsp;&nbsp;<a href=\"../bajas.php?nombre=" + resultado.nombre + "&sel=" + id + "&op=Abogado\" onclick=\"mostrarAbogado(" + id + ");\">   Eliminar   </a></td></tr>";
     });
     string += "</table>";
     $("#main_content").empty().append(string);
@@ -194,9 +196,8 @@ function successFuncAbogados(data) {
 }
 
 function successFuncDireccion(data) {
-    var head = '<th>Calle</th><th>Colonia</th><th>Ciudad</th><th>CP</th><th>Mapa</th>';
+
     var string = "";
-    $("#main_table tr:first").append(head);
     $.each(data.Resultados, function(i, resultado) {
         var calle = resultado.calle;
         var ext = resultado.no_exterior;
@@ -207,32 +208,34 @@ function successFuncDireccion(data) {
         string += "<td>" + calle + " #" + ext + " - " + int + "  " + "</td><td>  " + colonia + "  " + "</td><td>" + ciudad + "</td><td>" + cp + "</td>\n\
         <td><button type=\"button\" " +
                 "onclick=\"window.open('http://maps.google.com/?q=" + calle + "," + ext + "," + colonia + "," + ciudad + "," + cp + "')\">Mapa</button></td>";
-    });
-    $("#main_table tbody tr:first").append(string);
-    cambiaTabla();
+        $("#main_table tbody tr:eq(" + cont + ")").append(string);
+        cont++;         
+    }); 
+
 }
 
 function successFuncDespacho(data) {
 
     var string = '<div id=\"leyenda\"><a href=\"../altas.php?op=Despacho\"><img src="../css/images/add_general.png"\n\
     style=\"width: 36px; height: 36px;\"></a></div>\n\
-    <table id="main_table" class="display"><thead><tr><th>Opciones</th><th>Nombre</th></tr></thead>';
+    <table id="main_table" class="display"><thead><tr><th>Opciones</th><th>Nombre</th><th>Calle</th><th>Colonia</th><th>Ciudad</th><th>CP</th><th>Mapa</th></tr></thead>';
     $.each(data.Resultados, function(i, resultado) {
         var id = resultado.id;
         var nombre = resultado.nombre;
         var dirID = resultado.id_Direccion;
         string += "<tr><td><a href=\"#\"\n\
-        onclick=\"mostrarAbogado(" + id + ");\">Mostrar</a><a href=\"../cambios.php?nombre=" + nombre + "&sel=" + id + "&op=Despacho\" \n\
-       onclick=\"mostrarAbogado(" + id + ");\">Editar</a><a href=\"../bajas.php?nombre=" + nombre + "&sel=" + id + "&op=Despacho\" onclick=\"mostrarAbogado(" + id + ");\">   Eliminar   </a></td><td>" + nombre + " " + "</td></tr>";
+        onclick=\"mostrarAbogado(" + id + ");\">Mostrar</a>&nbsp;&nbsp;<a href=\"../cambios.php?nombre=" + nombre + "&sel=" + id + "&op=Despacho\" \n\
+       onclick=\"mostrarAbogado(" + id + ");\">Editar</a>&nbsp;&nbsp;<a href=\"../bajas.php?nombre=" + nombre + "&sel=" + id + "&op=Despacho\" onclick=\"mostrarAbogado(" + id + ");\">   Eliminar   </a></td><td>" + nombre + " " + "</td></tr>";
         var params = {
             op: "sii",
             entidad: "Direccion",
             "params[id]": dirID
         };
-        servicio(params, successFuncDireccion);
+        servicio(params, successFuncDireccion); 
     });
     string += "</table>";
     $("#main_content").empty().append(string);
+    
 }
 
 function loadMain(clase) {
