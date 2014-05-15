@@ -118,10 +118,9 @@ switch ($op) {
         
         $query = "SELECT * FROM Abogados WHERE id_Despacho=" . $desp;
         $resultado = $dbM->executeQuery($query);
+        
         echo "<table id=\"abogs\" class=\"display\" >
-              <thead> <tr>Abogados</tr> </thead>
-              
-        ";
+              <thead> <tr><th>Abogados</th></tr> </thead>";
 
         while ($row = $resultado->fetch_assoc()) {
 

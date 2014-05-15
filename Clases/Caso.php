@@ -46,6 +46,8 @@ class Caso extends EntidadBD {
         $sel_status = 0;
         $sel_desp = 0;
         $sel_cliente = 0;
+        $caso_descrip = "";
+        $caso_id = 0;
 
         if ($nombre !== "Selecciona") {
             $caso = new Caso();
@@ -53,9 +55,11 @@ class Caso extends EntidadBD {
             if ($exito) {
                 /* Actualizo el valor de name */
                 $name = $caso->atributos["nombre"];
+                $caso_descrip = $caso->atributos["descripcion"];
                 $sel_status = $caso->atributos["status"];
                 $sel_desp = $caso->atributos["id_Despacho"];
                 $sel_cliente = $caso->atributos["id_Cliente"];
+                $caso_id = $caso->atributos["id"];
 
                 /* Status del Caso */
                 if ($sel_status === 1) {
@@ -86,6 +90,8 @@ class Caso extends EntidadBD {
 
         $caso_desp = $desp->atributos["nombre"];
         static::$smarty->assign('caso_nombre', $name);
+        static::$smarty->assign('caso_descrip',$caso_descrip);
+        static::$smarty->assign('caso_id',$caso_id);
         static::$smarty->assign('nombre', $accion . "Despachos");
         static::$smarty->assign('sel_status', $sel_status);
         static::$smarty->assign('sel_desp', $sel_desp);
@@ -109,8 +115,11 @@ class Caso extends EntidadBD {
                 $this->cargarDeBD("nombre", $_REQUEST['nombre']);
                 $id = $this->atributos['id_Despacho'];
                 $nombre = $this->atributos['nombre'];
+                $caso_id = $this->atributos['id'];
+                $this->procesa_insert(); //antes de pasar a la siguiente, guardo
                 static::$smarty->assign('id_desp', $id);
                 static::$smarty->assign('caso_name', $nombre);
+                static::$smarty->assign('caso_id', $caso_id);
                 static::$smarty->display($this->BASE_DIR . 'Vistas/Casos/AbogadosCasos.tpl');
         }else{
         static::$smarty->assign('accion', "Registrar");

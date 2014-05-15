@@ -43,7 +43,7 @@ print"
     <h1 id=\"logo\"><a href=\"../Vistas/vista-admin.php\">GESTION DE DESPACHOS</a></h1>
     <div id=\"navigation\">
       <ul>
-      <li><a href=\"#\">BIENVENIDO  " . $miUsuario->atributos['nombre'] . "</a></li>
+      <li><a href=\"#\">BIENVENIDO  Administrador " . $miUsuario->atributos['nombre'] . "</a></li>
        
      </ul>
      <ul>

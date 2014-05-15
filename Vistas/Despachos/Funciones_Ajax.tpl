@@ -26,12 +26,12 @@
         var strURL = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Servicios/select_direccion.php?op=1";
         var req = getXMLHTTP();
         if (req) {
-        
+
             req.onreadystatechange = function() {
                 if (req.readyState === 4) {
                     if (req.status === 200) {
                         document.getElementById('estados').innerHTML = req.responseText;
-                        
+
                     } else {
                         alert("Hay un problema al utilizar  XMLHTTP:\n" + req.statusText);
                     }
@@ -131,7 +131,7 @@
                     // only if "OK"
                     if (req.status == 200) {
                         document.getElementById('tipos').innerHTML = req.responseText;
-                         
+
                     } else {
                         alert("Hay un problema al utilizar  XMLHTTP:\n" + req.statusText);
                     }
@@ -156,7 +156,7 @@
                     // only if "OK"
                     if (req.status == 200) {
                         document.getElementById(name).innerHTML = req.responseText;
-                      
+
                     } else {
                         alert("Hay un problema al utilizar  XMLHTTP:\n" + req.statusText);
                     }
@@ -168,7 +168,7 @@
 
 
     }
-    
+
     function llenaAbogadosDespachos(desp) {
 
         var strURL = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Servicios/select_direccion.php?op=7&desp=" + desp;
@@ -181,8 +181,7 @@
                     // only if "OK"
                     if (req.status == 200) {
                         document.getElementById("abogados_desp").innerHTML = req.responseText;
-                        
-                cambiatabla();
+                        cambiaTabla();
                     } else {
                         alert("Hay un problema al utilizar  XMLHTTP:\n" + req.statusText);
                     }
@@ -194,6 +193,6 @@
 
 
     }
-     
+
 
 </script>

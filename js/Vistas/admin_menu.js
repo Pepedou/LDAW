@@ -1,4 +1,7 @@
 cont = 0;
+var AboActual = 1;
+var promActual = 0;
+
 function mostrarExpediente(id) {
 //Carga la pagina mediante AJAX y despues le añade los datos de cada campo
     var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Vistas/vista-admin-expediente.html";
@@ -101,48 +104,52 @@ function mostrarCaso(id) {
     });
 }
 
-/*Funcion para recuperar la información del abogado seleccionado*/
-function successFuncAbogadosActual(id) {
-    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Servicios/servicio.php";
+
+function mostrarAbogado(id) {
+
+
+    //Carga la pagina mediante AJAX y despues le añade los datos de cada campo
+    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Vistas/vista-admin-abogado.html";
+    $.ajax({
+        url: myurl,
+        success: function(data) {
+            $("#main_content").empty().append(data);
+        },
+        timeout: 3000, //3 second timeout, 
+        error: function(jqXHR, status, errorThrown) {   //the status returned will be "timeout" 
+            alert(status + " " + errorThrown + ": No se pudo conectar con el servidor. Intente de nuevo.");
+        }
+    });
 
     var params = {
         op: "sii",
         entidad: "Abogado",
-        'params[id]': id,
+        'params[id]': id
     };
-    $
-            .ajax({
-                url: myurl,
-                dataType: 'jsonp',
-                crossDomain: true,
-                data: params,
-                success: function(data) {
 
-                    $.each(data.Resultados, function(i, resultado) {
+    servicio(params, function(data) {
 
-                        var row = $("<p>Nombre: <br>" + resultado.nombre + "&nbsp" + resultado.apellidoP + "&nbsp" + resultado.apellidoM + "</p>");
-                        $("#nombre").html(row);
-                        var tel = $("<p>Tel&eacute;fono: <br>" + resultado.telefono + "&nbsp </p>");
-                        $("#telefono").html(tel);
-                        var email = $("<p> Email: <br>" + resultado.email + "&nbsp </p>");
-                        $("#email").html(email);
-                        var imagen = $("<img alt=\"\" src=" + resultado.fotografia + " style=\"width: 362px; height: 217px; border-width: 5px; border-style: solid; float: left; margin-top: 20px; margin-bottom: 20px;\"/>");
-                        $("#imagen").html(imagen);
-                        //llenaPuntaje(resultado.id);
-                    });
 
-                },
-                timeout: 3000, // 3 second timeout,
-                error: function(jqXHR, status, errorThrown) { // the status
-                    // returned will
-                    // be "timeout"
-                    alert(status
-                            + ": No se pudo conectar con el servidor. Intente de nuevo.");
-                }
-            });
+        $.each(data.Resultados, function(i, resultado) {
 
+            var row = $("<p>Nombre: <br>" + resultado.nombre + "&nbsp" + resultado.apellidoP + "&nbsp" + resultado.apellidoM + "</p>");
+            $("#nombre").html(row);
+            var tel = $("<p>Tel&eacute;fono: <br>" + resultado.telefono + "&nbsp </p>");
+            $("#telefono").html(tel);
+            var email = $("<p> Email: <br>" + resultado.email + "&nbsp </p>");
+            $("#email").html(email);
+            var imagen = $("<img alt=\"\" src=" + resultado.fotografia + " style=\"width: 362px; height: 217px; border-width: 5px; border-style: solid; float: left; margin-top: 20px; margin-bottom: 20px;\"/>");
+            $("#imagen").html(imagen);
+            AboActual = resultado.id;
+            llenaPuntaje(resultado.id);
+        });
+
+    });
+    
+    
 
 }
+
 
 function servicio(params, successFunc) {
     var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/Servicios/servicio.php";
@@ -156,7 +163,7 @@ function servicio(params, successFunc) {
         error: function(jqXHR, status, errorThrown) {
             alert(errorThrown + ": No se pudo conectar con el servidor [" + status + "]. Intente de nuevo.");
         }
-    }); 
+    });
 }
 
 function successFuncCaso(data) {
@@ -170,7 +177,7 @@ function successFuncCaso(data) {
         var desc = resultado.descripcion;
         string += "<tr><td>" + caso + "</td><td>" + desc + "</td><td>" + (estado ? "Activo" : "Inactivo") + "</td><td><a href=\"#\"\n\
         onclick=\"mostrarCaso(" + id + ");\">Mostrar</a>&nbsp;&nbsp;<a href=\"../cambios.php?nombre=" + caso + "&sel=" + id + "&op=Caso\" \n\
-        onclick=\"mostrarCaso(" + id + ");\">Editar</a>&nbsp<a href=\"../bajas.php?nombre=" + caso + "&sel=" + id + "&op=Caso\" onclick=\"mostrarCaso(" + id + ");\">   Eliminar   </a></td></tr>";
+        \">Editar</a>&nbsp<a href=\"../bajas.php?nombre=" + caso + "&sel=" + id + "&op=Caso\" onclick=\"mostrarCaso(" + id + ");\">   Eliminar   </a></td></tr>";
     });
     string += "</table>";
     $("#main_content").empty().append(string);
@@ -186,9 +193,9 @@ function successFuncAbogados(data) {
         var nombre = resultado.nombre + " " + resultado.apellidoP + " " + resultado.apellidoM;
         var telefono = resultado.telefono;
         var email = resultado.email;
-        string += "<tr><td>" + nombre + "</td><td>" + email + "</td><td>" + telefono + "</td><td><a href=\"#\"\n\
-        onclick=\"mostrarAbogado(" + id + ");\">Mostrar</a>&nbsp;&nbsp;<a href=\"../cambios.php?nombre=" + resultado.nombre + "&sel=" + id + "&op=Abogado\" \n\
-       onclick=\"mostrarAbogado(" + id + ");\">Editar</a>&nbsp;&nbsp;<a href=\"../bajas.php?nombre=" + resultado.nombre + "&sel=" + id + "&op=Abogado\" onclick=\"mostrarAbogado(" + id + ");\">   Eliminar   </a></td></tr>";
+        string += "<tr><td>" + nombre + "</td><td>" + email + "</td><td>" + telefono + "</td><td>\n\
+        <a href=\"#\"onclick=\"mostrarAbogado(" + id + ");\">Mostrar</a>&nbsp;&nbsp;<a href=\"../cambios.php?nombre=" + resultado.nombre + "&sel=" + id + "&op=Abogado\" \n\
+      \">Editar</a>&nbsp;&nbsp;<a href=\"../bajas.php?nombre=" + resultado.nombre + "&sel=" + id + "&op=Abogado\">   Eliminar   </a></td></tr>";
     });
     string += "</table>";
     $("#main_content").empty().append(string);
@@ -209,9 +216,92 @@ function successFuncDireccion(data) {
         <td><button type=\"button\" " +
                 "onclick=\"window.open('http://maps.google.com/?q=" + calle + "," + ext + "," + colonia + "," + ciudad + "," + cp + "')\">Mapa</button></td>";
         $("#main_table tbody tr:eq(" + cont + ")").append(string);
-        cont++;         
-    }); 
+        cont++;
+    });
 
+}
+/*Seleccionar El puntaje*/
+function llenaPuntaje(id) {
+
+    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Servicios/servicio.php";
+    var params = {
+        op: "gcal",
+        entidad: "Abogado",
+        'params[id]': id
+    };
+    $
+            .ajax({
+                url: myurl,
+                dataType: 'jsonp',
+                crossDomain: true,
+                data: params,
+                success: function(data) {
+                    var promedio = data.Resultados;
+                    promActual = promedio;
+                    set_votes(promedio);
+                },
+                timeout: 3000, // 3 second timeout,
+                error: function(jqXHR, status, errorThrown) {
+                    alert(status
+                            + ": No se pudo conectar con el servidor. Intente de nuevo.");
+                }
+            });
+            
+                /*Votos*/
+    $('.ratings_stars').hover(
+            // Handles the mouseover
+                    function() {
+                        $(this).prevAll().andSelf().addClass('ratings_over');
+                        $(this).nextAll().removeClass('ratings_vote');
+                    },
+                    // Handles the mouseout
+                            function() {
+                                $(this).prevAll().andSelf().removeClass('ratings_over');
+                                set_votes($(this).parent());
+                            }
+                    );
+                    $('.ratings_stars').bind('click', function() {
+                        var star = this;
+                        var clicked_on = $(star).attr('id');
+                        var voto_entero = parseInt(clicked_on);
+                        mandaVoto(voto_entero, AboActual);
+                    });
+            
+            
+}
+
+function mandaVoto(puntos, id) {
+
+    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Servicios/servicio.php";
+    var params = {
+        op: "scal",
+        entidad: "Abogado",
+        'params[id]': AboActual,
+        'params[puntos]': puntos
+    };
+    $
+            .ajax({
+                url: myurl,
+                dataType: 'jsonp',
+                crossDomain: true,
+                data: params,
+                success: function(data) {
+                    alert("Registrado");
+                    set_votes(puntos);
+                },
+                timeout: 3000, // 3 second timeout,
+                error: function(jqXHR, status, errorThrown) {
+                    alert(status
+                            + ": No se pudo conectar con el servidor. Intente de nuevo.");
+                }
+            });
+}
+function set_votes(promedio) {
+
+    promActual = promedio;
+    var avg = Math.round(promedio);
+    $(califica).find('.star_' + avg).prevAll().andSelf().addClass('ratings_vote');
+    $(califica).find('.star_' + avg).nextAll().removeClass('ratings_vote');
 }
 
 function successFuncDespacho(data) {
@@ -223,19 +313,18 @@ function successFuncDespacho(data) {
         var id = resultado.id;
         var nombre = resultado.nombre;
         var dirID = resultado.id_Direccion;
-        string += "<tr><td><a href=\"#\"\n\
-        onclick=\"mostrarAbogado(" + id + ");\">Mostrar</a>&nbsp;&nbsp;<a href=\"../cambios.php?nombre=" + nombre + "&sel=" + id + "&op=Despacho\" \n\
-       onclick=\"mostrarAbogado(" + id + ");\">Editar</a>&nbsp;&nbsp;<a href=\"../bajas.php?nombre=" + nombre + "&sel=" + id + "&op=Despacho\" onclick=\"mostrarAbogado(" + id + ");\">   Eliminar   </a></td><td>" + nombre + " " + "</td></tr>";
+        string += "<tr><td><a href=\"../cambios.php?nombre=" + nombre + "&sel=" + id + "&op=Despacho\" \n\
+       \">Editar</a>&nbsp;&nbsp;<a href=\"../bajas.php?nombre=" + nombre + "&sel=" + id + "&op=Despacho\">   Eliminar   </a></td><td>" + nombre + " " + "</td></tr>";
         var params = {
             op: "sii",
             entidad: "Direccion",
             "params[id]": dirID
         };
-        servicio(params, successFuncDireccion); 
+        servicio(params, successFuncDireccion);
     });
     string += "</table>";
     $("#main_content").empty().append(string);
-    
+
 }
 
 function loadMain(clase) {
@@ -348,4 +437,7 @@ $(document).ready(function() {
         location.reload(true);
     });
 
+
+
 });
+                

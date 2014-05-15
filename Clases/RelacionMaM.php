@@ -119,8 +119,10 @@ abstract class RelacionMaM extends ServicioGenerico {
 
     public function service_insert($callback) {
         foreach ($this->atributos as $campo => $campoValor) {
-            $subqueryCamps .= $campo . ",";
-            $subqueryVals .= "'" . $campoValor . "',";
+            if ($campo !== 'id') {
+                $subqueryCamps .= $campo . ",";
+                $subqueryVals .= "'" . $campoValor . "',";
+            }
         }
         $subqueryCamps = rtrim($subqueryCamps, ","); //Elimina la última coma
         $subqueryVals = rtrim($subqueryVals, ","); //Elimina la última coma
