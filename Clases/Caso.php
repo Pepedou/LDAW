@@ -19,6 +19,7 @@ class Caso extends EntidadBD {
         $this->atributos = array(
             "id" => -1,
             "nombre" => "",
+            "descripcion" => "",
             "status" => 0,
             "id_Despacho" => -1,
             "id_Cliente" => -1,

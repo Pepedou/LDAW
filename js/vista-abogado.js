@@ -40,7 +40,7 @@ function mostrarExpediente(id) {
             var nombre = resultado.nombre;
             $("#nombreExpediente span").append(nombre);
             var documentos = {
-                op: "st",
+                op: "stw",
                 entidad: "Documento",
                 "params[id_Expediente]": id
             };
@@ -78,10 +78,12 @@ function mostrarCaso(id) {
         $.each(data.Resultados, function(i, resultado) {
             var nombre = resultado.nombre;
             var estado = resultado.status;
+            var descripcion = resultado.descripcion;
             var clienteID = resultado.id_Cliente;
             var despachoID = resultado.id_Despacho;
             $("#nombreCaso span").append(nombre);
             $("#estado span").append(estado === "1" ? "Activo" : "Cerrado");
+            $("#descripcion span").append(descripcion);
             var cliente = {
                 op: "sii",
                 entidad: "Cliente",
@@ -103,7 +105,7 @@ function mostrarCaso(id) {
                 });
             });
             var expedientes = {
-                op: "st",
+                op: "stw",
                 entidad: "Expediente",
                 "params[id_Caso]": id
             };
@@ -266,9 +268,9 @@ function loadMain(clase) {
     switch (clase) {
         case "Caso":
             var params1 = {
-                op: "st",
+                op: "stw",
                 entidad: "Caso",
-                "params[id_Abogado]": usuario.id
+                "params[id_Despacho]": usuario.id_Despacho
             };
             servicio(params1, successFuncCaso);
             break;

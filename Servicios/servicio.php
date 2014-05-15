@@ -24,7 +24,6 @@ function procesa(EntidadBD $entidad, $operacion, $params, $callback) {
             $abogado->service_setcalificacion($params, $callback);
             break;
         case 'st'://Select todos
-            $entidad->guardarDatos($params);
             $entidad->service_selectTodos($callback);
             break;
         case 'stw'://Select todos where
@@ -50,6 +49,11 @@ function procesa(EntidadBD $entidad, $operacion, $params, $callback) {
         case 'stu'://Select tareas urgentes
             $tarea = new Tarea();
             $tarea->service_tareasUrgentes($params, $callback);
+            break;
+        case 'hon':
+            $abogado = new Abogado();
+            $abogado->guardarDatos($params);
+            $abogado->service_calcularHonorarios($callback);
             break;
     }
 }

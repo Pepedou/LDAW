@@ -2,7 +2,7 @@
 
 session_start();
 if (!session_is_registered(myusername)) {
-    header("Location: index.html");
+    header("Location: ../index.html");
 }
 
 include_once '../Clases/Abogado.php';
