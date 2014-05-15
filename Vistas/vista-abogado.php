@@ -13,6 +13,8 @@ include_once '../Clases/AbogadosClientes.php';
 $correo = $_COOKIE['usuario'];
 $miUsuario = new Abogado();
 $miUsuario->cargarDeBD("email", $correo);
+if ($miUsuario->atributos['id'] == -1)
+    die("Ocurrió un error al obtener el usuario.");
 
 print "
 <!DOCTYPE html>
@@ -241,7 +243,7 @@ body {
     <div class=\"gwd-div-ub98\"><a href=\"logout.php\"><span class=\"gwd-span-e7ga\">Cerrar sesión</span></a></div>
     
   
-<userTag uid=\"" . $miUsuario->atributos['id'] . "\" nombre=\"" . $miUsuario->atributos['nombre'] . "\" apellidoP=\"" . $miUsuario->atributos['apellidoP'] . "\" apellidoM=\"" . $miUsuario->atributos['apellidoM'] . "\" id_Despacho=\"".$miUsuario->atributos['id_Despacho'] . "\"/>
+<userTag uid=\"" . $miUsuario->atributos['id'] . "\" nombre=\"" . $miUsuario->atributos['nombre'] . "\" apellidoP=\"" . $miUsuario->atributos['apellidoP'] . "\" apellidoM=\"" . $miUsuario->atributos['apellidoM'] . "\" id_Despacho=\"" . $miUsuario->atributos['id_Despacho'] . "\"/>
 </body>
 <script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js\"></script>
 <script src=\"../js/vista-abogado.js\"></script>

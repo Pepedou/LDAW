@@ -98,7 +98,7 @@ class Abogado extends EntidadBD {
 
     public function guardarDatos(array $misDatos) {
         foreach ($misDatos as $campo => $valor) {
-            if ($campo === "contrasena" && $this->existente != false) {
+            if ($campo === "contrasena") {
                 $this->atributos[$campo] = sha1($misDatos[$campo]);
             } else {
                 $this->atributos[$campo] = $misDatos[$campo];
@@ -352,6 +352,35 @@ class Abogado extends EntidadBD {
         }
     }
 
+    public function service_update($callback) {
+        $json = array();
+        foreach ($this->atributos as $campo => $campoValor) {
+            if ($campo != "id") {
+                if ($campo == "contrasena")
+                    $subquerySets .= $campo .= "= SHA1('" . $campoValor . "')";
+                else
+                    $subquerySets .= $campo . "='" . $campoValor . "',";
+            }
+        }
+        $subquerySets = rtrim($subquerySets, ","); //Elimina la última coma
+
+        $query = "UPDATE $this->tabla SET $subquerySets WHERE $this->discr = '$this->discrValor'";
+        $resultado = $this->dbExecute($query);
+        if ($resultado === true) {
+            array_push($json, $this->atributos);
+            $finalData = array("Resultados" => $json);
+            if ($callback != "") {
+                $json = "$callback(" . json_encode($finalData) . ")";
+            } else {
+                $json = json_encode($finalData);
+            }
+            print_r($json);
+        } else {
+            print "[null]";
+        }
+        return $resultado;
+    }
+
     public function service_getcalificacion(array $datos, $callback) {
         $id = $datos['id'];
         $this->atributos['id'] = $id;
@@ -413,15 +442,23 @@ class Abogado extends EntidadBD {
 
     public function service_calcularHonorarios($callback) {
         $data = array();
+        $subFin = array();
         $query = "CALL calcularHonorarios(" . $this->atributos['id'] . ")";
         $resultado = $this->dbExecute($query);
         if ($resultado != false) {
             $row = $resultado->fetch_assoc();
-            $data[] = array("honorarios" => $row['honorarios']);
+            $hono = $row['honorarios'];
+            $aux = array("nombre" => $row['nombre'], "dias" => $row['dias']);
+            array_push($data, $aux);
+            while ($row = $resultado->fetch_assoc()) {
+                $aux = array("nombre" => $row['nombre'], "dias" => $row['dias']);
+                array_push($data, $aux);
+            }
+            $subFin = array("honorarios" => $hono, "Tareas" => $data);
         } else {
-            $data[] = array("honorarios" => "NULL");
+            $subFin[] = array("NULL" => "NULL");
         }
-        $finalData = array("Resultados" => $data);
+        $finalData = array("Resultados" => array($subFin));
         if ($callback != "") {
             $json = "$callback(" . json_encode($finalData) . ")";
         } else {
