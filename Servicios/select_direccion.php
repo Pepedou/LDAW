@@ -8,11 +8,13 @@ $edo = $_REQUEST['edo'];
 $campo = $_REQUEST['campo'];
 $name = $_REQUEST['name'];
 $tabla = $_REQUEST['tabla'];
+$desp = $_REQUEST['desp'];
+
 
 switch ($op) {
 
     case 1:
-        
+
         $dbM = DatabaseManager::getInstance();
         $dbM->connectToDatabase();
         $query = "SELECT id, Estado  FROM Estados WHERE Paises_id=1"; //siempre es México
@@ -110,6 +112,24 @@ switch ($op) {
         $dbM->closeConnection();
         break;
 
+    case 7:
+        $dbM = DatabaseManager::getInstance();
+        $dbM->connectToDatabase();
+        
+        $query = "SELECT * FROM Abogados WHERE id_Despacho=" . $desp;
+        $resultado = $dbM->executeQuery($query);
+        echo "<table id=\"abogs\" class=\"display\" >
+              <thead> <tr>Abogados</tr> </thead>
+              
+        ";
+
+        while ($row = $resultado->fetch_assoc()) {
+
+            echo"<tr><td><input type=\"checkbox\" class=\"chk\" value =" . $row['id'] . " >" . $row['nombre'] ."</td></tr>";
+        }
+        echo "</table>";
+        $dbM->closeConnection();
+        break;
     default:
         echo"Necesito la opcion";
         break;

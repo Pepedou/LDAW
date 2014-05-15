@@ -105,9 +105,19 @@ class Caso extends EntidadBD {
 
     public function generarFormaInsercion() {
 
+        if(isset($_REQUEST['nombre'])){
+                $this->cargarDeBD("nombre", $_REQUEST['nombre']);
+                $id = $this->atributos['id_Despacho'];
+                $nombre = $this->atributos['nombre'];
+                static::$smarty->assign('id_desp', $id);
+                static::$smarty->assign('caso_name', $nombre);
+                static::$smarty->display($this->BASE_DIR . 'Vistas/Casos/AbogadosCasos.tpl');
+        }else{
         static::$smarty->assign('accion', "Registrar");
         static::$smarty->assign('header', "Nuevo Caso");
         static::$smarty->display($this->BASE_DIR . 'Vistas/Casos/Altas.tpl');
+        
+        }
     }
 
     public function procesarForma($op) {
@@ -193,6 +203,22 @@ class Caso extends EntidadBD {
 
     public function validarDatos() {
         
+    }
+
+    
+      public function procesa_insert() {
+
+        foreach ($this->atributos as $campo => $valor) {
+            if (isset($_REQUEST[$campo])) {
+                $this->atributos[$campo] = $_REQUEST[$campo];
+            }
+        }
+        if ($this->all_set()) {
+            if ($this->almacenarEnBD()) {
+                
+               // Debug::getInstance()->alert("Registro Exitoso.");
+            }
+        }
     }
 
 }

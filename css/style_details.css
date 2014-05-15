@@ -1,0 +1,114 @@
+#pagos
+{
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+    width:100%;
+    border-collapse:collapse;
+}
+#abogados
+{
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+    width:10%;
+    border-collapse:collapse;
+}
+#pagos td, #pagos th 
+{
+    font-size:1.2em;
+    border:1px solid #E3CEF6;
+    padding:3px 7px 2px 7px;
+    text-align:center;
+    background-color:white;
+    color:black;
+}
+#pagos th 
+{
+    font-size:1.3em;
+    text-align:center;
+    padding-top:5px;
+    padding-bottom:4px;
+    background-color:#ECCEF5; //color más fuerte, morado
+    color:#ffffff;
+}
+#pagos tr.alt td 
+{
+    color:#000000;
+    background-color:#E3CEF6; //color para las intermedias
+}
+#imagen{
+
+    position:absolute;
+    top:25%;
+    right:35%;
+}
+#nombre{
+
+    position:absolute;
+    top:30%;
+    left:68%;
+
+}
+#telefono{
+
+    position:absolute;
+    top:40%;
+    left:68%;
+
+}
+#email{
+
+    position:absolute;
+    top:50%;
+    left:68%;
+
+}
+#califica{
+
+    position:absolute;
+    top:80%;
+    left:45%;
+
+}
+#calificacion{
+
+    position:absolute;
+    top:75%;
+    left:45%;
+
+}
+
+#leyenda{
+
+    position:absolute;
+    top:24%;
+    left:65%;
+
+}
+
+
+
+
+/*Calificacion*/
+
+.rate_widget {
+    border:     1px solid #CCC;
+    overflow:   visible;
+    padding:    10px;
+    position:   relative;
+    width:      180px;
+    height:     32px;
+}
+.ratings_stars {
+    background: url('../stylesheets/images/Rating/star_empty.png') no-repeat;
+    float:      left;
+    height:     28px;
+    padding:    2px;
+    width:      32px;
+}
+.ratings_vote {
+    background: url('../stylesheets/images/Rating/star_full.png') no-repeat;
+}
+.ratings_over {
+    background: url('../stylesheets/images/Rating/star_highlight.png') no-repeat;
+}
+
+
+

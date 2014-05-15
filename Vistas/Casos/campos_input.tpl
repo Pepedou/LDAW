@@ -29,6 +29,7 @@
             </select>
         </td>
     </tr>
+    
     <input type ='hidden' id="op" name='op' value='Caso' />
     <td>
         <input type='submit' value='Aceptar' />

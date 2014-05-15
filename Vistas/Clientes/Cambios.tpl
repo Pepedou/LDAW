@@ -3,7 +3,7 @@
 {include file="../Despachos/Funciones_Ajax.tpl"}
 </head>
 <body onload="llenaEstados();llenaMunicipios({$sel_edo});llenaEntidad('{$name}','{$tabla}','{$campo}');selected_direccion({$sel_edo},{$sel_mun});select_entidad({$sel},'{$name}');">
-
+ {include file="../body_css.tpl"}
       <h1>Actualiza {$tabla}</h1>        
 
         <td >
@@ -16,6 +16,6 @@
     <form action=''>
         {include file="./campos_input.tpl"}
     </form>
-
+{include file="../body_footer.tpl"}
 </body>
 </html>
