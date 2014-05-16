@@ -1,32 +1,4 @@
-<?php
-
-session_start();
-if (!session_is_registered(myusername)) {
-    header("Location: ../index.html");
-}
-
-include_once '../Clases/Abogado.php';
-include_once '../Clases/AbogadosCasos.php';
-include_once '../Clases/AbogadosClientes.php';
-
-
-$correo = $_COOKIE['usuario'];
-$miUsuario = new Abogado();
-$miUsuario->cargarDeBD("email", $correo);
-if ($miUsuario->atributos['id'] == -1)
-    die("Ocurrió un error al obtener el usuario.");
-
-print "
-<!DOCTYPE html>
-<html><head data-gwd-animation-mode=\"proMode\"><meta name=\"GCD\" content=\"YTk3ODQ3ZWZhN2I4NzZmMzBkNTEwYjJl2346eb3881df112d22a38bdd2be9226e\"/>
-     <title>Gesti&oacute;n de Despachos</title>
-     <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
-     <link rel=\"stylesheet\" href=\"../css/style.css\" type=\"text/css\" media=\"all\" />
-     <link rel=\"stylesheet\" href=\"../css/style_details.css\" type=\"text/css\" media=\"all\" />
-     <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/dataTables/jquery.dataTables.css\">
-     
-    <meta name=\"generator\" content=\"Google Web Designer 1.0.5.0416\">    
-    <style type=\"text/css\">html, body {
+html, body {
   width: 100%;
   height: 100%;
   margin: 0px;
@@ -46,11 +18,12 @@ body {
 }
 
 .gwd-div-4mle {
-  position: absolute;
-  padding-bottom: 0px;
+  //position: absolute;
+  padding-bottom: 30px;
+  padding-top: 0px;
   border-width: 5px;
   border-style: solid;
-  width: 15%;
+  width: 18%;
   height: 100%;
   -webkit-transform-origin: 123.5573041836px 332.9652085745px 0px;
   -moz-transform-origin: 123.5573041836px 332.9652085745px 0px;
@@ -157,7 +130,7 @@ body {
 
 .gwd-span-xmh2 {
   font-family: 'Courier New';
-  font-size: 30px;
+  font-size: 20px;
 }
 
 .gwd-div-l46c {
@@ -186,84 +159,3 @@ body {
   font-family: 'Courier New';
   font-size: 40px;
 }
-
-</style>
-  </head>
-  
-  <body>
-  <div id=\"shell\">
-    <div id=\"header\">
-     <h1 id=\"logo\"><a href=\"../Vistas/vista-admin.php\">GESTION DE DESPACHOS</a></h1>
-      <div id=\"navigation\">
-      <ul>
-      <li><a href=\"#\">BIENVENIDO  Administrador " . $miUsuario->atributos['nombre'] . "</a></li>
-       
-       </ul>
-       <ul>
-       <li><a href=\"logout.php\">Cerrar sesión</span></a></li>
-       </ul>
-       </div> <!--End Navigation-->
-    </div> <!--End Header-->
-    <div class=\"gwd-div-4mle\" id=\"leftnav\">
-      <div class=\"gwd-div-lim3 menuEntry\" id=\"menu_entry1\">
-        <div class=\"gwd-div-bx6z\"><span class=\"gwd-span-xmh2\">Casos</span>
-
-        </div>
-      </div>
-      <br>
-      
-      <div class=\"gwd-div-lim3 menuEntry\" id=\"menu_entry2\">
-        <div class=\"gwd-div-bx6z\"><span class=\"gwd-span-xmh2\">Clientes</span>
-
-        </div>
-      </div>
-      <br>
-      
-      <div class=\"gwd-div-lim3 menuEntry\" id=\"menu_entry3\">
-        <div class=\"gwd-div-bx6z\"><span class=\"gwd-span-xmh2\">Mi Despacho</span>
-
-        </div>
-      </div>
-      <br>
-      
-      <div class=\"gwd-div-lim3 menuEntry\" id=\"menu_entry4\">
-        <div class=\"gwd-div-bx6z\"><span class=\"gwd-span-xmh2\">Tareas</span>
-
-        </div>
-      </div>
-      <br>
-      
-      <div class=\"gwd-div-lim3 menuEntry\" id=\"menu_entry5\">
-        <div class=\"gwd-div-bx6z\"><span class=\"gwd-span-xmh2\">Honorarios</span>
-
-        </div>
-      </div>
-      <br>
-      
-      <div class=\"gwd-div-lim3 menuEntry\" id=\"menu_entry6\">
-        <div class=\"gwd-div-bx6z\"><span class=\"gwd-span-xmh2\">Reportes</span>
-
-        </div>
-      </div>
-      <br>
-    </div>
-    
-    <div id=\"main\">
-     <div id=\"content\">
-        <div id =\"main_content\">
-            <div class=\"box\">
-                </div>     
-
-                </div>
-    </div>
-    <div class=\"gwd-div-2osj\"></div>
-    
-    
-  
-<userTag uid=\"" . $miUsuario->atributos['id'] . "\" nombre=\"" . $miUsuario->atributos['nombre'] . "\" apellidoP=\"" . $miUsuario->atributos['apellidoP'] . "\" apellidoM=\"" . $miUsuario->atributos['apellidoM'] . "\" id_Despacho=\"" . $miUsuario->atributos['id_Despacho'] . "\"/>
-</body>
-<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js\"></script>
-<script src=\"../js/vista-abogado.js\"></script>
-<script type=\"text/javascript\" language=\"javascript\" src=\"../js/dataTables/jquery.dataTables.js\"></script>
-</html>
-";

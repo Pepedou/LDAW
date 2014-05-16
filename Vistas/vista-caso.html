@@ -1,111 +1,28 @@
-<style type="text/css">
-    html, body {
-        width: 100%;
-        height: 100%;
-        margin: 0px;
-    }
-    body {
-        background-color: transparent;
-        -webkit-transform: perspective(1400px) matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-        -webkit-transform-style: preserve-3d;
-    }
-    .gwd-div-hqgh {
-        position: absolute;
-        font-family:'Courier New';
-        color: rgb(0, 0, 0);
-        font-size: 45px;
-        left: 576px;
-        top: 46px;
-        width: 448px;
-        height: 54px;
-        -webkit-transform-origin: 224px 27px 0px;
-        -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-        text-align: center;
-    }
-    .gwd-span-pxpp {
-        font-family:'Courier New';
-        font-size: 45px;
-    }
-    .gwd-div-8tku {
-        position: absolute;
-        font-family:'Courier New';
-        text-align: left;
-        color: rgb(0, 0, 0);
-        width: 458px;
-        height: 38px;
-        -webkit-transform-origin: 229px 19px 0px;
-        -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-        left: 342px;
-        top: 152px;
-    }
-    .gwd-span-x7pz {
-        font-family:'Courier New';
-        font-size: 28px;
-    }
-    .gwd-div-4bd6 {
-        position: absolute;
-        font-family:'Courier New';
-        text-align: left;
-        color: rgb(0, 0, 0);
-        width: 458px;
-        height: 42px;
-        -webkit-transform-origin: 229px 21px 0px;
-        -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-        left: 342px;
-        top: 206px;
-    }
-    .gwd-span-3knr {
-        font-size: 28px;
-        font-family:'Courier New';
-    }
-    .gwd-table-9etn {
-        position: absolute;
-        left: 800px;
-        top: 287px;
-        width: 427px;
-        height: 398px;
-        -webkit-transform-origin: 213.5px 199px 0px;
-        -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-    }
-    .gwd-div-fi9s {
-        position: absolute;
-        font-family:'Courier New';
-        text-align: left;
-        color: rgb(0, 0, 0);
-        left: 920px;
-        top: 152px;
-        width: 237px;
-        height: 38px;
-        -webkit-transform-origin: 118.5px 19px 0px;
-        -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-    }
-    .gwd-span-nsar {
-        font-family:'Courier New';
-        font-size: 24px;
-    }
-    .gwd-div-qvn7 {
-        position: absolute;
-        width: 458px;
-        height: 398px;
-        left: 342px;
-        top: 287px;
-        text-align: left;
-        font-family:'Courier New';
-    }
-</style>
-<div class="gwd-div-hqgh" id="nombreCaso"><span class="gwd-span-pxpp">Caso: </span>
+<link rel="stylesheet" type="text/css" href="../css/google_css.css">
+</head>
+
+<div  id="nombreCaso"><span></span>
 
 </div>
-<div class="gwd-div-8tku" id="nombreCliente"><span class="gwd-span-x7pz">Cliente: </span>
+<div  id="nombreCliente"><span>Cliente: </span>
 
 </div>
-<div class="gwd-div-4bd6" id="despacho"><span class="gwd-span-3knr">Atiende: </span>
+<div  id="despacho"><span>Responsable: </span>
 
 </div>
-<table class="gwd-table-9etn" id="main-table">
-    <tbody></tbody>
+<table id="main-table">
+    <tbody>
+    </tbody>
 </table>
-<div class="gwd-div-fi9s" id="estado"><span class="gwd-span-nsar"></span>
+<div id="estado"><span >Estado: </span>
 
 </div>
-<div class="gwd-div-qvn7" id="descripcion"><span class="gwd-span-nsar">Descripci&oacute;n: </span></div>
+<div  id="descripcion"><span >Descripción: </span></div>
+<table class="gwd-table-9etn gwd-table-tuoq" id="tablaComentarios">
+    <tbody class="gwd-tbody-52f2">
+    </tbody>
+</table>
+<div class="gwd-div-qvn7 gwd-div-wn8a" id="comentario">
+    <input type ="text" />
+    <button type="button" onclick="enviarComentario();">Enviar comentario</button>
+</div>

@@ -30,7 +30,7 @@ if ($result->num_rows === 1) {
     if ($rol == 1) { //Si es administrador
         header("location:vista-admin.php"); 
     } else {
-        header("location:vista-abogado.php");
+        header("location:vista-abogado2.php");
     }
 } else {
     /* Si no está dentro de Abogados, checamos que no esté en Clientes */

@@ -81,7 +81,10 @@ abstract class EntidadBD extends ServicioGenerico {
                 return false;
             }
         }
-        $query = "SELECT * FROM $this->tabla WHERE $discriminante = '$valor' LIMIT 1";
+        if (array_key_exists('visible', $this->atributos)) //Verifico si la tabla tiene el campo visible
+            $query = "SELECT * FROM $this->tabla WHERE $discriminante = '$valor' AND visible = 1 LIMIT 1";
+        else
+            $query = "SELECT * FROM $this->tabla WHERE $discriminante = '$valor' LIMIT 1";
         $resultado = $this->dbExecute($query);
         if ($resultado != false && $resultado->num_rows) {
             foreach ($resultado->fetch_assoc() as $campo => $valor) {
@@ -99,12 +102,15 @@ abstract class EntidadBD extends ServicioGenerico {
 
     public function cargarDeBD_MultDiscr(array $arregloDiscrValor) {
         foreach ($arregloDiscrValor as $campo => $valor) {
-            if ($campo != 'id') {
+            if ($campo != 'id' && $campo != 'visible') {
                 $condicion .= "$campo = '$valor' AND ";
             }
         }
         $condicion = preg_replace('/\W\w+\s*(\W*)$/', '$1', $condicion); //Elimina el último AND
-        $query = "SELECT * FROM $this->tabla WHERE $condicion LIMIT 1";
+        if (array_key_exists('visible', $this->atributos)) //Verifico si la tabla tiene el campo visible
+            $query = "SELECT * FROM $this->tabla WHERE $condicion AND visible = 1 LIMIT 1";
+        else
+            $query = "SELECT * FROM $this->tabla WHERE $condicion LIMIT 1";
         $resultado = $this->dbExecute($query);
         if ($resultado != false && $resultado->num_rows) {
             foreach ($resultado->fetch_assoc() as $campo => $valor) {
@@ -172,9 +178,16 @@ abstract class EntidadBD extends ServicioGenerico {
     }
 
     public function eliminarDeBD() {
-
-        $query = "UPDATE $this->tabla SET visible = 0 WHERE id =" . $this->atributos['id'];
-        $resultado = $this->dbExecute($query);
+        if ($this->atributos['id'] != -1) {
+            if (array_key_exists('visible', $this->atributos)) //Verifico si la tabla tiene el campo visible
+                $query = "UPDATE $this->tabla SET visible = 0 WHERE id =" . $this->atributos['id'];
+            else
+                $query = "DELETE FROM $this->tabla WHERE id =" . $this->atributos['id'];
+            $resultado = $this->dbExecute($query);
+        } else {
+            Debug::getInstance()->alert("EntidadBD::eliminarDeBD => No se pudo eliminar porque no se ha cargado.");
+            return false;
+        }
         if ($resultado === true) {
             return true;
         } else {
@@ -265,7 +278,6 @@ abstract class EntidadBD extends ServicioGenerico {
     }
 
     public function procesa_bajas() {
-
         if (isset($_REQUEST['nombre']) && isset($_REQUEST['elim'])) {
             $this->atributos["id"] = $this->getID("nombre", $_REQUEST['nombre']);
 

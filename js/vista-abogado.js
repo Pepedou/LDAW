@@ -18,11 +18,11 @@ function borrarDocumento(id) {
 
 function mostrarExpediente(id) {
 //Carga la pagina mediante AJAX y despues le añade los datos de cada campo
-    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/Vistas/vista-expediente.html";
+    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Vistas/vista-expediente.html";
     $.ajax({
         url: myurl,
         success: function(data) {
-            $("#main").empty().append(data);
+            $("#main_content_abogs").empty().append(data);
         },
         timeout: 3000, //3 second timeout, 
         error: function(jqXHR, status, errorThrown) {   //the status returned will be "timeout" 
@@ -56,13 +56,58 @@ function mostrarExpediente(id) {
     });
 }
 
+function enviarComentarioCaso(idCaso) {
+    var comentario = $("#comentario input").val();
+    if (comentario === "") {
+        alert("El comentario está vacío.");
+        return;
+    }
+    ;
+    var params = {
+        "op": "in",
+        "entidad": "ComentarioCaso",
+        "params[id_Abogado]": usuario.id,
+        "params[id_Caso]": idCaso,
+        "params[comentario]": comentario
+    };
+    servicio(params, function(data) {
+        if (data.Resultados['comentario'] === comentario)
+            alert("Comentario registrado exitosamente.");
+        else
+            alert("No se pudo registrar el comentario.");
+    });
+    mostrarCaso(idCaso);
+}
+
+function enviarComentarioTarea(idTarea) {
+    var comentario = $("#comentario" + idTarea).val();
+    if (comentario === "") {
+        alert("El comentario está vacío.");
+        return;
+    }
+    var params = {
+        "op": "in",
+        "entidad": "ComentarioTarea",
+        "params[id_Abogado]": usuario.id,
+        "params[id_Tarea]": idTarea,
+        "params[comentario]": comentario
+    };
+    servicio(params, function(data) {
+        if (data.Resultados['comentario'] === comentario)
+            alert("Comentario registrado exitosamente.");
+        else
+            alert("No se pudo registrar el comentario.");
+    });
+    loadMain("Tarea");
+}
+
 function mostrarCaso(id) {
 //Carga la pagina mediante AJAX y despues le añade los datos de cada campo
-    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/Vistas/vista-caso.html";
+    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Vistas/vista-caso.html";
     $.ajax({
         url: myurl,
         success: function(data) {
-            $("#main").empty().append(data);
+            $("#main_content_abogs").empty().append(data);
         },
         timeout: 3000, //3 second timeout, 
         error: function(jqXHR, status, errorThrown) {   //the status returned will be "timeout" 
@@ -84,6 +129,7 @@ function mostrarCaso(id) {
             $("#nombreCaso span").append(nombre);
             $("#estado span").append(estado === "1" ? "Activo" : "Cerrado");
             $("#descripcion span").append(descripcion);
+            $("button").attr("onclick", "enviarComentarioCaso(" + id + ");");
             var cliente = {
                 op: "sii",
                 entidad: "Cliente",
@@ -115,20 +161,48 @@ function mostrarCaso(id) {
                     $("#main-table tbody").append("<tr><td>" + resultado.nombre + "</td><td><button type=\"button\" onclick=\"mostrarExpediente(" + resultado.id + ");\">Detalles</button></td></tr>");
                 });
             });
+            var comentarios = {
+                op: "stw",
+                entidad: "ComentarioCaso",
+                "params[id_Caso]": id
+            };
+            servicio(comentarios, function(data) {
+                $("#tablaComentarios tbody").append("<tr><th>Comentario</th><th>Autor</th><th>Fecha</th></tr>");
+                $.each(data.Resultados, function(i, resultado) {
+                    var idComentario = resultado.id;
+                    $("#tablaComentarios tbody").append("<tr><td>" + resultado.comentario + "</td><td id=\"abogado" + resultado.id + "\"></td><td>" + resultado.creado + "</td></tr>");
+                    var abogado = {
+                        op: "sii",
+                        entidad: "Abogado",
+                        "params[id]": resultado.id_Abogado
+                    };
+                    servicio(abogado, function(data) {
+                        $.each(data.Resultados, function(i, resultado) {
+                            var nombre = resultado.nombre;
+                            var apellidoP = resultado.apellidoP;
+                            $("#abogado" + idComentario).append(nombre + " " + apellidoP);
+                        });
+                    });
+                });
+            });
         });
     });
 }
 
 function successFuncCaso(data) {
-    var string = '<table id="main_table" class="tablesorter"><thead><tr><th>Nombre</th><th>Estado</th></tr></thead> <tbody>';
+    var string = '<table id="main-table" class="display"><thead><tr><th>Nombre</th><th>Descripci&oacute;n<th>Estado</th><th></th></tr></thead> <tbody>';
     $.each(data.Resultados, function(i, resultado) {
         var id = resultado.id;
         var caso = resultado.nombre;
+        var descripcion = String(resultado.descripcion);
         var estado = resultado.status;
-        string += "<tr><td>" + caso + "</td><td>" + (estado === "1" ? "Activo" : "Inactivo") + "</td><td><button type=\"button\" onclick=\"mostrarCaso(" + id + ");\">Mostrar</button></td></tr>";
+        if (descripcion.length == 0)
+            descripcion = "-";
+        string += "<tr><td>" + caso + "</td><td>" + descripcion.substring(0, 40) + ((descripcion.length > 40) ? "..." : "") + "</td><td>" + (estado === "1" ? "Activo" : "Inactivo") + "</td><td><button type=\"button\" onclick=\"mostrarCaso(" + id + ");\">Mostrar</button></td></tr>";
     });
     string += "</tbody></table>";
-    $("#main").empty().append(string);
+    $("#main_content_abogs").empty().append(string);
+    cambiaTabla();
 }
 
 function successFuncAbogadosClientes(data) {
@@ -144,7 +218,7 @@ function successFuncAbogadosClientes(data) {
 }
 
 function successFuncCliente(data) {
-    var string = '<table id="main_table" class="tablesorter"><thead><tr><th>Nombre</th><th>Teléfono</th><th>Correo</th></tr></thead> <tbody>';
+    var string = '<table id="main-table" class="display"><thead><tr><th>Nombre</th><th>Teléfono</th><th>Correo</th></tr></thead> <tbody>';
     $.each(data.Resultados, function(i, resultado) {
         var nombre = resultado.nombre;
         var apellidoP = resultado.apellidoP;
@@ -154,13 +228,14 @@ function successFuncCliente(data) {
         string += "<tr><td>" + nombre + " " + apellidoP + " " + apellidoM + "</td><td>" + telefono + "</td><td>" + email + "</td></tr>";
     });
     string += "</tbody></table>";
-    $("#main").empty().append(string);
+    $("#main_content_abogs").empty().append(string);
+    cambiaTabla();
 }
 
 function successFuncDireccion(data) {
-    var head = '<th>Calle</th><th>Colonia</th><th>Ciudad</th><th>CP</th>';
+    var head = '<th>Calle</th><th>Colonia</th><th>Ciudad</th><th>CP</th><th></th>';
     var string = "";
-    $("#main_table tr:first").append(head);
+    $("#main-table tr:first").append(head);
     $.each(data.Resultados, function(i, resultado) {
         var calle = resultado.calle;
         var ext = resultado.no_exterior;
@@ -171,11 +246,12 @@ function successFuncDireccion(data) {
         string += "<td>" + calle + " #" + ext + "-" + int + "</td><td>" + colonia + "</td><td>" + ciudad + "</td><td>" + cp + "</td><td><button type=\"button\" " +
                 "onclick=\"window.open('http://maps.google.com/?q=" + calle + "," + ext + "," + colonia + "," + ciudad + "," + cp + "')\">Mapa</button></td>";
     });
-    $("#main_table tbody tr:first").append(string);
+    $("#main-table tbody tr:first").append(string);
+    cambiaTabla();
 }
 
 function successFuncDespacho(data) {
-    var string = '<table id="main_table" class="tablesorter"><thead><tr><th>Nombre</th></tr></thead> <tbody>';
+    var string = '<table id="main-table" class="tablesorter"><thead><tr><th>Nombre</th></tr></thead> <tbody>';
     $.each(data.Resultados, function(i, resultado) {
         var nombre = resultado.nombre;
         var dirID = resultado.id_Direccion;
@@ -188,7 +264,8 @@ function successFuncDespacho(data) {
         servicio(params, successFuncDireccion);
     });
     string += "</tbody></table>";
-    $("#main").empty().append(string);
+    $("#main_content_abogs").empty().append(string);
+   
 }
 
 function toggleTarea(id, estado) {
@@ -203,7 +280,7 @@ function toggleTarea(id, estado) {
             var id = resultado.id;
             var estado = resultado.status;
             $(".tarea" + id + " button").each(function(index, tupla) {//Para las tuplas en la tabla urgentes y en la de todas
-                $(this).empty().append((estado === "1") ? "Completa" : "Reactivar");
+                $(this).empty().append((estado === "1") ? "Finalizar" : "Reactivar");
                 $(this).attr("onclick", "toggleTarea(" + id + "," + estado + ");");
             });
         });
@@ -212,19 +289,20 @@ function toggleTarea(id, estado) {
 }
 
 function successFuncTarea(data) {
-    var string = '<h4>Tareas Urgentes</h4><table id="table_urgent" class="tablesorter"><thead><tr><th>Nombre</th><th>Descripcion</th><th>Inicio</th><th>Fin</th><th>Estado</th><th></th></tr></thead> <tbody>';
+    var string = '<h4>Tareas Urgentes</h4><table id="table_urgent" class="tablesorter"><thead><tr><th>Nombre</th><th>Descripcion</th><th>Inicio</th><th>Fin</th><th>Estado</th><th></th><th>Comentario</th><th></th></tr></thead> <tbody>';
     $.each(data.Resultados, function(i, resultado) {
         var id = resultado.id;
         var nombre = resultado.nombre;
-        var desc = resultado.descripcion;
+        var desc = String(resultado.descripcion);
         var inicio = resultado.inicio;
         var fin = resultado.fin;
         var estado = resultado.status;
-        string += "<tr class=\"tarea" + id + "\"><td>" + nombre + "</td><td>" + desc + "</td><td>"
-                + inicio + "</td><td>" + fin + "</td><td>" + ((estado === "1") ? "Activa" : "Finalizada") + "</td><td><button type=\"button\" onclick=\"toggleTarea(" + id + "," + estado + ");\">" + ((estado === "1") ? "Completa" : "Reactivar") + "</button></td></tr>";
+        string += "<tr class=\"tarea" + id + "\"><td>" + nombre + "</td><td class=\"descripcionTarea\" onclick=\"alert('" + desc + "');\">" + desc.substring(0, 60) + ((desc.length > 60) ? "..." : "") + "</td><td>"
+                + inicio + "</td><td>" + fin + "</td><td>" + ((estado === "1") ? "Activa" : "Finalizada") + "</td><td><button type=\"button\" onclick=\"toggleTarea(" + id + "," + estado + ");\">" + ((estado === "1") ? "Finalizar" : "Reactivar") + "</button></td><td><input type=\"text\"/></td><td><button type=\"button\">Enviar</button></td></tr>";
     });
     string += "</tbody></table>";
-    $("#main").empty().append(string); //Agrego las tareas
+    $("#main_content_abogs").empty().append(string); //Agrego las tareas
+
 
     //Ahora agregamos todas las tareas
     var params = {
@@ -233,24 +311,29 @@ function successFuncTarea(data) {
         "params[id_Abogado]": usuario.id
     };
     servicio(params, function(data) {
-        var string2 = '<h4>Todas mis tareas</h4><table id="main_table" class="tablesorter"><thead><tr><th>Nombre</th><th>Descripcion</th><th>Inicio</th><th>Fin</th><th>Estado</th><th></th></tr></thead> <tbody>';
+        var string2 = '<h4>Todas mis tareas</h4><table id="table_urgent" class="tablesorter"><thead><tr><th>Nombre</th><th>Descripcion</th><th>Inicio</th><th>Fin</th><th>Estado</th><th></th><th>Comentario</th><th></th></tr></thead> <tbody>';
         $.each(data.Resultados, function(i, resultado) {
             var id = resultado.id;
             var nombre = resultado.nombre;
-            var desc = resultado.descripcion;
+            var desc = String(resultado.descripcion);
             var inicio = resultado.inicio;
             var fin = resultado.fin;
             var estado = resultado.status;
-            string2 += "<tr class=\"tarea" + id + "\"><td>" + nombre + "</td><td>" + desc + "</td><td>"
-                    + inicio + "</td><td>" + fin + "</td><td>" + (estado === "1" ? "Activa" : "Finalizada") + "</td><td><button type=\"button\" onclick=\"toggleTarea(" + id + "," + estado + ");\">" + (estado === "1" ? "Completa" : "Reactivar") + "</button></td></tr>";
+            string2 += "<tr class=\"tarea" + id + "\"><td>" + nombre + "</td><td class=\"descripcionTarea\" onclick=\"alert('" + desc + "');\">" + desc.substring(0, 60) + ((desc.length > 60) ? "..." : "") + "</td><td>"
+                    + inicio + "</td><td>" + fin + "</td><td>" + ((estado === "1") ? "Activa" : "Finalizada") + "</td><td><button type=\"button\" onclick=\"toggleTarea(" + id + "," + estado + ");\">" + ((estado === "1") ? "Finalizar" : "Reactivar") + "</button></td><td><input id=\"comentario" + id + "\" type=\"text\"/></td><td><button type=\"button\" onclick=\"enviarComentarioTarea(" + id + ");\">Enviar</button></td></tr>";
         });
         string2 += "</tbody></table>";
-        $("#main").append(string2); //Agrego las tareas
+        $("#main_content_abogs").append(string2); //Agrego las tareas
+        $(".descripcionTarea").hover(function() {
+            $(this).css('opacity', '0.5');
+        }, function() {
+            $(this).css('opacity', '1');
+        });
     });
 }
 
 function successFuncHono(data) {
-    var string = '<h4>Mis honorarios</h4><table id="main-table" class="tablesorter"><thead><tr><th>Tarea</th><th>Duración</th></tr></thead><tbody>';
+    var string = '<h4>Mis honorarios</h4><table id="main-table" class="display"><thead><tr><th>Tarea</th><th>Duración</th></tr></thead><tbody>';
     var honorarios = "";
     $.each(data.Resultados, function(i, resultado) {
         honorarios = resultado.honorarios;
@@ -263,8 +346,10 @@ function successFuncHono(data) {
     });
     string += "<tr><td>Honorarios:</td><td>$" + honorarios + " M.N.</td></tr>";
     string += "</tbody></table>";
-    $("#main").empty().append(string); //Agrego los honorarios
+    $("#main_content_abogs").empty().append(string); //Agrego los honorarios
+    cambiaTabla();
 }
+
 
 function servicio(params, successFunc) {
     var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/Servicios/servicio.php";
@@ -324,6 +409,28 @@ function loadMain(clase) {
             servicio(params5, successFuncHono);
             break;
     }
+}
+
+function cambiaTabla() {
+    $('#main-table').dataTable({
+        "scrollY": "200px",
+        "scrollCollapse": true,
+        "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+            $(nRow).addClass('registros');
+            return nRow;
+        },
+        "language": {
+            "lengthMenu": "Mostrar _MENU_ resultados",
+            "zeroRecords": "Lo sentimos, no hay resultados",
+            "info": "Mostrando página _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay resultados disponibles",
+            "sSearch": "Buscar: ",
+            "oPaginate": {
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            }
+        }
+    });
 }
 
 function initMenuEntries(entryNumber) {
