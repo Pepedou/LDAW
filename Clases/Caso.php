@@ -111,6 +111,7 @@ class Caso extends EntidadBD {
 
     public function generarFormaInsercion() {
 
+
         if(isset($_REQUEST['nombre'])){
                 $this->cargarDeBD("nombre", $_REQUEST['nombre']);
                 $id = $this->atributos['id_Despacho'];
@@ -125,7 +126,7 @@ class Caso extends EntidadBD {
         static::$smarty->assign('accion', "Registrar");
         static::$smarty->assign('header', "Nuevo Caso");
         static::$smarty->display($this->BASE_DIR . 'Vistas/Casos/Altas.tpl');
-        
+
         }
     }
 

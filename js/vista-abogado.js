@@ -288,8 +288,37 @@ function toggleTarea(id, estado) {
     loadMain("Tarea");
 }
 
+function mostrarComentariosTarea(idTarea) {
+    var comentarios = {
+        "op": "st",
+        "entidad": "ComentarioTarea",
+        "params[id_Tarea]": idTarea
+    };
+    $("#tablaComentarios").hide(0).fadeIn(250);
+    servicio(comentarios, function(data) {
+        $("#tablaComentarios tbody").empty().append("<tr><th>Comentario</th><th>Autor</th><th>Fecha</th></tr>");
+        $.each(data.Resultados, function(i, resultado) {
+            var idComentario = resultado.id;
+            $("#tablaComentarios tbody").append("<tr><td>" + resultado.comentario + "</td><td id=\"abogado" + resultado.id + "\"></td><td>" + resultado.creado + "</td></tr>");
+            var abogado = {
+                op: "sii",
+                entidad: "Abogado",
+                "params[id]": resultado.id_Abogado
+            };
+            servicio(abogado, function(data) {
+                $.each(data.Resultados, function(i, resultado) {
+                    var nombre = resultado.nombre;
+                    var apellidoP = resultado.apellidoP;
+                    $("#abogado" + idComentario).append(nombre + " " + apellidoP);
+                });
+            });
+        });
+    });
+}
+
 function successFuncTarea(data) {
-    var string = '<h4>Tareas Urgentes</h4><table id="table_urgent" class="tablesorter"><thead><tr><th>Nombre</th><th>Descripcion</th><th>Inicio</th><th>Fin</th><th>Estado</th><th></th><th>Comentario</th><th></th></tr></thead> <tbody>';
+    var string = "<table id=\"tablaComentarios\"><tbody></tbody></table>";
+    string += '<h4>Tareas Urgentes</h4><table id="table_urgent" class="tablesorter"><thead><tr><th>Nombre</th><th>Descripcion</th><th>Inicio</th><th>Fin</th><th>Estado</th><th></th><th>Comentario</th><th></th></tr></thead> <tbody>';
     $.each(data.Resultados, function(i, resultado) {
         var id = resultado.id;
         var nombre = resultado.nombre;
@@ -297,8 +326,8 @@ function successFuncTarea(data) {
         var inicio = resultado.inicio;
         var fin = resultado.fin;
         var estado = resultado.status;
-        string += "<tr class=\"tarea" + id + "\"><td>" + nombre + "</td><td class=\"descripcionTarea\" onclick=\"alert('" + desc + "');\">" + desc.substring(0, 60) + ((desc.length > 60) ? "..." : "") + "</td><td>"
-                + inicio + "</td><td>" + fin + "</td><td>" + ((estado === "1") ? "Activa" : "Finalizada") + "</td><td><button type=\"button\" onclick=\"toggleTarea(" + id + "," + estado + ");\">" + ((estado === "1") ? "Finalizar" : "Reactivar") + "</button></td><td><input type=\"text\"/></td><td><button type=\"button\">Enviar</button></td></tr>";
+        string += "<tr class=\"tareas tarea" + id + "\"><td>" + nombre + "</td><td class=\"descripcionTarea\" onclick=\"alert('" + desc + "');\">" + desc.substring(0, 60) + ((desc.length > 60) ? "..." : "") + "</td><td>"
+                + inicio + "</td><td>" + fin + "</td><td>" + ((estado === "1") ? "Pendiente" : "Finalizada") + "</td><td><button type=\"button\" onclick=\"toggleTarea(" + id + "," + estado + ");\">" + ((estado === "1") ? "Finalizar" : "Reactivar") + "</button></td><td><input id=\"comentario" + id + "\" type=\"text\"/></td><td><button type=\"button\" onclick=\"enviarComentarioTarea(" + id + ");\">Enviar</button></td></tr>";
     });
     string += "</tbody></table>";
     $("#main_content_abogs").empty().append(string); //Agrego las tareas
@@ -319,17 +348,41 @@ function successFuncTarea(data) {
             var inicio = resultado.inicio;
             var fin = resultado.fin;
             var estado = resultado.status;
-            string2 += "<tr class=\"tarea" + id + "\"><td>" + nombre + "</td><td class=\"descripcionTarea\" onclick=\"alert('" + desc + "');\">" + desc.substring(0, 60) + ((desc.length > 60) ? "..." : "") + "</td><td>"
-                    + inicio + "</td><td>" + fin + "</td><td>" + ((estado === "1") ? "Activa" : "Finalizada") + "</td><td><button type=\"button\" onclick=\"toggleTarea(" + id + "," + estado + ");\">" + ((estado === "1") ? "Finalizar" : "Reactivar") + "</button></td><td><input id=\"comentario" + id + "\" type=\"text\"/></td><td><button type=\"button\" onclick=\"enviarComentarioTarea(" + id + ");\">Enviar</button></td></tr>";
+            string2 += "<tr class=\"tareas tarea" + id + "\"><td>" + nombre + "</td><td class=\"descripcionTarea\" onclick=\"alert('" + desc + "');\">" + desc.substring(0, 60) + ((desc.length > 60) ? "..." : "") + "</td><td>"
+                    + inicio + "</td><td>" + fin + "</td><td>" + ((estado === "1") ? "Pendiente" : "Finalizada") + "</td><td><button type=\"button\" onclick=\"toggleTarea(" + id + "," + estado + ");\">" + ((estado === "1") ? "Finalizar" : "Reactivar") + "</button></td><td><input id=\"comentario" + id + "\" type=\"text\"/></td><td><button type=\"button\" onclick=\"enviarComentarioTarea(" + id + ");\">Enviar</button></td></tr>";
         });
         string2 += "</tbody></table>";
-        $("#main_content_abogs").append(string2); //Agrego las tareas
+        $("#main").append(string2); //Agrego las tareas
         $(".descripcionTarea").hover(function() {
             $(this).css('opacity', '0.5');
         }, function() {
             $(this).css('opacity', '1');
         });
+        $(".tareas").each(function(i, tarea) {
+            var id = String($(this).attr('class'));
+            id = id.replace(/^\D+/g, '');//Obtengo el número únicamente de tarea<num>
+            $(this).click(function() {
+                mostrarComentariosTarea(id);
+            });
+        });
     });
+}
+
+function successFuncHono(data) {
+    var string = '<h4>Mis honorarios</h4><table id="main-table" class="tablesorter"><thead><tr><th>Tarea</th><th>Duración</th></tr></thead><tbody>';
+    var honorarios = "";
+    $.each(data.Resultados, function(i, resultado) {
+        honorarios = resultado.honorarios;
+        var tareas = resultado.Tareas;
+        $.each(tareas, function(i, tarea) {
+            var nombre = tarea.nombre;
+            var dias = tarea.dias;
+            string += "<tr><td>" + nombre + "</td><td>" + dias + " días</td></tr>";
+        });
+    });
+    string += "<tr><td>Honorarios:</td><td>$" + honorarios + " M.N.</td></tr>";
+    string += "</tbody></table>";
+    $("#main").empty().append(string); //Agrego los honorarios
 }
 
 function successFuncHono(data) {
@@ -471,4 +524,6 @@ $(document).ready(function() {
     $("#menu_entry6").click(function() {
         alert("Nada que reportar.");
     });
+    
+    loadMain("Caso");
 });
