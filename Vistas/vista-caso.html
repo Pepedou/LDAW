@@ -11,7 +11,7 @@
     }
     .gwd-div-hqgh {
         position: absolute;
-        font-family:'Courier New';
+        font-family:'Times New Roman';
         color: rgb(0, 0, 0);
         font-size: 45px;
         left: 576px;
@@ -28,7 +28,7 @@
     }
     .gwd-div-8tku {
         position: absolute;
-        font-family:'Courier New';
+        font-family:'Times New Roman';
         text-align: left;
         color: rgb(0, 0, 0);
         width: 458px;
@@ -44,7 +44,7 @@
     }
     .gwd-div-4bd6 {
         position: absolute;
-        font-family:'Courier New';
+        font-family:'Times New Roman';
         text-align: left;
         color: rgb(0, 0, 0);
         width: 458px;
@@ -63,13 +63,13 @@
         left: 800px;
         top: 287px;
         width: 427px;
-        height: 398px;
-        -webkit-transform-origin: 213.5px 199px 0px;
+        height: 199px;
+        -webkit-transform-origin: 213.5px 99.5px 0px;
         -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
     }
     .gwd-div-fi9s {
         position: absolute;
-        font-family:'Courier New';
+        font-family:'Times New Roman';
         text-align: left;
         color: rgb(0, 0, 0);
         left: 920px;
@@ -85,27 +85,112 @@
     }
     .gwd-div-qvn7 {
         position: absolute;
-        width: 458px;
-        height: 398px;
-        left: 342px;
-        top: 287px;
         text-align: left;
         font-family:'Courier New';
+        left: 342px;
+        top: 287px;
+        width: 458px;
+        height: 199px;
+        -webkit-transform-origin: 229px 99.5px 0px;
+        -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    .gwd-table-tuoq {
+        width: 427px;
+        left: 800px;
+        top: 486px;
+    }
+    .gwd-tbody-52f2 {
+        border-color: rgb(128, 128, 128);
+        height: 199px;
+        width: 427px;
+        border-spacing: 2px;
+    }
+    .gwd-tr-5gsa {
+        border-color: rgb(128, 128, 128);
+        height: 96px;
+        vertical-align: middle;
+        width: 427px;
+        border-spacing: 2px;
+    }
+    .gwd-th-gbjk {
+        height: 94px;
+        padding: 1px;
+        vertical-align: middle;
+        width: 137px;
+        border-spacing: 2px;
+    }
+    .gwd-th-dt9y {
+        height: 94px;
+        padding: 1px;
+        vertical-align: middle;
+        width: 138px;
+        border-spacing: 2px;
+    }
+    .gwd-th-18qr {
+        height: 94px;
+        padding: 1px;
+        vertical-align: middle;
+        width: 138px;
+        border-spacing: 2px;
+    }
+    .gwd-tr-3jku {
+        border-color: rgb(128, 128, 128);
+        height: 97px;
+        vertical-align: middle;
+        width: 427px;
+        border-spacing: 2px;
+    }
+    .gwd-td-nj1x {
+        height: 95px;
+        padding: 1px;
+        vertical-align: middle;
+        width: 137px;
+        border-spacing: 2px;
+    }
+    .gwd-td-42mb {
+        height: 95px;
+        padding: 1px;
+        vertical-align: middle;
+        width: 138px;
+        border-spacing: 2px;
+    }
+    .gwd-td-quoa {
+        height: 95px;
+        padding: 1px;
+        vertical-align: middle;
+        width: 138px;
+        border-spacing: 2px;
+    }
+    .gwd-div-wn8a {
+        width: 458px;
+        left: 342px;
+        top: 486px;
     }
 </style>
-<div class="gwd-div-hqgh" id="nombreCaso"><span class="gwd-span-pxpp">Caso: </span>
+</head>
+
+<div class="gwd-div-hqgh" id="nombreCaso"><span class="gwd-span-pxpp"></span>
 
 </div>
 <div class="gwd-div-8tku" id="nombreCliente"><span class="gwd-span-x7pz">Cliente: </span>
 
 </div>
-<div class="gwd-div-4bd6" id="despacho"><span class="gwd-span-3knr">Atiende: </span>
+<div class="gwd-div-4bd6" id="despacho"><span class="gwd-span-3knr">Responsable: </span>
 
 </div>
 <table class="gwd-table-9etn" id="main-table">
-    <tbody></tbody>
+    <tbody>
+    </tbody>
 </table>
-<div class="gwd-div-fi9s" id="estado"><span class="gwd-span-nsar"></span>
+<div class="gwd-div-fi9s" id="estado"><span class="gwd-span-nsar">Estado: </span>
 
 </div>
-<div class="gwd-div-qvn7" id="descripcion"><span class="gwd-span-nsar">Descripci&oacute;n: </span></div>
+<div class="gwd-div-qvn7" id="descripcion"><span class="gwd-span-nsar">Descripción: </span></div>
+<table class="gwd-table-9etn gwd-table-tuoq" id="tablaComentarios">
+    <tbody class="gwd-tbody-52f2">
+    </tbody>
+</table>
+<div class="gwd-div-qvn7 gwd-div-wn8a" id="comentario">
+    <input type ="text" />
+    <button type="button" onclick="enviarComentario();">Enviar comentario</button>
+</div>

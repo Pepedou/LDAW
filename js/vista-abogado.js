@@ -56,6 +56,51 @@ function mostrarExpediente(id) {
     });
 }
 
+function enviarComentarioCaso(idCaso) {
+    var comentario = $("#comentario input").val();
+    if (comentario === "") {
+        alert("El comentario está vacío.");
+        return;
+    }
+    ;
+    var params = {
+        "op": "in",
+        "entidad": "ComentarioCaso",
+        "params[id_Abogado]": usuario.id,
+        "params[id_Caso]": idCaso,
+        "params[comentario]": comentario
+    };
+    servicio(params, function(data) {
+        if (data.Resultados['comentario'] === comentario)
+            alert("Comentario registrado exitosamente.");
+        else
+            alert("No se pudo registrar el comentario.");
+    });
+    mostrarCaso(idCaso);
+}
+
+function enviarComentarioTarea(idTarea) {
+    var comentario = $("#comentario" + idTarea).val();
+    if (comentario === "") {
+        alert("El comentario está vacío.");
+        return;
+    }
+    var params = {
+        "op": "in",
+        "entidad": "ComentarioTarea",
+        "params[id_Abogado]": usuario.id,
+        "params[id_Tarea]": idTarea,
+        "params[comentario]": comentario
+    };
+    servicio(params, function(data) {
+        if (data.Resultados['comentario'] === comentario)
+            alert("Comentario registrado exitosamente.");
+        else
+            alert("No se pudo registrar el comentario.");
+    });
+    loadMain("Tarea");
+}
+
 function mostrarCaso(id) {
 //Carga la pagina mediante AJAX y despues le añade los datos de cada campo
     var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/Vistas/vista-caso.html";
@@ -84,6 +129,7 @@ function mostrarCaso(id) {
             $("#nombreCaso span").append(nombre);
             $("#estado span").append(estado === "1" ? "Activo" : "Cerrado");
             $("#descripcion span").append(descripcion);
+            $("button").attr("onclick", "enviarComentarioCaso(" + id + ");");
             var cliente = {
                 op: "sii",
                 entidad: "Cliente",
@@ -115,17 +161,44 @@ function mostrarCaso(id) {
                     $("#main-table tbody").append("<tr><td>" + resultado.nombre + "</td><td><button type=\"button\" onclick=\"mostrarExpediente(" + resultado.id + ");\">Detalles</button></td></tr>");
                 });
             });
+            var comentarios = {
+                op: "stw",
+                entidad: "ComentarioCaso",
+                "params[id_Caso]": id
+            };
+            servicio(comentarios, function(data) {
+                $("#tablaComentarios tbody").append("<tr><th>Comentario</th><th>Autor</th><th>Fecha</th></tr>");
+                $.each(data.Resultados, function(i, resultado) {
+                    var idComentario = resultado.id;
+                    $("#tablaComentarios tbody").append("<tr><td>" + resultado.comentario + "</td><td id=\"abogado" + resultado.id + "\"></td><td>" + resultado.creado + "</td></tr>");
+                    var abogado = {
+                        op: "sii",
+                        entidad: "Abogado",
+                        "params[id]": resultado.id_Abogado
+                    };
+                    servicio(abogado, function(data) {
+                        $.each(data.Resultados, function(i, resultado) {
+                            var nombre = resultado.nombre;
+                            var apellidoP = resultado.apellidoP;
+                            $("#abogado" + idComentario).append(nombre + " " + apellidoP);
+                        });
+                    });
+                });
+            });
         });
     });
 }
 
 function successFuncCaso(data) {
-    var string = '<table id="main_table" class="tablesorter"><thead><tr><th>Nombre</th><th>Estado</th></tr></thead> <tbody>';
+    var string = '<table id="main-table" class="tablesorter"><thead><tr><th>Nombre</th><th>Descripci&oacute;n<th>Estado</th></tr></thead> <tbody>';
     $.each(data.Resultados, function(i, resultado) {
         var id = resultado.id;
         var caso = resultado.nombre;
+        var descripcion = String(resultado.descripcion);
         var estado = resultado.status;
-        string += "<tr><td>" + caso + "</td><td>" + (estado === "1" ? "Activo" : "Inactivo") + "</td><td><button type=\"button\" onclick=\"mostrarCaso(" + id + ");\">Mostrar</button></td></tr>";
+        if (descripcion.length == 0)
+            descripcion = "-";
+        string += "<tr><td>" + caso + "</td><td>" + descripcion.substring(0, 40) + ((descripcion.length > 40) ? "..." : "") + "</td><td>" + (estado === "1" ? "Activo" : "Inactivo") + "</td><td><button type=\"button\" onclick=\"mostrarCaso(" + id + ");\">Mostrar</button></td></tr>";
     });
     string += "</tbody></table>";
     $("#main").empty().append(string);
@@ -203,7 +276,7 @@ function toggleTarea(id, estado) {
             var id = resultado.id;
             var estado = resultado.status;
             $(".tarea" + id + " button").each(function(index, tupla) {//Para las tuplas en la tabla urgentes y en la de todas
-                $(this).empty().append((estado === "1") ? "Completa" : "Reactivar");
+                $(this).empty().append((estado === "1") ? "Finalizar" : "Reactivar");
                 $(this).attr("onclick", "toggleTarea(" + id + "," + estado + ");");
             });
         });
@@ -212,19 +285,20 @@ function toggleTarea(id, estado) {
 }
 
 function successFuncTarea(data) {
-    var string = '<h4>Tareas Urgentes</h4><table id="table_urgent" class="tablesorter"><thead><tr><th>Nombre</th><th>Descripcion</th><th>Inicio</th><th>Fin</th><th>Estado</th><th></th></tr></thead> <tbody>';
+    var string = '<h4>Tareas Urgentes</h4><table id="table_urgent" class="tablesorter"><thead><tr><th>Nombre</th><th>Descripcion</th><th>Inicio</th><th>Fin</th><th>Estado</th><th></th><th>Comentario</th><th></th></tr></thead> <tbody>';
     $.each(data.Resultados, function(i, resultado) {
         var id = resultado.id;
         var nombre = resultado.nombre;
-        var desc = resultado.descripcion;
+        var desc = String(resultado.descripcion);
         var inicio = resultado.inicio;
         var fin = resultado.fin;
         var estado = resultado.status;
-        string += "<tr class=\"tarea" + id + "\"><td>" + nombre + "</td><td>" + desc + "</td><td>"
-                + inicio + "</td><td>" + fin + "</td><td>" + ((estado === "1") ? "Activa" : "Finalizada") + "</td><td><button type=\"button\" onclick=\"toggleTarea(" + id + "," + estado + ");\">" + ((estado === "1") ? "Completa" : "Reactivar") + "</button></td></tr>";
+        string += "<tr class=\"tarea" + id + "\"><td>" + nombre + "</td><td class=\"descripcionTarea\" onclick=\"alert('" + desc + "');\">" + desc.substring(0, 60) + ((desc.length > 60) ? "..." : "") + "</td><td>"
+                + inicio + "</td><td>" + fin + "</td><td>" + ((estado === "1") ? "Activa" : "Finalizada") + "</td><td><button type=\"button\" onclick=\"toggleTarea(" + id + "," + estado + ");\">" + ((estado === "1") ? "Finalizar" : "Reactivar") + "</button></td><td><input type=\"text\"/></td><td><button type=\"button\">Enviar</button></td></tr>";
     });
     string += "</tbody></table>";
     $("#main").empty().append(string); //Agrego las tareas
+    
 
     //Ahora agregamos todas las tareas
     var params = {
@@ -233,19 +307,24 @@ function successFuncTarea(data) {
         "params[id_Abogado]": usuario.id
     };
     servicio(params, function(data) {
-        var string2 = '<h4>Todas mis tareas</h4><table id="main_table" class="tablesorter"><thead><tr><th>Nombre</th><th>Descripcion</th><th>Inicio</th><th>Fin</th><th>Estado</th><th></th></tr></thead> <tbody>';
+        var string2 = '<h4>Todas mis tareas</h4><table id="table_urgent" class="tablesorter"><thead><tr><th>Nombre</th><th>Descripcion</th><th>Inicio</th><th>Fin</th><th>Estado</th><th></th><th>Comentario</th><th></th></tr></thead> <tbody>';
         $.each(data.Resultados, function(i, resultado) {
             var id = resultado.id;
             var nombre = resultado.nombre;
-            var desc = resultado.descripcion;
+            var desc = String(resultado.descripcion);
             var inicio = resultado.inicio;
             var fin = resultado.fin;
             var estado = resultado.status;
-            string2 += "<tr class=\"tarea" + id + "\"><td>" + nombre + "</td><td>" + desc + "</td><td>"
-                    + inicio + "</td><td>" + fin + "</td><td>" + (estado === "1" ? "Activa" : "Finalizada") + "</td><td><button type=\"button\" onclick=\"toggleTarea(" + id + "," + estado + ");\">" + (estado === "1" ? "Completa" : "Reactivar") + "</button></td></tr>";
+            string2 += "<tr class=\"tarea" + id + "\"><td>" + nombre + "</td><td class=\"descripcionTarea\" onclick=\"alert('" + desc + "');\">" + desc.substring(0, 60) + ((desc.length > 60) ? "..." : "") + "</td><td>"
+                    + inicio + "</td><td>" + fin + "</td><td>" + ((estado === "1") ? "Activa" : "Finalizada") + "</td><td><button type=\"button\" onclick=\"toggleTarea(" + id + "," + estado + ");\">" + ((estado === "1") ? "Finalizar" : "Reactivar") + "</button></td><td><input id=\"comentario" + id + "\" type=\"text\"/></td><td><button type=\"button\" onclick=\"enviarComentarioTarea(" + id + ");\">Enviar</button></td></tr>";
         });
         string2 += "</tbody></table>";
         $("#main").append(string2); //Agrego las tareas
+        $(".descripcionTarea").hover(function() {
+            $(this).css('opacity', '0.5');
+        }, function() {
+            $(this).css('opacity', '1');
+        });
     });
 }
 
