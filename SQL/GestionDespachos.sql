@@ -48,11 +48,17 @@ DROP PROCEDURE IF EXISTS calcularHonorarios //
 CREATE PROCEDURE calcularHonorarios(IN idAbogado int)
 BEGIN
 DECLARE diasTrabajados INT DEFAULT 0;
-DECLARE desempeno NUMERIC(15,2) DEFAULT 0.0;--Desempeño del abogado basado en sus calificaciones
-DECLARE factor NUMERIC(15,2) DEFAULT 1.0;--Factor multiplicador de ganancias, lo determina el administrador
-SELECT SUM(fin-inicio)  INTO diasTrabajados FROM Tareas WHERE status = 0 AND id_Abogado = idAbogado AND fin BETWEEN NOW() - INTERVAL 1 MONTH AND NOW();--Tareas terminadas el último mes
+DECLARE desempeno NUMERIC(15,2) DEFAULT 0.0;
+DECLARE incentivo NUMERIC(15,2) DEFAULT 1.0;
+DECLARE factor NUMERIC(15,2) DEFAULT 150.0;
+DECLARE honorarios NUMERIC(15,2) DEFAULT 1.0;
+SELECT SUM(fin-inicio)  INTO diasTrabajados FROM Tareas WHERE status = 1 AND id_Abogado = idAbogado AND fin BETWEEN NOW() - INTERVAL 1 MONTH AND NOW() + interval 7 day;
 SELECT puntos/votos INTO desempeno FROM Abogados WHERE id = idAbogado LIMIT 1;
-SELECT diasTrabajados * desempeno * factor AS honorarios;
+SET honorarios = diasTrabajados * desempeno * factor;
+IF desempeno > 4 THEN
+    SET honorarios = honorarios + honorarios * 0.10;
+END IF;
+SELECT honorarios, nombre, fin-inicio as dias FROM Tareas WHERE status = 1 AND id_Abogado = idAbogado AND fin BETWEEN NOW() - INTERVAL 1 MONTH AND NOW() + interval 7 day;
 END //
 DELIMITER ;
 

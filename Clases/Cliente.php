@@ -99,6 +99,35 @@ class Cliente extends EntidadBD {
         return $json;
     }
 
+    public function service_update($callback) {
+        $json = array();
+        foreach ($this->atributos as $campo => $campoValor) {
+            if ($campo != "id") {
+                if ($campo == "contrasena")
+                    $subquerySets .= $campo .= "= SHA1('" . $campoValor . "')";
+                else
+                    $subquerySets .= $campo . "='" . $campoValor . "',";
+            }
+        }
+        $subquerySets = rtrim($subquerySets, ","); //Elimina la última coma
+
+        $query = "UPDATE $this->tabla SET $subquerySets WHERE $this->discr = '$this->discrValor'";
+        $resultado = $this->dbExecute($query);
+        if ($resultado === true) {
+            array_push($json, $this->atributos);
+            $finalData = array("Resultados" => $json);
+            if ($callback != "") {
+                $json = "$callback(" . json_encode($finalData) . ")";
+            } else {
+                $json = json_encode($finalData);
+            }
+            print_r($json);
+        } else {
+            print "[null]";
+        }
+        return $resultado;
+    }
+
     public function verificaLogin(array $datos, $callback) {
         $email = $datos['email'];
         $pwd = $datos['contrasena']; //necesitamos añadir contraseña al cliente

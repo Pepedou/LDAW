@@ -57,6 +57,7 @@ print"
       <li><a id=\"navAbogados\" href=\"#\">ABOGADOS</a></li>
       <li><a id=\"navCasos\" href=\"#\">CASOS</a></li>
       <li><a id=\"navDespachos\" href=\"#\">DESPACHOS</a></li>
+      <li><a id=\"navClientes\" href=\"#\">CLIENTES</a></li>
       </ul>
       </div>
       <div id=\"search\">
@@ -89,13 +90,20 @@ print"
         </div>
         
         <div class=\"movie\">
-          <div class=\"movie-image\"> <span class=\"play\"><span class=\"name\">MIS PAGOS</span></span><a id=\"refpagos\" href=\"#\"><img src=\"../css/images/pagos.jpg\" alt=\"\"/></a></div>
-          <div id=\"pagosref\" class=\"rating\">  
-          	 <a href=\"#\"> PAGOS </a>     
-                 <a href=\"../altas.php?op=Pago\">Registar</a>
-                 
+          <div class=\"movie-image\"> <span class=\"play\"><span class=\"name\">CLIENTES</span></span><a id=\"refclientes\" href=\"#\"><img src=\"../css/images/clientes.jpg\" alt=\"\"/></a></div>
+          <div id=\"clientesref\" class=\"rating\">  
+          	 <a href=\"#\"> CLIENTES </a>     
+                                  
             <span class=\"comments\"></span> </div>
         </div>
+         <div class=\"movie\">
+          <div class=\"movie-image\"> <span class=\"play\"><span class=\"name\">DESPACHOS</span></span><a id=\"refdespachos\" href=\"#\"><img src=\"../css/images/despachos.jpg\" alt=\"\"/></a></div>
+          <div id=\"despachosref\" class=\"rating\">  
+          	 <a href=\"#\"> DESPACHOS </a>     
+                                  
+            <span class=\"comments\"></span> </div>
+        </div>
+        
         <div class=\"cl\">&nbsp;</div>
       </div>
    </div>

@@ -214,8 +214,7 @@ class Caso extends EntidadBD {
         
     }
 
-    
-      public function procesa_insert() {
+    public function procesa_insert() {
 
         foreach ($this->atributos as $campo => $valor) {
             if (isset($_REQUEST[$campo])) {
@@ -224,8 +223,8 @@ class Caso extends EntidadBD {
         }
         if ($this->all_set()) {
             if ($this->almacenarEnBD()) {
-                
-               // Debug::getInstance()->alert("Registro Exitoso.");
+
+                // Debug::getInstance()->alert("Registro Exitoso.");
             }
         }
     }

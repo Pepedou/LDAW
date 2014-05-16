@@ -1,38 +1,3 @@
-#pagos
-{
-    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-    width:100%;
-    border-collapse:collapse;
-}
-#abogados
-{
-    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-    width:10%;
-    border-collapse:collapse;
-}
-#pagos td, #pagos th 
-{
-    font-size:1.2em;
-    border:1px solid #E3CEF6;
-    padding:3px 7px 2px 7px;
-    text-align:center;
-    background-color:white;
-    color:black;
-}
-#pagos th 
-{
-    font-size:1.3em;
-    text-align:center;
-    padding-top:5px;
-    padding-bottom:4px;
-    background-color:#ECCEF5; //color más fuerte, morado
-    color:#ffffff;
-}
-#pagos tr.alt td 
-{
-    color:#000000;
-    background-color:#E3CEF6; //color para las intermedias
-}
 #imagen{
 
     position:absolute;
@@ -83,6 +48,33 @@
 
 }
 
+/*Clientes*/
+
+#nombre_cliente{
+
+    position:absolute;
+    top:40%;
+    left:25%;
+
+}
+#telefono_cliente{
+
+    position:absolute;
+    top:40%;
+    left:45%;
+
+}
+#email_cliente{
+
+    position:absolute;
+    top:40%;
+    left:65%;
+
+}
+div#tablapagos{
+    
+    right: 30%;
+}
 
 
 

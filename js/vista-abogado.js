@@ -1,9 +1,9 @@
 var usuario = {
-    id : -1,
-    nombre : "",
-    apellidoP : "",
-    apellidoM : "",
-    id_Despacho : -1
+    id: -1,
+    nombre: "",
+    apellidoP: "",
+    apellidoM: "",
+    id_Despacho: -1
 };
 
 function borrarDocumento(id) {
@@ -249,6 +249,23 @@ function successFuncTarea(data) {
     });
 }
 
+function successFuncHono(data) {
+    var string = '<h4>Mis honorarios</h4><table id="main-table" class="tablesorter"><thead><tr><th>Tarea</th><th>Duración</th></tr></thead><tbody>';
+    var honorarios = "";
+    $.each(data.Resultados, function(i, resultado) {
+        honorarios = resultado.honorarios;
+        var tareas = resultado.Tareas;
+        $.each(tareas, function(i, tarea) {
+            var nombre = tarea.nombre;
+            var dias = tarea.dias;
+            string += "<tr><td>" + nombre + "</td><td>" + dias + " días</td></tr>";
+        });
+    });
+    string += "<tr><td>Honorarios:</td><td>$" + honorarios + " M.N.</td></tr>";
+    string += "</tbody></table>";
+    $("#main").empty().append(string); //Agrego los honorarios
+}
+
 function servicio(params, successFunc) {
     var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/Servicios/servicio.php";
     $.ajax({
@@ -298,6 +315,14 @@ function loadMain(clase) {
             };
             servicio(params4, successFuncTarea);
             break;
+        case "Honorarios":
+            var params5 = {
+                op: "hon",
+                entidad: "Abogado",
+                "params[id]": usuario.id
+            }
+            servicio(params5, successFuncHono);
+            break;
     }
 }
 
@@ -317,7 +342,7 @@ $(document).ready(function() {
     usuario.apellidoP = $("userTag").attr("apellidoP");
     usuario.apellidoM = $("userTag").attr("apellidoM");
     usuario.id_Despacho = $("userTag").attr("id_Despacho");
-    
+
     $(".menuEntry").each(function(index) {
         initMenuEntries(index);
     });
@@ -334,7 +359,7 @@ $(document).ready(function() {
         loadMain("Tarea");
     });
     $("#menu_entry5").click(function() {
-        alert("¡No tiene honorarios aún!");
+        loadMain("Honorarios");
     });
     $("#menu_entry6").click(function() {
         alert("Nada que reportar.");
