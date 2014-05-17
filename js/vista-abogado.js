@@ -414,7 +414,6 @@ function generarGrafica() {
             var finalizadas = Number(resultado.finalizadas);
             var pendientes = total - finalizadas;
             var vencidas = Number(resultado.vencidas);
-
             $('#main_content_abogs').highcharts({
                 chart: {
                     plotBackgroundColor: null,
@@ -465,6 +464,7 @@ function generarGrafica() {
 }
 
 function loadMain(clase) {
+    $("#main_content_abogs").hide().fadeIn(250);
     switch (clase) {
         case "Caso":
             var params1 = {
@@ -540,8 +540,7 @@ function initMenuEntries(entryNumber) {
     }, function() {
         $(this).css('opacity', '1');
     });
-    $("#menu_entry" + entryNumber).hide();
-    $("#menu_entry" + entryNumber).fadeIn((entryNumber + 1) * 250);
+    $("#menu_entry" + entryNumber).hide().fadeIn((entryNumber + 1) * 250);
 }
 
 $(document).ready(function() {
@@ -552,7 +551,7 @@ $(document).ready(function() {
     usuario.id_Despacho = $("userTag").attr("id_Despacho");
 
     $(".menuEntry").each(function(index) {
-        initMenuEntries(index);
+        initMenuEntries(index + 1);
     });
     $("#menu_entry1").click(function() {
         loadMain("Caso");
