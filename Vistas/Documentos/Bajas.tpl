@@ -3,7 +3,7 @@
 {include file="../Despachos/Funciones_Ajax.tpl"}
 </head>
 <body onload="llenaEntidad('{$name}','{$tabla}','{$campo}');">
-     {include file="../body_css.tpl"}
+    {include file="./header_doc.tpl"}
     <h1>Elimina {$tabla}</h1>        
 
         <td >

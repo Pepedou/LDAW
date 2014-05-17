@@ -173,6 +173,7 @@ class Abogado extends EntidadBD {
     }
 
     public function generarFormaInsercion() {
+
         static::$smarty->assign('nombre', "Nuevo Abogado");
         static::$smarty->assign('accion', "Registrar");
         static::$smarty->assign('header', "Alta de Abogados");
@@ -227,11 +228,13 @@ class Abogado extends EntidadBD {
                 }
                 /* Corrobora que los demás atributos estén puestos */
                 if ($this->all_set()) {
-                    if ($this->almacenarEnBD()) { //si el registro es exitoso, muevo el archivo
-                        Debug::getInstance()->alert("Registro Exitoso.");
-                    } else {
-                        Debug::getInstance()->alert("Error en el Registro.");
-                    }
+                    if ($_REQUEST["contrasena_conf"] === $_REQUEST["contrasena"]) {
+                        if ($this->almacenarEnBD()) { //si el registro es exitoso, muevo el archivo
+                            Debug::getInstance()->alert("Registro Exitoso.");
+                        } else {
+                            Debug::getInstance()->alert("Error en el Registro.");
+                        }
+                    } 
                 }
 
                 break;
@@ -248,21 +251,32 @@ class Abogado extends EntidadBD {
 
                 if ($_REQUEST['sel'] !== 0) {
 
+                    /* foreach ($this->atributos as $campo => $valor) {
+                      if (isset($_REQUEST[$campo])) {
+                      if ($campo === "contrasena") {
+
+                      $this->atributos[$campo] = sha1($_REQUEST[$campo]);
+                      } else {
+                      $this->atributos[$campo] = $_REQUEST[$campo];
+                      }
+                      }
+                      } */
                     foreach ($this->atributos as $campo => $valor) {
                         if (isset($_REQUEST[$campo])) {
-                            if ($campo === "contrasena") {
-                                $this->atributos[$campo] = sha1($_REQUEST[$campo]);
-                            } else {
-                                $this->atributos[$campo] = $_REQUEST[$campo];
-                            }
+
+                            $this->atributos[$campo] = $_REQUEST[$campo];
                         }
                     }
 
                     if ($this->all_set()) {
-                        if ($this->almacenarEnBD()) {
-                            Debug::getInstance()->alert("Actualización Exitosa.");
+                        if ($_REQUEST["contrasena_conf"] === $_REQUEST["contrasena"]) {
+                            if ($this->almacenarEnBD()) {
+                                Debug::getInstance()->alert("Actualización Exitosa.");
+                            } else {
+                                Debug::getInstance()->alert("Actualización Errónea.");
+                            }
                         } else {
-                            Debug::getInstance()->alert("Actualización Errónea.");
+                            Debug::getInstance()->alert("Confirmación de Contraseña Incorrecta.");
                         }
                     }
                 }

@@ -1,7 +1,8 @@
 <?php
 
 include_once 'ServicioGenerico.php';
-include_once '/home/ldaw-1018566/html_container/content/Proyecto/Smarty/libs/SmartyBC.class.php';
+include_once '/home/ldaw-1018566/html_container/content/Proyecto2/Smarty/libs/SmartyBC.class.php';
+include_once '/home/ldaw-1018566/html_container/content/Proyecto2/Smarty/libs/SmartyValidate.class.php';
 
 /**
  * Description of EntidadBD
@@ -18,7 +19,7 @@ abstract class EntidadBD extends ServicioGenerico {
         $this->debug = Debug::getInstance();
         $this->dbManager = DatabaseManager::getInstance();
         $this->existente = false;
-        $this->BASE_DIR = '/home/ldaw-1018566/html_container/content/Proyecto/';
+        $this->BASE_DIR = '/home/ldaw-1018566/html_container/content/Proyecto2/';
         static::$smarty = new SmartyBC;
         static::$smarty->template_dir = static::$BASE_DIR . 'Smarty/demo/templates/';
         static::$smarty->compile_dir = static::$BASE_DIR . 'Smarty/demo/templates_c/';
@@ -49,7 +50,7 @@ abstract class EntidadBD extends ServicioGenerico {
 
     public function revisarExistencia_MultDiscr(array $arregloDiscrValor) {
         foreach ($arregloDiscrValor as $campo => $valor) {
-            if ($campo != 'id') {
+            if ($campo != 'id' && $campo != "contrasena") {
                 $condicion .= "$campo = '$valor' AND ";
             }
         }
@@ -85,6 +86,7 @@ abstract class EntidadBD extends ServicioGenerico {
             $query = "SELECT * FROM $this->tabla WHERE $discriminante = '$valor' AND visible = 1 LIMIT 1";
         else
             $query = "SELECT * FROM $this->tabla WHERE $discriminante = '$valor' LIMIT 1";
+        
         $resultado = $this->dbExecute($query);
         if ($resultado != false && $resultado->num_rows) {
             foreach ($resultado->fetch_assoc() as $campo => $valor) {
@@ -159,8 +161,12 @@ abstract class EntidadBD extends ServicioGenerico {
             $this->atributos['id'] = static::getID($this->discr, $this->discrValor);
 
             foreach ($this->atributos as $campo => $valor) {//Creo asignaciones SQL
-                if ($campo != "id") {
+                if ($campo != "id" && $campo != "contrasena") {
                     $subquerySets .= $campo . "='" . $valor . "',";
+                } else if ($campo === "contrasena") {
+                    if ($valor !== "") {
+                        $subquerySets.= $campo . "=sha1('" . $valor . "'),";
+                    }
                 }
             }
             $subquerySets = rtrim($subquerySets, ","); //Elimina la última coma

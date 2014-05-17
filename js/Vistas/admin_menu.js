@@ -230,10 +230,27 @@ function mostrarCaso(id) {
     });
 }
 
+function borrarEntidad(entidad, id) {
 
+    var params = {
+        op: "del",
+        entidad: entidad,
+        "params[id]": id//Cambiar este 1 por variable
+    };
+    if (confirm('¿Está seguro que desea eliminar el Registro?')) {
+        servicio(params, function(data) {
+            loadMain(entidad);
+        }
+        );
+        
+    }
+    else {
+        // Do nothing!
+    }
+}
 function mostrarAbogado(id) {
     //Carga la pagina mediante AJAX y despues le añade los datos de cada campo
-    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/Vistas/vista-admin-abogado.html";
+    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Vistas/vista-admin-abogado.html";
     $.ajax({
         url: myurl,
         success: function(data) {
@@ -271,7 +288,7 @@ function mostrarAbogado(id) {
 
 
 function servicio(params, successFunc) {
-    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/Servicios/servicio.php";
+    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto2/Servicios/servicio.php";
     $.ajax({
         url: myurl,
         dataType: 'jsonp',
@@ -296,7 +313,7 @@ function successFuncCaso(data) {
         var desc = resultado.descripcion;
         string += "<tr><td>" + caso + "</td><td>" + desc + "</td><td>" + (estado ? "Activo" : "Inactivo") + "</td><td><a href=\"#\"\n\
         onclick=\"mostrarCaso(" + id + ");\">Mostrar</a>&nbsp;&nbsp;<a href=\"../cambios.php?nombre=" + caso + "&sel=" + id + "&op=Caso\" \n\
-        \">Editar</a>&nbsp<a href=\"../bajas.php?nombre=" + caso + "&sel=" + id + "&op=Caso\" onclick=\"mostrarCaso(" + id + ");\">   Eliminar   </a></td></tr>";
+        \">Editar</a>&nbsp<a href=\"#\" onclick=\"borrarEntidad('Caso'," + id + ");\">   Eliminar   </a></td></tr>";
     });
     string += "</table>";
     $("#main_content").empty().append(string);
@@ -314,7 +331,7 @@ function successFuncAbogados(data) {
         var email = resultado.email;
         string += "<tr><td>" + nombre + "</td><td>" + email + "</td><td>" + telefono + "</td><td>\n\
         <a href=\"#\"onclick=\"mostrarAbogado(" + id + ");\">Mostrar</a>&nbsp;&nbsp;<a href=\"../cambios.php?nombre=" + resultado.nombre + "&sel=" + id + "&op=Abogado\" \n\
-      \">Editar</a>&nbsp;&nbsp;<a href=\"../bajas.php?nombre=" + resultado.nombre + "&sel=" + id + "&op=Abogado\">   Eliminar   </a></td></tr>";
+      \">Editar</a>&nbsp;&nbsp;<a href=\"#\" onclick=\"borrarEntidad('Abogado'," + id + ");\">   Eliminar   </a></td></tr>";
     });
     string += "</table>";
     $("#main_content").empty().append(string);
@@ -440,7 +457,7 @@ function llenaPuntaje(id) {
                 var nombre = resultado.nombre;
                 var dirID = resultado.id_Direccion;
                 string += "<tr><td><a href=\"../cambios.php?nombre=" + nombre + "&sel=" + id + "&op=Despacho\" \n\
-       \">Editar</a>&nbsp;&nbsp;<a href=\"../bajas.php?nombre=" + nombre + "&sel=" + id + "&op=Despacho\">   Eliminar   </a></td><td>" + nombre + " " + "</td></tr>";
+       \">Editar</a>&nbsp;&nbsp;<a onclick=\"borrarEntidad('Despacho'," + id + ");\">   Eliminar   </a></td><td>" + nombre + " " + "</td></tr>";
                 var params = {
                     op: "sii",
                     entidad: "Direccion",
@@ -466,7 +483,7 @@ function llenaPuntaje(id) {
                 var nombre = resultado.nombre;
                 var dirID = resultado.id_Direccion;
                 string += "<tr><td><a href=\"../cambios.php?nombre=" + nombre + "&sel=" + id + "&op=Despacho\" \n\
-       \">Editar</a>&nbsp;&nbsp;<a href=\"../bajas.php?nombre=" + nombre + "&sel=" + id + "&op=Despacho\">   Eliminar   </a></td><td>" + nombre + " " + "</td></tr>";
+       \">Editar</a>&nbsp;&nbsp;<a onclick=\"borrarEntidad('Despacho'," + id + ");\">   Eliminar   </a></td><td>" + nombre + " " + "</td></tr>";
                 var params = {
                     op: "sii",
                     entidad: "Direccion",
@@ -508,7 +525,7 @@ function llenaPuntaje(id) {
                 var email = resultado.email;
                 string += "<tr><td>" + nombre + "</td><td>" + email + "</td><td>" + telefono + "</td><td>\n\
         <a href=\"#\"onclick=\"mostrarCliente(" + id + ");\">Mostrar</a>&nbsp;&nbsp;<a href=\"../cambios.php?nombre=" + resultado.nombre + "&sel=" + id + "&op=Cliente\" \n\
-      \">Editar</a>&nbsp;&nbsp;<a href=\"../bajas.php?nombre=" + resultado.nombre + "&sel=" + id + "&op=Cliente\">   Eliminar   </a></td></tr>";
+      \">Editar</a>&nbsp;&nbsp;<a onclick=\"borrarEntidad('Cliente'," + id + ");\">   Eliminar   </a></td></tr>";
             });
             string += "</table>";
             $("#main_content").empty().append(string);
@@ -543,7 +560,7 @@ function llenaPuntaje(id) {
                     };
                     servicio(params, successFuncAbogadosActual);
                     break;
-                case "Cliente":
+                case "Clientes":
                     var params = {
                         op: "st",
                         entidad: "AbogadosClientes",
@@ -567,7 +584,7 @@ function llenaPuntaje(id) {
                     };
                     servicio(params, successFuncTarea);
                     break;
-                case "Clientes":
+                case "Cliente":
                     var params = {
                         op: "st",
                         entidad: "Cliente",
@@ -631,10 +648,10 @@ function llenaPuntaje(id) {
         $(document).ready(function() {
 
             $("#refclientes").click(function() {
-                loadMain("Clientes");
+                loadMain("Cliente");
             });
             $("#clientesref").click(function() {
-                loadMain("Clientes");
+                loadMain("Cliente");
             });
             $("#refabogados").click(function() {
                 loadMain("Abogado");
@@ -665,7 +682,7 @@ function llenaPuntaje(id) {
                 loadMain("Despacho");
             });
             $("#navClientes").click(function() {
-                loadMain("Clientes");
+                loadMain("Cliente");
             });
 
 

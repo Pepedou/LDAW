@@ -27,9 +27,7 @@
 
         newUrl = "bajas.php?nombre=" + a + "&elim=1" + "&op=" + o;
         document.location.href = newUrl;
-        alert("");
-
-    }
+     }
 
     function selected_direccion(sel_edo, sel_mun) {
         /*Select del estado*/
