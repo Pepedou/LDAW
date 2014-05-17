@@ -486,4 +486,26 @@ class Abogado extends EntidadBD {
         print_r($json);
     }
 
+    public function service_calcularDesempeno($callback) {
+        $json = array();
+        $dbManager = DatabaseManager::getInstance();
+        $dbManager->connectToDatabase();
+        $query = "SELECT (SELECT COUNT(id) FROM Tareas WHERE id_Abogado = " . $this->atributos['id'] . ") AS total, (SELECT COUNT(id) FROM Tareas WHERE id_Abogado = " . $this->atributos['id'] . " AND status = 0) AS finalizadas, (SELECT COUNT(id) FROM Tareas WHERE id_Abogado = " . $this->atributos['id'] . "  AND fin BETWEEN NOW() - INTERVAL 1 MONTH AND NOW()) AS vencidas;";
+        $resultado = $this->dbExecute($query);
+        /* Genero el JSON con los resultados */
+        if ($resultado != false) {
+            while ($fila = $resultado->fetch_assoc()) {
+                array_push($json, $fila);
+            }
+            $finalData = array("Resultados" => $json);
+            if ($callback != "") {
+                $json = "$callback(" . json_encode($finalData) . ")";
+            } else {
+                $json = json_encode($finalData);
+            }
+            print_r($json);
+        }
+        return $json;
+    }
+
 }

@@ -55,6 +55,11 @@ function procesa(EntidadBD $entidad, $operacion, $params, $callback) {
             $abogado->guardarDatos($params);
             $abogado->service_calcularHonorarios($callback);
             break;
+        case 'des':
+            $abogado = new Abogado();
+            $abogado->guardarDatos($params);
+            $abogado->service_calcularDesempeno($callback);
+            break;
     }
 }
 

@@ -3,6 +3,67 @@ var AboActual = 1;
 var promActual = 0;
 var timer;
 
+function generarGrafica(idAbogado) {
+    var params = {
+        "op": "des",
+        "entidad": "Abogado",
+        "params[id]": idAbogado
+    };
+    servicio(params, function(data) {
+        $.each(data.Resultados, function(i, resultado) {
+            var total = Number(resultado.total);
+            var finalizadas = Number(resultado.finalizadas);
+            var pendientes = total - finalizadas;
+            var vencidas = Number(resultado.vencidas);
+            $('#grafica').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false
+                },
+                title: {
+                    text: 'Desempeño del abogado'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                        type: 'pie',
+                        name: 'Tareas',
+                        data: [
+                            ['Pendientes', pendientes],
+                            {
+                                name: 'Completas',
+                                y: finalizadas,
+                                sliced: true,
+                                selected: true,
+                                color: "green"
+                            },
+                            {
+                                name: 'Vencidas',
+                                y: vencidas,
+                                color: "red"
+                            }
+                        ]
+                    }]
+            });
+        });
+    });
+}
+
 function mostrarExpediente(id) {
 //Carga la pagina mediante AJAX y despues le añade los datos de cada campo
     var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Vistas/vista-admin-expediente.html";
@@ -188,10 +249,8 @@ function borrarEntidad(entidad, id) {
     }
 }
 function mostrarAbogado(id) {
-
-
     //Carga la pagina mediante AJAX y despues le añade los datos de cada campo
-    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Vistas/vista-admin-abogado.html";
+    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/Vistas/vista-admin-abogado.html";
     $.ajax({
         url: myurl,
         success: function(data) {
@@ -210,10 +269,7 @@ function mostrarAbogado(id) {
     };
 
     servicio(params, function(data) {
-
-
         $.each(data.Resultados, function(i, resultado) {
-
             var row = $("<p>Nombre: <br>" + resultado.nombre + "&nbsp" + resultado.apellidoP + "&nbsp" + resultado.apellidoM + "</p>");
             $("#nombre").html(row);
             var tel = $("<p>Tel&eacute;fono: <br>" + resultado.telefono + "&nbsp </p>");
@@ -224,11 +280,9 @@ function mostrarAbogado(id) {
             $("#imagen").html(imagen);
             AboActual = resultado.id;
             llenaPuntaje(resultado.id);
+            generarGrafica(resultado.id);
         });
-
     });
-
-
 
 }
 
