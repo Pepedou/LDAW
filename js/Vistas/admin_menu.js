@@ -250,7 +250,7 @@ function borrarEntidad(entidad, id) {
 }
 function mostrarAbogado(id) {
     //Carga la pagina mediante AJAX y despues le añade los datos de cada campo
-    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/Vistas/vista-admin-abogado.html";
+    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Vistas/vista-admin-abogado.html";
     $.ajax({
         url: myurl,
         success: function(data) {
