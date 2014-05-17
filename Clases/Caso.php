@@ -48,7 +48,8 @@ class Caso extends EntidadBD {
         $sel_cliente = 0;
         $caso_descrip = "";
         $caso_id = 0;
-
+        
+        
         if ($nombre !== "Selecciona") {
             $caso = new Caso();
             $exito = $caso->cargarDeBD("nombre", $nombre);
@@ -60,6 +61,7 @@ class Caso extends EntidadBD {
                 $sel_desp = $caso->atributos["id_Despacho"];
                 $sel_cliente = $caso->atributos["id_Cliente"];
                 $caso_id = $caso->atributos["id"];
+               
 
                 /* Status del Caso */
                 if ($sel_status === 1) {
@@ -228,6 +230,25 @@ class Caso extends EntidadBD {
                 // Debug::getInstance()->alert("Registro Exitoso.");
             }
         }
+    }
+    
+      public function service_delete($callback) {
+        $json = array();
+        $id = $this->atributos['id'];
+        $query = "UPDATE $this->tabla SET visible = 0 WHERE id = $id";
+       
+        $resultado = $this->dbExecute($query);
+        if ($resultado === true) {
+            array_push($json, $this->atributos);
+        }
+        $finalData = array("Resultados" => $json);
+        if ($callback != "") {
+            $json = "$callback(" . json_encode($finalData) . ")";
+        } else {
+            $json = json_encode($finalData);
+        }
+        print_r($json);
+        return $resultado;
     }
 
 }

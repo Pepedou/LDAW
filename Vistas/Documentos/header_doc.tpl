@@ -1,7 +1,7 @@
 <div id="shell">
     <div id="header">
-      <h1 id="logo">
-            <a href="../Proyecto2/Vistas/vista-admin.php">GESTION DE DESPACHOS</a>
+        <h1 id="logo">
+            <a>GESTION DE DESPACHOS</a>
         </h1>
         <div id="navigation">
             <!-- pestañas -->

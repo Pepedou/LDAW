@@ -168,11 +168,12 @@ class ServicioGenerico {
 
     public function service_delete($callback) {
         $json = array();
+        $id = $this->atributos['id'];
         if (array_key_exists('visible', $this->atributos)) {//Verifico si la tabla tiene el campo visible
-            $query = "UPDATE $this->tabla SET visible = 0 WHERE $this->discr = '$this->discrValor'";
+            $query = "UPDATE $this->tabla SET visible = 0 WHERE  id = $id";
         } else {
-            $query = "DELETE FROM $this->tabla WHERE $this->discr = '$this->discrValor'";
-        }
+            $query = "DELETE FROM $this->tabla WHERE id = $id";
+        }       
         $resultado = $this->dbExecute($query);
         if ($resultado === true) {
             array_push($json, $this->atributos);

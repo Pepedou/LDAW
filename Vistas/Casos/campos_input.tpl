@@ -32,7 +32,8 @@
 
     </tr>
     <tr><td><label> Comentarios</label></td>
-        <td><textarea name="descripcion" value = "{$caso_descrip}" cols="30" rows="5" ></textarea>   
+        <td><textarea id="descripcion" name="descripcion" cols="30" rows="5" > {$caso_descrip} 
+            </textarea>   
         </td>
     </tr>
 

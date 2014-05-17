@@ -22,7 +22,7 @@ class Despacho extends EntidadBD {
             "id_Direccion" => -1,
             "visible" => 1);
         static::$direccion = new Direccion();
-        $this->discr = "nombre";
+        $this->discr = "id";
         $this->discrValor = $this->atributos[$this->discr];
     }
 
@@ -67,7 +67,7 @@ class Despacho extends EntidadBD {
                 if ($dir->atributos["calle"] != NULL) {
                     $dir->almacenarEnBD();
                     $id = $dir->getID("calle", $dir->atributos["calle"]);
-                    $this->atributos["id_Direccion"] = $id;
+                    $this->atributos["id_Direccion"] = $atributosid;
                     $this->atributos["visible"] = 1;
                     if ($this->almacenarEnBD())
                         Debug::getInstance()->alert("Registro Exitoso.");
@@ -79,7 +79,8 @@ class Despacho extends EntidadBD {
             case (3): //actualizacion
                 if ($_REQUEST['sel'] !== 0) {
                     $dir = static::$direccion;
-                    $this->existente = true;
+                    $this->atributos['id'] = $_REQUEST['sel'];
+            
                     foreach ($this->atributos as $campo => $valor) {
 
                         $this->atributos[$campo] = $_REQUEST[$campo]; //guarda el nombre del despacho

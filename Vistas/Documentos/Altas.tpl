@@ -4,7 +4,7 @@
 </head>
 <body onload="llenaEntidad('expedientes','Expedientes','nombre');
         llenaTipos();">
-  {include file="../body_css.tpl"}
+  {include file="./header_doc.tpl"}
     <h1>{$header}</h1>    
     <form action='altas.php' method='post' enctype="multipart/form-data">
 
