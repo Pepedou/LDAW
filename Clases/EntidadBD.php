@@ -1,8 +1,8 @@
 <?php
 
 include_once 'ServicioGenerico.php';
-include_once '/home/ldaw-1018566/html_container/content/Proyecto2/Smarty/libs/SmartyBC.class.php';
-include_once '/home/ldaw-1018566/html_container/content/Proyecto2/Smarty/libs/SmartyValidate.class.php';
+include_once '/home/ldaw-1015544/html_container/proyecto/Smarty/libs/SmartyBC.class.php';
+include_once '/home/ldaw-1015544/html_container/proyecto/Smarty/libs/SmartyValidate.class.php';
 
 /**
  * Description of EntidadBD
@@ -19,7 +19,7 @@ abstract class EntidadBD extends ServicioGenerico {
         $this->debug = Debug::getInstance();
         $this->dbManager = DatabaseManager::getInstance();
         $this->existente = false;
-        $this->BASE_DIR = '/home/ldaw-1018566/html_container/content/Proyecto2/';
+        $this->BASE_DIR = '/home/ldaw-1015544/html_container/proyecto/';
         static::$smarty = new SmartyBC;
         static::$smarty->template_dir = static::$BASE_DIR . 'Smarty/demo/templates/';
         static::$smarty->compile_dir = static::$BASE_DIR . 'Smarty/demo/templates_c/';

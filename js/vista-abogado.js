@@ -317,7 +317,7 @@ function mostrarComentariosTarea(idTarea) {
 }
 
 function successFuncTarea(data) {
-    var string = "<table id=\"tablaComentarios\"><tbody></tbody></table>";
+    var string = "<table id=\"tablaComentarios\" style=\"text-align:center;\"><tbody></tbody></table>";
     string += '<h4>Tareas Urgentes</h4><table id="table_urgent" class="tablesorter"><thead><tr><th>Nombre</th><th>Descripcion</th><th>Inicio</th><th>Fin</th><th>Estado</th><th></th><th>Comentario</th><th></th></tr></thead> <tbody>';
     $.each(data.Resultados, function(i, resultado) {
         var id = resultado.id;

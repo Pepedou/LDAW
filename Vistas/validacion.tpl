@@ -1,7 +1,7 @@
 <script>
-   function verificar() {
-
-    $("#forma_abogados").validate({
+   $(document).ready(function verificar() {
+alert("ready");
+    $("#forma_verificar").validate({
 
     rules: {
     nombre: "required",
@@ -41,5 +41,5 @@
 
     });
 
-}
+});
 </script>

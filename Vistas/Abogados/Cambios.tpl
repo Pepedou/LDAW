@@ -7,7 +7,7 @@
     {include file="../select_entidad.tpl"}
 
     <!-- Desplegar campos correspondientes a actualizar-->
-    <form id="campos" name="forma_campos" action='cambios.php'>
+    <form id="forma_verificar" name="forma_campos" action='cambios.php'>
 
         {include file="./campos_input.tpl"}
     </form>
