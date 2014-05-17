@@ -31,6 +31,7 @@ print"
          <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/dataTables/jquery.dataTables.css\">
 		
 		
+        <script src=\"../js/highcharts.js\"></script> 
         <script src=\"../js/Vistas/admin_menu.js\"></script> 
         <script type=\"text/javascript\" language=\"javascript\" src=\"../js/dataTables/jquery.dataTables.js\"></script>
   
@@ -130,8 +131,6 @@ print"
     <div style=\"clear:both;\"></div>
   </div>
 </div>
-<!-- END PAGE SOURCE -->
-
 </body>
 </html> 
          

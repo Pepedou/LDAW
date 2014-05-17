@@ -265,7 +265,7 @@ function successFuncDespacho(data) {
     });
     string += "</tbody></table>";
     $("#main_content_abogs").empty().append(string);
-   
+
 }
 
 function toggleTarea(id, estado) {
@@ -352,7 +352,7 @@ function successFuncTarea(data) {
                     + inicio + "</td><td>" + fin + "</td><td>" + ((estado === "1") ? "Pendiente" : "Finalizada") + "</td><td><button type=\"button\" onclick=\"toggleTarea(" + id + "," + estado + ");\">" + ((estado === "1") ? "Finalizar" : "Reactivar") + "</button></td><td><input id=\"comentario" + id + "\" type=\"text\"/></td><td><button type=\"button\" onclick=\"enviarComentarioTarea(" + id + ");\">Enviar</button></td></tr>";
         });
         string2 += "</tbody></table>";
-        $("#main").append(string2); //Agrego las tareas
+        $("#main_content_abogs").append(string2); //Agrego las tareas
         $(".descripcionTarea").hover(function() {
             $(this).css('opacity', '0.5');
         }, function() {
@@ -366,23 +366,6 @@ function successFuncTarea(data) {
             });
         });
     });
-}
-
-function successFuncHono(data) {
-    var string = '<h4>Mis honorarios</h4><table id="main-table" class="tablesorter"><thead><tr><th>Tarea</th><th>Duración</th></tr></thead><tbody>';
-    var honorarios = "";
-    $.each(data.Resultados, function(i, resultado) {
-        honorarios = resultado.honorarios;
-        var tareas = resultado.Tareas;
-        $.each(tareas, function(i, tarea) {
-            var nombre = tarea.nombre;
-            var dias = tarea.dias;
-            string += "<tr><td>" + nombre + "</td><td>" + dias + " días</td></tr>";
-        });
-    });
-    string += "<tr><td>Honorarios:</td><td>$" + honorarios + " M.N.</td></tr>";
-    string += "</tbody></table>";
-    $("#main").empty().append(string); //Agrego los honorarios
 }
 
 function successFuncHono(data) {
@@ -403,7 +386,6 @@ function successFuncHono(data) {
     cambiaTabla();
 }
 
-
 function servicio(params, successFunc) {
     var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/Servicios/servicio.php";
     $.ajax({
@@ -416,6 +398,69 @@ function servicio(params, successFunc) {
         error: function(jqXHR, status, errorThrown) {
             alert(errorThrown + ": No se pudo conectar con el servidor [" + status + "]. Intente de nuevo.");
         }
+    });
+}
+
+function generarGrafica() {
+    var params = {
+        "op": "des",
+        "entidad": "Abogado",
+        "params[id]": usuario.id
+    };
+
+    servicio(params, function(data) {
+        $.each(data.Resultados, function(i, resultado) {
+            var total = Number(resultado.total);
+            var finalizadas = Number(resultado.finalizadas);
+            var pendientes = total - finalizadas;
+            var vencidas = Number(resultado.vencidas);
+
+            $('#main_content_abogs').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false
+                },
+                title: {
+                    text: 'Desempeño de ' + usuario.nombre + " " + usuario.apellidoP
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                        type: 'pie',
+                        name: 'Tareas',
+                        data: [
+                            ['Pendientes', pendientes],
+                            {
+                                name: 'Completas',
+                                y: finalizadas,
+                                sliced: true,
+                                selected: true,
+                                color: "green"
+                            },
+                            {
+                                name: 'Vencidas',
+                                y: vencidas,
+                                color: "red"
+                            }
+                        ]
+                    }]
+            });
+        });
     });
 }
 
@@ -460,6 +505,9 @@ function loadMain(clase) {
                 "params[id]": usuario.id
             }
             servicio(params5, successFuncHono);
+            break;
+        case "Reporte":
+            generarGrafica();
             break;
     }
 }
@@ -522,8 +570,7 @@ $(document).ready(function() {
         loadMain("Honorarios");
     });
     $("#menu_entry6").click(function() {
-        alert("Nada que reportar.");
+        loadMain("Reporte");
     });
-    
-    loadMain("Caso");
+    loadMain("Reporte");
 });

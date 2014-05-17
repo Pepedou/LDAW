@@ -1,7 +1,68 @@
 cont = 0;
 var AboActual = 1;
 var promActual = 0;
-var timer ;
+var timer;
+
+function generarGrafica(idAbogado) {
+    var params = {
+        "op": "des",
+        "entidad": "Abogado",
+        "params[id]": idAbogado
+    };
+    servicio(params, function(data) {
+        $.each(data.Resultados, function(i, resultado) {
+            var total = Number(resultado.total);
+            var finalizadas = Number(resultado.finalizadas);
+            var pendientes = total - finalizadas;
+            var vencidas = Number(resultado.vencidas);
+            $('#grafica').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false
+                },
+                title: {
+                    text: 'Desempeño del abogado'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                        type: 'pie',
+                        name: 'Tareas',
+                        data: [
+                            ['Pendientes', pendientes],
+                            {
+                                name: 'Completas',
+                                y: finalizadas,
+                                sliced: true,
+                                selected: true,
+                                color: "green"
+                            },
+                            {
+                                name: 'Vencidas',
+                                y: vencidas,
+                                color: "red"
+                            }
+                        ]
+                    }]
+            });
+        });
+    });
+}
 
 function mostrarExpediente(id) {
 //Carga la pagina mediante AJAX y despues le añade los datos de cada campo
@@ -39,8 +100,9 @@ function mostrarExpediente(id) {
                             "')\">Descargar</button></td><td><button type=\"button\" onclick=\"borrarDocumento(" + resultado.id + ");mostrarExpediente(" + id + ");\">Eliminar</button></td></tr>");
                 });
             });
-           
-        }); cambiaTabla();
+
+        });
+        cambiaTabla();
     });
 }
 
@@ -64,14 +126,14 @@ function mostrarCliente(id) {
         "params[id]": id
     };
     servicio(params, function(data) {
-        $.each(data.Resultados, function(i, resultado){
-           var nombre = resultado.nombre + " "+ resultado.apellidoP +" "+resultado.apellidoM;
+        $.each(data.Resultados, function(i, resultado) {
+            var nombre = resultado.nombre + " " + resultado.apellidoP + " " + resultado.apellidoM;
             $("#nombre_cliente").append(nombre);
-           var telefono = resultado.telefono;
-           var email = resultado.email;
-           $("#telefono_cliente").append(telefono);
-           $("#email_cliente").append(email); 
-       });
+            var telefono = resultado.telefono;
+            var email = resultado.email;
+            $("#telefono_cliente").append(telefono);
+            $("#email_cliente").append(email);
+        });
     });
     var params = {
         op: "pagos",
@@ -94,7 +156,7 @@ function mostrarCliente(id) {
                         $("#pagos").append(row);
 
                     });
-                   Tabla("pagos");
+                    Tabla("pagos");
 
                 },
                 timeout: 3000, // 3 second timeout,
@@ -170,10 +232,8 @@ function mostrarCaso(id) {
 
 
 function mostrarAbogado(id) {
-
-
     //Carga la pagina mediante AJAX y despues le añade los datos de cada campo
-    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Vistas/vista-admin-abogado.html";
+    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1015544/proyecto/Vistas/vista-admin-abogado.html";
     $.ajax({
         url: myurl,
         success: function(data) {
@@ -192,10 +252,7 @@ function mostrarAbogado(id) {
     };
 
     servicio(params, function(data) {
-
-
         $.each(data.Resultados, function(i, resultado) {
-
             var row = $("<p>Nombre: <br>" + resultado.nombre + "&nbsp" + resultado.apellidoP + "&nbsp" + resultado.apellidoM + "</p>");
             $("#nombre").html(row);
             var tel = $("<p>Tel&eacute;fono: <br>" + resultado.telefono + "&nbsp </p>");
@@ -206,11 +263,9 @@ function mostrarAbogado(id) {
             $("#imagen").html(imagen);
             AboActual = resultado.id;
             llenaPuntaje(resultado.id);
+            generarGrafica(resultado.id);
         });
-
     });
-
-
 
 }
 
@@ -267,7 +322,7 @@ function successFuncAbogados(data) {
 }
 
 function successFuncDireccion(data) {
-    
+
     $.each(data.Resultados, function(i, resultado) {
         var stringdir = "";
         var calle = resultado.calle;
@@ -282,7 +337,9 @@ function successFuncDireccion(data) {
         $("#desp_table tbody tr:eq(" + cont + ")").append(stringdir);
         cont++;
     });
-    timer = setInterval(function(){Tabla("desp_table");},100);  
+    timer = setInterval(function() {
+        Tabla("desp_table");
+    }, 100);
 
 }
 
@@ -338,7 +395,7 @@ function llenaPuntaje(id) {
 
                 }
 
-function mandaVoto(puntos, id) {
+        function mandaVoto(puntos, id) {
 
             var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Servicios/servicio.php";
             var params = {
@@ -365,7 +422,7 @@ function mandaVoto(puntos, id) {
                     });
         }
 
-function set_votes(promedio) {
+        function set_votes(promedio) {
 
             promActual = promedio;
             var avg = Math.round(promedio);
@@ -373,7 +430,7 @@ function set_votes(promedio) {
             $(califica).find('.star_' + avg).nextAll().removeClass('ratings_vote');
         }
 
-function successFuncDespacho2(data) {
+        function successFuncDespacho2(data) {
 
             var string = '<div id=\"leyenda\"><a href=\"../altas.php?op=Despacho\"><img src="../css/images/add_general.png"\n\
     style=\"width: 36px; height: 36px;\"></a></div>\n\
@@ -394,12 +451,12 @@ function successFuncDespacho2(data) {
             cont = 0;
             string += "</table>";
             $("#main_content").empty().append(string);
-                    
-            
-}
 
 
-function successFuncDespacho(data) {
+        }
+
+
+        function successFuncDespacho(data) {
 
             var string = '<div id=\"leyenda\"><a href=\"../altas.php?op=Despacho\"><img src="../css/images/add_general.png"\n\
     style=\"width: 36px; height: 36px;\"></a></div>\n\
@@ -428,7 +485,7 @@ function successFuncDespacho(data) {
                         string += "<td>" + calle + " #" + ext + " - " + int + "  " + "</td><td>  " + colonia + "  " + "</td><td>" + ciudad + "</td><td>" + cp + "</td>\n\
                          <td><button type=\"button\" " +
                                 "onclick=\"window.open('http://maps.google.com/?q=" + calle + "," + ext + "," + colonia + "," + ciudad + "," + cp + "')\">Mapa</button></td>";
-                      });
+                    });
                 });
             });
             string += "</table>";
@@ -438,7 +495,7 @@ function successFuncDespacho(data) {
 
 
 
-function successFuncClientes(data) {
+        function successFuncClientes(data) {
 
             var string = '<div id=\"leyenda\"><a href=\"../altas.php?op=Despacho\"><img src="../css/images/add_general.png"\n\
     style=\"width: 36px; height: 36px;\"></a></div>\n\
@@ -460,7 +517,7 @@ function successFuncClientes(data) {
         }
 
 
-function loadMain(clase) {
+        function loadMain(clase) {
             switch (clase) {
                 case "Caso":
                     var params = {
@@ -522,14 +579,14 @@ function loadMain(clase) {
         }
 
         /*Conversión de la tabla a tabla dinámica*/
-function cambiaTabla() {
+        function cambiaTabla() {
             $('#main_table').dataTable({
                 "scrollY": "200px",
                 "scrollCollapse": true,
                 "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                 $(nRow).addClass( 'registros' );
-                 return nRow;
-                  },
+                    $(nRow).addClass('registros');
+                    return nRow;
+                },
                 "language": {
                     "lengthMenu": "Mostrar _MENU_ resultados",
                     "zeroRecords": "Lo sentimos, no hay resultados",
@@ -543,16 +600,16 @@ function cambiaTabla() {
                 }
             });
         }
-        
-function Tabla(tabla){
-    $.fn.dataTableExt.sErrMode = 'throw';
-      $("#"+tabla).dataTable({
+
+        function Tabla(tabla) {
+            $.fn.dataTableExt.sErrMode = 'throw';
+            $("#" + tabla).dataTable({
                 "scrollY": "200px",
                 "scrollCollapse": true,
                 "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                 $(nRow).addClass( 'registros' );
-                 return nRow;
-                  },
+                    $(nRow).addClass('registros');
+                    return nRow;
+                },
                 "language": {
                     "lengthMenu": "Mostrar _MENU_ resultados",
                     "zeroRecords": "Lo sentimos, no hay resultados",
@@ -565,13 +622,13 @@ function Tabla(tabla){
                     }
                 }
             });
-    
-    
-}
+
+
+        }
 
 
 
-$(document).ready(function() {
+        $(document).ready(function() {
 
             $("#refclientes").click(function() {
                 loadMain("Clientes");
@@ -589,11 +646,11 @@ $(document).ready(function() {
                 loadMain("Caso");
             });
             $("#casosref").click(function() {
-                loadMain("Caso");                
-            });            
-             $("#refdespachos").click(function() {
+                loadMain("Caso");
+            });
+            $("#refdespachos").click(function() {
                 loadMain("Despacho");
-            });            
+            });
             $("#despachosref").click(function() {
                 loadMain("Despacho");
                 cont = 0;
@@ -605,7 +662,7 @@ $(document).ready(function() {
                 loadMain("Caso");
             });
             $("#navDespachos").click(function() {
-                loadMain("Despacho");            
+                loadMain("Despacho");
             });
             $("#navClientes").click(function() {
                 loadMain("Clientes");
