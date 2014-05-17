@@ -99,7 +99,6 @@ print "
         </div>
       </div>
       <br>
-      
     </div>
 <div id =\"main_content_abogs\">
         <div class=\"box\">

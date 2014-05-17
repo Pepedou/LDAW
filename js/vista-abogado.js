@@ -317,7 +317,7 @@ function mostrarComentariosTarea(idTarea) {
 }
 
 function successFuncTarea(data) {
-    var string = "<table id=\"tablaComentarios\" style=\"text-align:center;\"><tbody></tbody></table>";
+    var string = "<table id=\"tablaComentarios\"><tbody></tbody></table>";
     string += '<h4>Tareas Urgentes</h4><table id="table_urgent" class="tablesorter"><thead><tr><th>Nombre</th><th>Descripcion</th><th>Inicio</th><th>Fin</th><th>Estado</th><th></th><th>Comentario</th><th></th></tr></thead> <tbody>';
     $.each(data.Resultados, function(i, resultado) {
         var id = resultado.id;
@@ -414,6 +414,7 @@ function generarGrafica() {
             var finalizadas = Number(resultado.finalizadas);
             var pendientes = total - finalizadas;
             var vencidas = Number(resultado.vencidas);
+
             $('#main_content_abogs').highcharts({
                 chart: {
                     plotBackgroundColor: null,
@@ -464,7 +465,6 @@ function generarGrafica() {
 }
 
 function loadMain(clase) {
-    $("#main_content_abogs").hide().fadeIn(250);
     switch (clase) {
         case "Caso":
             var params1 = {
@@ -540,7 +540,8 @@ function initMenuEntries(entryNumber) {
     }, function() {
         $(this).css('opacity', '1');
     });
-    $("#menu_entry" + entryNumber).hide().fadeIn((entryNumber + 1) * 250);
+    $("#menu_entry" + entryNumber).hide();
+    $("#menu_entry" + entryNumber).fadeIn((entryNumber + 1) * 250);
 }
 
 $(document).ready(function() {
@@ -551,7 +552,7 @@ $(document).ready(function() {
     usuario.id_Despacho = $("userTag").attr("id_Despacho");
 
     $(".menuEntry").each(function(index) {
-        initMenuEntries(index + 1);
+        initMenuEntries(index);
     });
     $("#menu_entry1").click(function() {
         loadMain("Caso");
