@@ -1,40 +1,38 @@
 #imagen{
 
-    position:absolute;
-    top:25%;
-    right:35%;
+    position:relative;
+    top:15%;
+
+}
+
+#datos{
+
+    position:relative;
+    width:20%;   
+
 }
 #nombre{
-
-    position:absolute;
-    top:30%;
-    left:68%;
 
 }
 #telefono{
 
-    position:absolute;
-    top:40%;
-    left:68%;
 
 }
 #email{
 
-    position:absolute;
-    top:50%;
-    left:68%;
+
 
 }
 #califica{
 
-    position:absolute;
-    top:80%;
-    left:45%;
+    position:relative;
+    top:10%;
+    left:35%;
 
 }
 #calificacion{
 
-    position:absolute;
+    position:relative;
     top:75%;
     left:45%;
 
@@ -76,7 +74,20 @@ div#tablapagos{
     right: 30%;
 }
 
+#grafica{
 
+   
+    height: 300px;
+    width: 500px;
+  
+}
+
+#grafica_califica{
+    
+     position:absolute;
+        left:45%; 
+    
+}
 
 /*Calificacion*/
 
@@ -89,17 +100,17 @@ div#tablapagos{
     height:     32px;
 }
 .ratings_stars {
-    background: url('images/Rating/star_empty.png') no-repeat;
+    background: url('images/Rating/StarEmpty2.png') no-repeat;
     float:      left;
     height:     28px;
     padding:    2px;
     width:      32px;
 }
 .ratings_vote {
-    background: url('images/Rating/star_full.png') no-repeat;
+    background: url('images/Rating/StarFull2.png') no-repeat;
 }
 .ratings_over {
-    background: url('images/Rating/star_highlight.png') no-repeat;
+    background: url('images/Rating/StarHover2.png') no-repeat;
 }
 
 /*Diseño de la tabla*/

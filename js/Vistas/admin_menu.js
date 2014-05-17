@@ -250,7 +250,7 @@ function borrarEntidad(entidad, id) {
 }
 function mostrarAbogado(id) {
     //Carga la pagina mediante AJAX y despues le añade los datos de cada campo
-    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Vistas/vista-admin-abogado.html";
+    var myurl = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto2/Vistas/vista-admin-abogado.html";
     $.ajax({
         url: myurl,
         success: function(data) {
@@ -270,13 +270,13 @@ function mostrarAbogado(id) {
 
     servicio(params, function(data) {
         $.each(data.Resultados, function(i, resultado) {
-            var row = $("<p>Nombre: <br>" + resultado.nombre + "&nbsp" + resultado.apellidoP + "&nbsp" + resultado.apellidoM + "</p>");
+            var row = $("<p>" + resultado.nombre + "&nbsp" + resultado.apellidoP + "&nbsp" + resultado.apellidoM + "</p>");
             $("#nombre").html(row);
             var tel = $("<p>Tel&eacute;fono: <br>" + resultado.telefono + "&nbsp </p>");
             $("#telefono").html(tel);
             var email = $("<p> Email: <br>" + resultado.email + "&nbsp </p>");
             $("#email").html(email);
-            var imagen = $("<img alt=\"\" src=" + resultado.fotografia + " style=\"width: 362px; height: 217px; border-width: 5px; border-style: solid; float: left; margin-top: 20px; margin-bottom: 20px;\"/>");
+            var imagen = $("<img alt=\"\" src=" + resultado.fotografia + " style=\"width: 200px; height: 200px; border-width: 5px; border-style: solid; float: left; margin-top: 20px; margin-bottom: 20px;\"/>");
             $("#imagen").html(imagen);
             AboActual = resultado.id;
             llenaPuntaje(resultado.id);
