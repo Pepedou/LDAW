@@ -87,7 +87,7 @@
 
 <tr>
     <td>
-        <input type='submit' value='Aceptar' />
+        <button onclick="verificar();">Registrar</button>  
     </td>
 
 </table>

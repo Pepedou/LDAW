@@ -1,12 +1,12 @@
 {include file="../header.tpl" title="Altas"}
 {include file="../Despachos/Funciones_Ajax.tpl"}
-{include file="./validacion_abogados.tpl"}
+{include file="../validaciones.tpl"}
 
 </head>
 <body onload="llenaDespachos();llenaRoles();">
     {include file="../body_css.tpl"}
     <h1>{$header}</h1>    
-    <form id="forma_abogados" action='#' method='post' enctype="multipart/form-data">
+    <form id="forma_entidad" action='#' method='post' enctype="multipart/form-data">
 
         {include file="./campos_input.tpl"}
         

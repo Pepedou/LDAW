@@ -43,7 +43,7 @@ abstract class EntidadBD extends ServicioGenerico {
                 return false;
             }
         } else {
-            $this->debug->alert("EntidadBD::revisarExistencia => Error en la consulta " . $query);
+          //  $this->debug->alert("EntidadBD::revisarExistencia => Error en la consulta " . $query);
             return false;
         }
     }
@@ -67,7 +67,7 @@ abstract class EntidadBD extends ServicioGenerico {
                 return false;
             }
         } else {
-            $this->debug->alert("EntidadBD::revisarExistencia_MultDiscr => Error en la consulta " . $query);
+          //  $this->debug->alert("EntidadBD::revisarExistencia_MultDiscr => Error en la consulta " . $query);
             $this->existente = false;
             return false;
         }
@@ -96,7 +96,7 @@ abstract class EntidadBD extends ServicioGenerico {
             $this->actualizarValorDiscr();
             return true;
         } else {
-            Debug::getInstance()->alert("EntidadBD::cargarDeBD => No se pudo cargar.");
+          //  Debug::getInstance()->alert("EntidadBD::cargarDeBD => No se pudo cargar.");
             $this->existente = false;
             return false;
         }
@@ -121,7 +121,7 @@ abstract class EntidadBD extends ServicioGenerico {
             $this->existente = true;
             return true;
         } else {
-            Debug::getInstance()->alert("EntidadBD::cargarDeBD_MultDiscr => No se pudo cargar.");
+           // Debug::getInstance()->alert("EntidadBD::cargarDeBD_MultDiscr => No se pudo cargar.");
             $this->existente = false;
             return false;
         }
@@ -151,7 +151,7 @@ abstract class EntidadBD extends ServicioGenerico {
                 $this->cargarDeBD($this->discr, $this->atributos[$this->discr]);
                 return true;
             } else {
-                Debug::getInstance()->alert("EntidadBD::almacenarEnBD => No se pudo insertar.");
+               // Debug::getInstance()->alert("EntidadBD::almacenarEnBD => No se pudo insertar.");
                 return false;
             }
         } else {//Si ya existe, actualizo los valores 
@@ -177,7 +177,7 @@ abstract class EntidadBD extends ServicioGenerico {
                 $this->actualizarValorDiscr();
                 return true;
             } else {
-                Debug::getInstance()->alert("EntidadBD::almacenarEnBD => No se pudo actualizar.");
+              //  Debug::getInstance()->alert("EntidadBD::almacenarEnBD => No se pudo actualizar.");
                 return false;
             }
         }
@@ -191,13 +191,13 @@ abstract class EntidadBD extends ServicioGenerico {
                 $query = "DELETE FROM $this->tabla WHERE id =" . $this->atributos['id'];
             $resultado = $this->dbExecute($query);
         } else {
-            Debug::getInstance()->alert("EntidadBD::eliminarDeBD => No se pudo eliminar porque no se ha cargado.");
+         //   Debug::getInstance()->alert("EntidadBD::eliminarDeBD => No se pudo eliminar porque no se ha cargado.");
             return false;
         }
         if ($resultado === true) {
             return true;
         } else {
-            Debug::getInstance()->alert("EntidadBD::eliminarDeBD => No se pudo eliminar.");
+         //   Debug::getInstance()->alert("EntidadBD::eliminarDeBD => No se pudo eliminar.");
             return false;
         }
     }

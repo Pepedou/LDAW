@@ -1,5 +1,6 @@
 {include file="../header.tpl" title="Altas"}
 {include file="../Despachos/Funciones_Ajax.tpl"}
+{include file="../validaciones.tpl"}
 
 
 </head>
@@ -7,7 +8,7 @@
      {include file="../body_css.tpl"} 
     <h1>{$header}</h1> 
 
-     <form action='altas.php' method='get'>
+     <form id="forma_entidad" action='altas.php' method='get'>
 
         {include file="./campos_input.tpl"}
         

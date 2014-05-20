@@ -39,7 +39,7 @@
 
     <input type ='hidden' id="op" name='op' value='Caso' />
     <td>
-        <input type='submit' value='Aceptar' />
+        <button onclick="verificar();">Aceptar</button>  
     </td>
 </tr>
 </table>

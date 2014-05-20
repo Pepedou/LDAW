@@ -191,7 +191,7 @@ class Abogado extends EntidadBD {
                 /* Procesa el archivo */
                 if (isset($_FILES['fotografia']) && $_FILES['fotografia']['size'] > 0) {
 
-                    $nombreDirectorio = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto/Imagenes/";
+                    $nombreDirectorio = "http://ubiquitous.csf.itesm.mx/~ldaw-1018566/content/Proyecto2/Imagenes/";
                     $idUnico = time();
                     $nombreArchivo = $idUnico . "-" . $_FILES['fotografia']['name'];
                     $this->atributos['fotografia'] = $nombreDirectorio . $nombreArchivo;
@@ -251,17 +251,7 @@ class Abogado extends EntidadBD {
 
                 if ($_REQUEST['sel'] !== 0) {
 
-                    /* foreach ($this->atributos as $campo => $valor) {
-                      if (isset($_REQUEST[$campo])) {
-                      if ($campo === "contrasena") {
-
-                      $this->atributos[$campo] = sha1($_REQUEST[$campo]);
-                      } else {
-                      $this->atributos[$campo] = $_REQUEST[$campo];
-                      }
-                      }
-                      } */
-                    foreach ($this->atributos as $campo => $valor) {
+                       foreach ($this->atributos as $campo => $valor) {
                         if (isset($_REQUEST[$campo])) {
 
                             $this->atributos[$campo] = $_REQUEST[$campo];

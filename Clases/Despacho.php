@@ -67,7 +67,7 @@ class Despacho extends EntidadBD {
                 if ($dir->atributos["calle"] != NULL) {
                     $dir->almacenarEnBD();
                     $id = $dir->getID("calle", $dir->atributos["calle"]);
-                    $this->atributos["id_Direccion"] = $atributosid;
+                    $this->atributos["id_Direccion"] = $id;
                     $this->atributos["visible"] = 1;
                     if ($this->almacenarEnBD())
                         Debug::getInstance()->alert("Registro Exitoso.");

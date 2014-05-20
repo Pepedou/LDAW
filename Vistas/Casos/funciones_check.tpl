@@ -11,9 +11,11 @@
         $.each(selected, function(i, value) {
             llenaCasosAbogados(value, id_caso);
         });
+        
+        alert("Registro Exitoso");
 
-        /*newUrl = "altas.php?op=Caso";
-         document.location.href = newUrl;*/
+        newUrl = "altas.php?op=Caso";
+         document.location.href = newUrl;
     }
 
     /*Servicio para llenar Muchos a muchos*/

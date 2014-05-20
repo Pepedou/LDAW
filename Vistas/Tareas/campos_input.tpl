@@ -26,13 +26,13 @@
 <tr>
     <td><label> Comentarios</label>
         <textarea name="descripcion" value = "{$tarea_descrip}" cols="30" rows="5" ></textarea>
-        
+
     </td>
 </tr>
 <tr>
 <br>
 <td>
-    <input type='submit' value='Aceptar' />
+    <button onclick="verificar();">Registrar</button>  
 </td>
 </tr>
 </tr>
