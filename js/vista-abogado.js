@@ -196,7 +196,7 @@ function successFuncCaso(data) {
         var caso = resultado.nombre;
         var descripcion = String(resultado.descripcion);
         var estado = resultado.status;
-        if (descripcion.length == 0)
+        if (descripcion.length === 0)
             descripcion = "-";
         string += "<tr><td>" + caso + "</td><td>" + descripcion.substring(0, 40) + ((descripcion.length > 40) ? "..." : "") + "</td><td>" + (estado === "1" ? "Activo" : "Inactivo") + "</td><td><button type=\"button\" onclick=\"mostrarCaso(" + id + ");\">Mostrar</button></td></tr>";
     });
@@ -290,7 +290,7 @@ function toggleTarea(id, estado) {
 
 function mostrarComentariosTarea(idTarea) {
     var comentarios = {
-        "op": "st",
+        "op": "stw",
         "entidad": "ComentarioTarea",
         "params[id_Tarea]": idTarea
     };
@@ -476,7 +476,7 @@ function loadMain(clase) {
             break;
         case "Cliente":
             var params2 = {
-                op: "st",
+                op: "stw",
                 entidad: "AbogadosClientes",
                 "params[id_Abogado]": usuario.id
             };
@@ -503,7 +503,7 @@ function loadMain(clase) {
                 op: "hon",
                 entidad: "Abogado",
                 "params[id]": usuario.id
-            }
+            };
             servicio(params5, successFuncHono);
             break;
         case "Reporte":

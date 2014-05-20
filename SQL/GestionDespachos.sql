@@ -58,7 +58,7 @@ SET honorarios = diasTrabajados * desempeno * factor;
 IF desempeno > 4 THEN
     SET honorarios = honorarios + honorarios * 0.10;
 END IF;
-SELECT honorarios, nombre, fin-inicio as dias FROM Tareas WHERE status = 1 AND id_Abogado = idAbogado AND fin BETWEEN NOW() - INTERVAL 1 MONTH AND NOW() + interval 7 day;
+SELECT honorarios, nombre, fin-inicio as dias FROM Tareas WHERE status = 0 AND id_Abogado = idAbogado AND fin BETWEEN NOW() - INTERVAL 1 MONTH AND NOW();
 END //
 DELIMITER ;
 
