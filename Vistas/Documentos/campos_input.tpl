@@ -21,7 +21,7 @@
 </td>
 </tr> <input type ='hidden' id="op" name='op' value='Documento' />
 <td>
-    <button onclick="verificar();">Registrar</button>  
-</td>
+       <input type="submit" value="Aceptar">
+    </td>
 </tr>
 </table>

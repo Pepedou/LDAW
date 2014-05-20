@@ -514,7 +514,7 @@ function llenaPuntaje(id) {
 
         function successFuncClientes(data) {
 
-            var string = '<div id=\"leyenda\"><a href=\"../altas.php?op=Despacho\"><img src="../css/images/add_general.png"\n\
+            var string = '<div id=\"leyenda\"><a href=\"../altas.php?op=Cliente\"><img src="../css/images/add_general.png"\n\
     style=\"width: 36px; height: 36px;\"></a></div>\n\
     <table id="main_table" class="display"><thead><tr><th>Opciones</th><th>Nombre</th><th>Telefono</th><th>Email</th></tr></thead>';
 

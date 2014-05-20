@@ -35,7 +35,7 @@
             <label for="telefono">Tel&eacute;fono</label>
             <input type='text' name='telefono' value = "{$abog_tel}" />                         
         </td>
-    <br>
+        <br>
     <td>
 
         <label for="email">Email</label>
@@ -45,7 +45,7 @@
 <tr>
     <td >
         <label for="roles">Rol</label>
-        <select id="roles" name="id_Rol" selected ="{$select_tol}" >
+        <select id="roles" name="id_Rol" selected ="{$select_rol}" >
         </select>
     </td>
     <td >
@@ -64,7 +64,7 @@
 </tr>
 <tr>
     <td>
-        <button onclick="verificar();">Registrar</button>  
+       <input type="submit" value="Aceptar">
     </td>
 
 </table>

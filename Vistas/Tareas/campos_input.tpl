@@ -32,7 +32,7 @@
 <tr>
 <br>
 <td>
-    <button onclick="verificar();">Registrar</button>  
+    <input type="submit" value="Aceptar">
 </td>
 </tr>
 </tr>

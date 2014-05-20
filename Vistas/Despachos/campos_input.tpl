@@ -56,8 +56,8 @@
     </td>
 </tr>
 <tr>
-    <td>
-        <button onclick="verificar();">Registrar</button>  
+   <td>
+       <input type="submit" value="Aceptar">
     </td>
 
 </tr>

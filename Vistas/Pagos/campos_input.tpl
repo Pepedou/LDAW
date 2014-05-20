@@ -15,7 +15,7 @@
 
     </tr> <input type ='hidden' id="op" name='op' value='Pago' />
     <td>
-        <button onclick="verificar();">Registrar</button>  
+       <input type="submit" value="Aceptar">
     </td>
 </tr>
 </table>
