@@ -69,6 +69,9 @@ function procesaMaM(RelacionMaM $entidad, $operacion, $params, $callback) {
         case 'st':
             $entidad->service_selectTodos($callback);
             break;
+        case 'stw'://Select todos where
+            $entidad->service_selectTodosWhere($params, $callback);
+            break;        
         case 'sti':
             $entidad->service_selectTodosID($params, $callback);
             break;
